@@ -18,7 +18,7 @@ function App() {
           <Route path={RouteNames.GOSTI} element={<GostPregled />} />
         </Routes>
         <hr />
-        &copy; XXXXXX
+        &copy; Roberto
       </Container>
     </>
   )

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-
+import GostService from "../../services/Gosti/GostiService"
 
 export default function GostPregled(){
     
