@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import GostService from "../../services/Gosti/GostiService"
+import GostService from "../../services/gosti/GostiService"
 
 export default function GostPregled(){
     
@@ -22,7 +22,7 @@ export default function GostPregled(){
         <>
         <ul>
             {gosti && gosti.map((gost)=>(
-                <li>{gost.naziv}</li>
+                <li>{gost.ime}</li>
             ))}
         </ul>
         
