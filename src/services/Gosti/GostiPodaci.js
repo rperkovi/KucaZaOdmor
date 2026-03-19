@@ -15,6 +15,6 @@ export const gosti = [
         trajanjeDana: 5,
         cijena:500,
         datumRezervacije: '2026-04-15T17:00:00',
-        aktivan: true
+        aktivan: false
     }
 ]
