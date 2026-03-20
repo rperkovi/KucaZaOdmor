@@ -14,7 +14,7 @@ export const gosti = [
         prezime: 'Maradona',
         trajanjeDana: 5,
         cijena:500,
-        datumRezervacije: '2026-04-15T17:00:00',
+        datumRezervacije: '2025-04-15T17:00:00',
         aktivan: false
     }
 ]

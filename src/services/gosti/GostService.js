@@ -1,4 +1,4 @@
-import { gosti } from "./GostiPodaci";
+import { gosti } from "./GostPodaci";
 
 
 async function get() {

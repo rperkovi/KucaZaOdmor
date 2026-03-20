@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import GostService from "../../services/gosti/GostiService"
+import GostService from "../../services/gosti/GostService.js"
 import { Table } from "react-bootstrap"
 import { NumericFormat } from "react-number-format"
 import FormatDatuma from "../../components/FormatDatuma.jsx"
@@ -27,18 +27,20 @@ export default function GostPregled(){
         <Table>
                 <thead>
                     <tr>
-                        <th>Ime i Prezime</th>
-                        <th>Trajanje</th>
+                        <th>Ime</th>
+                        <th>Prezime</th>
+                        <th>Trajanje (Dana)</th>
                         <th>Cijena</th>
-                        <th>Datum Pokretanja</th>
+                        <th>Datum Rezervacije</th>
                         <th>Aktivan</th>
-                        <th>Akcija</th>
+                        <th>Platio</th>
                     </tr>
                 </thead>
                 <tbody>
                     {gosti && gosti.map((gost)=>(
                     <tr>
                             <td>{gost.ime}</td>
+                            <td>{gost.prezime}</td>
                             <td>{gost.trajanjeDana}</td>
                             <td>
                                 <NumericFormat 
@@ -52,7 +54,7 @@ export default function GostPregled(){
                                 />
                             </td>
                             <td>
-                                <FormatDatuma datum={gost.datumPokretanja} />
+                                <FormatDatuma datum={gost.datumRezervacije} />
                             </td>
         
 
