@@ -6,6 +6,7 @@ import { Route, Routes } from 'react-router-dom'
 import { RouteNames } from './constants'
 import Home from './pages/Home'
 import GostPregled from './pages/gosti/GostPregled'
+import GostNovi from './pages/gosti/GostNovi'
 
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route path={RouteNames.HOME} element={<Home />} />
           <Route path={RouteNames.GOSTI} element={<GostPregled />} />
+           <Route path={RouteNames.GOSTI_NOVI} element={<GostNovi />} />
         </Routes>
         <hr />
         &copy; Roberto

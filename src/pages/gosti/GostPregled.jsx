@@ -4,6 +4,8 @@ import { Table } from "react-bootstrap"
 import { NumericFormat } from "react-number-format"
 import FormatDatuma from "../../components/FormatDatuma.jsx"
 import { GrValidate } from "react-icons/gr"
+import { Link } from "react-router-dom"
+import { RouteNames } from "../../constants.js"
 
 export default function GostPregled(){
     
@@ -24,6 +26,9 @@ export default function GostPregled(){
     
     return(
         <>
+        <Link to={RouteNames.GOSTI_NOVI}>
+            Unos novg gosta
+        </Link>
         <Table>
                 <thead>
                     <tr>
@@ -31,9 +36,10 @@ export default function GostPregled(){
                         <th>Prezime</th>
                         <th>Trajanje (Dana)</th>
                         <th>Cijena</th>
-                        <th>Datum Rezervacije</th>
+                        <th>Datumi</th>
                         <th>Aktivan</th>
                         <th>Platio</th>
+                        <th>Akcija</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -53,8 +59,8 @@ export default function GostPregled(){
                                 fixedDecimalScale
                                 />
                             </td>
-                            <td>
-                                <FormatDatuma datum={gost.datumRezervacije} />
+                            <td>Rezervirano <FormatDatuma datum={gost.datumRezervacije} /> <br />  za
+                                razdoblje <br /> <FormatDatuma datum={gost.datumPocetka} /> - <FormatDatuma datum={gost.datumKraja} />
                             </td>
         
 
@@ -64,6 +70,12 @@ export default function GostPregled(){
                                 color={gost.aktivan ? 'green' : 'red'}
                                 />
                                 </td>
+                            <td>
+                                 <GrValidate
+                                size={25}
+                                color={gost.platio ? 'green' : 'red'}
+                                />
+                            </td>
                             <td></td>
                         </tr>
             ))}
