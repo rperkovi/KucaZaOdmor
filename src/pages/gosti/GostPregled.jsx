@@ -4,12 +4,12 @@ import { Table } from "react-bootstrap"
 import { NumericFormat } from "react-number-format"
 import FormatDatuma from "../../components/FormatDatuma.jsx"
 import { GrValidate } from "react-icons/gr"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { RouteNames } from "../../constants.js"
 
 export default function GostPregled(){
     
-    
+    const navigate = useNavigate
     const[gosti, setGosti] = useState([])
 
 
@@ -27,6 +27,7 @@ export default function GostPregled(){
     return(
         <>
         <Link to={RouteNames.GOSTI_NOVI}>
+        className="btn btn-success w-100 mb-3 mt-3">
             Unos novg gosta
         </Link>
         <Table>
@@ -44,7 +45,7 @@ export default function GostPregled(){
                 </thead>
                 <tbody>
                     {gosti && gosti.map((gost)=>(
-                    <tr>
+                    <tr key={gost.sifra}>
                             <td>{gost.ime}</td>
                             <td>{gost.prezime}</td>
                             <td>{gost.trajanjeDana}</td>
@@ -76,7 +77,11 @@ export default function GostPregled(){
                                 color={gost.platio ? 'green' : 'red'}
                                 />
                             </td>
-                            <td></td>
+                            <td>
+                                <Button onClick={()=>{navigate(`/gosti/${gost.sifra}`)}}>
+                                    Promjena
+                                </Button>
+                            </td>
                         </tr>
             ))}
                 </tbody>

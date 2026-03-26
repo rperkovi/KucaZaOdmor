@@ -2,7 +2,11 @@ import { gosti } from "./GostPodaci";
 
 
 async function get() {
-    return {data: gosti}
+    return {data: [...gosti]}
+}
+
+async function getBySifra(sifra) {
+   return {data: gosti.find(s => s.sifra === parseInt(sifra))} 
 }
 
 async function dodaj(gost){
@@ -16,7 +20,19 @@ async function dodaj(gost){
 }
 
 
+
+async function promjeni(sifra,gost) {
+    const index = nadiIndex(sifra)
+    gosti[index] = {...gosti[index], ...gost}
+}
+
+function nadiIndex(sifra){
+    return gosti.findIndex(s => s.sifra === parseInt(sifra))
+}
+
 export default{
     get,
-    dodaj
+    dodaj,
+    getBySifra,
+    promjeni
 }
