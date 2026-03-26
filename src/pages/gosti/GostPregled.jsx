@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import GostService from "../../services/gosti/GostService.js"
-import { Table } from "react-bootstrap"
+import { Button, Table } from "react-bootstrap"
 import { NumericFormat } from "react-number-format"
 import FormatDatuma from "../../components/FormatDatuma.jsx"
 import { GrValidate } from "react-icons/gr"
@@ -9,7 +9,7 @@ import { RouteNames } from "../../constants.js"
 
 export default function GostPregled(){
     
-    const navigate = useNavigate
+    const navigate = useNavigate()
     const[gosti, setGosti] = useState([])
 
 
@@ -26,7 +26,7 @@ export default function GostPregled(){
     
     return(
         <>
-        <Link to={RouteNames.GOSTI_NOVI}>
+        <Link to={RouteNames.GOSTI_NOVI}
         className="btn btn-success w-100 mb-3 mt-3">
             Unos novg gosta
         </Link>

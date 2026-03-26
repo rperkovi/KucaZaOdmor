@@ -10,6 +10,7 @@ export default function GostPromjena(){
     const params = useParams()
     const [gost,setGost] = useState({})
     const [aktivan,setAktivan] = useState(false)
+    const [platio,setPlatio] = useState(false)
 
     async function ucitajGost() {
         await GostService.getBySifra(params.sifra).then((odgovor)=>{
@@ -17,16 +18,17 @@ export default function GostPromjena(){
             const s = odgovor.data
             // po potrebi prilagođavam podatke
             
-            s.datumPokretanja = s.datumPokretanja.substring(0,10)
+          //  s.datumPokretanja = s.datumPokretanja.substring(0,10)
             
             setGost(s)
 
             setAktivan(s.aktivan)
+            setPlatio(s.platio)
         })
     }
 
     useEffect(()=>{
-        ucitajSmjer()
+        ucitajGost()
     },[])
 
     async function promjeni(gost){
@@ -41,12 +43,14 @@ export default function GostPromjena(){
         e.preventDefault() // nemoj odraditi submit
         const podaci = new FormData(e.target)
         promjeni({
-            ime: podaci.get('Ime'),
-            prezime: podaci.get('Prezime'),
-            trajanje: parseInt(podaci.get('trajanje')),
+            ime: podaci.get('ime'),
+            prezime: podaci.get('prezime'),
             cijena: parseFloat(podaci.get('cijena')),
-            datumPokretanja: new Date(podaci.get('datumPokretanja')).toISOString(),
-            aktivan: podaci.get('aktivan') === 'on'
+            datumRezervacije: new Date().toISOString(),
+            datumPocetka: new Date(podaci.get('datumPocetka')).toISOString(),
+            datumKraja: new Date(podaci.get('datumKraja')).toISOString(),
+            aktivan: aktivan,
+            platio: platio
         })
     }
 
@@ -71,7 +75,7 @@ export default function GostPromjena(){
             <Form.Group controlId="cijena">
                 <Form.Label>Cijena</Form.Label>
                 <Form.Control type="number" name="cijena" step={0.01} 
-                defaultValue={smjer.cijena}/>
+                defaultValue={gost.cijena}/>
             </Form.Group>
 
             <Form.Group controlId="datumPokretanja">
