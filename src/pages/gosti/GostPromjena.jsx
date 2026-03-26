@@ -91,6 +91,12 @@ export default function GostPromjena(){
                 />
             </Form.Group>
 
+             <Form.Group controlId="platio">
+                <Form.Check label="Platio" name="platio" 
+                checked={platio}
+                onChange={(e)=>{setPlatio(e.target.checked)}}
+                />
+            </Form.Group>
             <hr style={{marginTop: '50px', border: '0'}} />
 
             <Row>
