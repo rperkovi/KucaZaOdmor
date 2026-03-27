@@ -18,8 +18,8 @@ export default function GostPromjena(){
             const s = odgovor.data
             // po potrebi prilagođavam podatke
             
-          //  s.datumPokretanja = s.datumPokretanja.substring(0,10)
-            
+            s.datumPocetka = s.datumPocetka.substring(0,10)
+            s.datumKraja = s.datumKraja.substring(0,10)
             setGost(s)
 
             setAktivan(s.aktivan)
@@ -74,16 +74,23 @@ export default function GostPromjena(){
 
 
 
-            <Form.Group controlId="datumPokretanja">
-                <Form.Label>Datum</Form.Label>
-                <Form.Control type="date" name="datumPokretanja" 
-                defaultValue={gost.datumPokretanja}/>
+            <Form.Group controlId="datumPocetka">
+                <Form.Label>Rezervirano od</Form.Label>
+                <Form.Control type="date" name="datumPocetka" 
+                defaultValue={gost.datumPocetka}/>
+            </Form.Group>
+
+            <Form.Group controlId="datumKraja">
+                <Form.Label>Rezervirano do</Form.Label>
+                <Form.Control type="date" name="datumKraja" 
+                defaultValue={gost.datumKraja}/>
             </Form.Group>
 
             <Form.Group controlId="cijena">
                 <Form.Label>Cijena</Form.Label>
                 <Form.Control type="number" name="cijena" step={0.01} 
                 defaultValue={gost.cijena}/>
+                </Form.Group>
 
             <Form.Group controlId="aktivan">
                 <Form.Check label="Aktivan" name="aktivan" 
