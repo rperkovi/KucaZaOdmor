@@ -79,7 +79,7 @@ export default function GostPromjena(){
             </Form.Group>
 
             <Form.Group controlId="datumPokretanja">
-                <Form.Label>Datum pokretanja smjera</Form.Label>
+                <Form.Label>Datum</Form.Label>
                 <Form.Control type="date" name="datumPokretanja" 
                 defaultValue={gost.datumPokretanja}/>
             </Form.Group>
@@ -107,7 +107,7 @@ export default function GostPromjena(){
                 </Col>
                 <Col>
                     <Button type="submit" variant="success">
-                       Promjeni smjer
+                       Promjeni gost
                     </Button>
                 </Col>
             </Row>
