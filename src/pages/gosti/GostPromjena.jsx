@@ -45,10 +45,10 @@ export default function GostPromjena(){
         promjeni({
             ime: podaci.get('ime'),
             prezime: podaci.get('prezime'),
-            cijena: parseFloat(podaci.get('cijena')),
             datumRezervacije: new Date().toISOString(),
             datumPocetka: new Date(podaci.get('datumPocetka')).toISOString(),
             datumKraja: new Date(podaci.get('datumKraja')).toISOString(),
+            cijena: parseFloat(podaci.get('cijena')),
             aktivan: aktivan,
             platio: platio
         })
@@ -72,17 +72,18 @@ export default function GostPromjena(){
                 defaultValue={gost.prezime}/>
             </Form.Group>
 
-            <Form.Group controlId="cijena">
-                <Form.Label>Cijena</Form.Label>
-                <Form.Control type="number" name="cijena" step={0.01} 
-                defaultValue={gost.cijena}/>
-            </Form.Group>
+
 
             <Form.Group controlId="datumPokretanja">
                 <Form.Label>Datum</Form.Label>
                 <Form.Control type="date" name="datumPokretanja" 
                 defaultValue={gost.datumPokretanja}/>
             </Form.Group>
+
+            <Form.Group controlId="cijena">
+                <Form.Label>Cijena</Form.Label>
+                <Form.Control type="number" name="cijena" step={0.01} 
+                defaultValue={gost.cijena}/>
 
             <Form.Group controlId="aktivan">
                 <Form.Check label="Aktivan" name="aktivan" 

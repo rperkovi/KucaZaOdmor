@@ -35,12 +35,11 @@ export default function GostPregled(){
                     <tr>
                         <th>Ime</th>
                         <th>Prezime</th>
+                        <th>Datumi</th>
                         <th>Trajanje (Dana)</th>
                         <th>Cijena</th>
-                        <th>Datumi</th>
                         <th>Aktivan</th>
                         <th>Platio</th>
-                        <th>Akcija</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -48,7 +47,6 @@ export default function GostPregled(){
                     <tr key={gost.sifra}>
                             <td>{gost.ime}</td>
                             <td>{gost.prezime}</td>
-                            <td>{gost.trajanjeDana}</td>
                             <td>
                                 <NumericFormat 
                                 value={gost.cijena}
@@ -63,7 +61,7 @@ export default function GostPregled(){
                             <td>Rezervirano <FormatDatuma datum={gost.datumRezervacije} /> <br />  za
                                 razdoblje <br /> <FormatDatuma datum={gost.datumPocetka} /> - <FormatDatuma datum={gost.datumKraja} />
                             </td>
-        
+                            <td>{gost.trajanjeDana}</td>
 
                             <td>
                                 <GrValidate
