@@ -51,11 +51,6 @@ export default function GostiNovi(){
                 <Form.Control type="number" name="cijena" step={0.01} />
             </Form.Group>
 
-            <Form.Group controlId="datumRezervacije">
-                <Form.Label>Rezerviran</Form.Label>
-                <Form.Control type="date" name="datumRezervacije" />
-            </Form.Group>
-
             <Form.Group controlId="datumPocetka">
                 <Form.Label>Rezervirano od</Form.Label>
                 <Form.Control type="date" name="datumPocetka" />

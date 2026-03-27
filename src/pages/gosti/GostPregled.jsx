@@ -22,6 +22,23 @@ export default function GostPregled(){
             setGosti(odgovor.data)
         })
     }
+
+
+        async function obrisi(sifra) {
+        if(!confirm('Sigurno obrisati')){
+            return
+        }
+        await GostService.obrisi(sifra)
+        ucitajGoste()
+    }
+
+    function brojDana(odDatuma, doDatuma){
+        const d1 = new Date(odDatuma);
+        const d2 = new Date(doDatuma);
+        const razlikaUMilisekundama = Math.abs(d1 - d2);
+        const milisekundiUDanu = 1000 * 60 * 60 * 24;
+        return Math.round(razlikaUMilisekundama / milisekundiUDanu);
+    }
     
     
     return(
@@ -47,8 +64,11 @@ export default function GostPregled(){
                     <tr key={gost.sifra}>
                             <td>{gost.ime}</td>
                             <td>{gost.prezime}</td>
-                            <td>Rezervirano <FormatDatuma datum={gost.datumRezervacije} /> <br />  za
+                            <td>Rezervirano 
+                                
+                                 <FormatDatuma datum={gost.datumRezervacije} /> <br />  za
                                 razdoblje <br /> <FormatDatuma datum={gost.datumPocetka} /> - <FormatDatuma datum={gost.datumKraja} />
+                                &nbsp;({brojDana(gost.datumPocetka,gost.datumKraja)} dana)
                             </td>
                             <td>
                                 <NumericFormat 
@@ -76,6 +96,10 @@ export default function GostPregled(){
                             <td>
                                 <Button onClick={()=>{navigate(`/gosti/${gost.sifra}`)}}>
                                     Promjena
+                                </Button>
+                                &nbsp;&nbsp;
+                                 <Button variant="danger" onClick={()=>{obrisi(gost.sifra)}}>
+                                    Obriši
                                 </Button>
                             </td>
                         </tr>
