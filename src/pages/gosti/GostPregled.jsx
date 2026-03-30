@@ -45,7 +45,7 @@ export default function GostPregled(){
         <>
         <Link to={RouteNames.GOSTI_NOVI}
         className="btn btn-success w-100 mb-3 mt-3">
-            Unos novg gosta
+            Unos novog gosta
         </Link>
         <Table>
                 <thead>
