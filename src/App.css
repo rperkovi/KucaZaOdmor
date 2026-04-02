@@ -1,0 +1,5 @@
+
+.slika {
+  width: 200px;
+  height: auto; /* Zadržava omjer slike */
+}
