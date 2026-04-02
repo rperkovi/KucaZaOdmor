@@ -12,8 +12,3 @@ createRoot(document.getElementById('root')).render(
     
   </StrictMode>,
 )
-
-
-function App() {
-  return <img src="../assets" className="slika" alt="Opis" />;
-}

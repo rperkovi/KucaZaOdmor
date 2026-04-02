@@ -6,7 +6,7 @@ export default function Home(){
     <>
     <h1>Dobrodošli na {IME_APLIKACIJE}</h1>
     <div>
-        <img src={mojaSlika} alt="Opis slike" />
+        <img src={mojaSlika} alt="Opis slike" className="slika" />
  
     </div>
     </>
