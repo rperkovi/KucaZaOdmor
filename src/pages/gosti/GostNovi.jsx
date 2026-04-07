@@ -1,4 +1,4 @@
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import GostService from "../../services/gosti/GostService";
@@ -82,7 +82,7 @@ export default function GostiNovi(){
                     <Card className="shadow-sm">
                         <Card.Body>
                             <Card.Title className="mb-4">Podaci o gostu</Card.Title>
-
+                            <Form onSubmit={odradiSubmit}>
                             {/* Naziv - Pun širina na svim ekranima */}
                             <Row>
                                 <Col xs={12}>
@@ -161,11 +161,13 @@ export default function GostiNovi(){
                                     Dodaj novi gost
                                 </Button>
                             </div>
+
+                            </Form>
                         </Card.Body>
                     </Card>
                 </Container>
 
-            </Form>
+            
         </>
     )
 }
