@@ -85,13 +85,24 @@ export default function GostiNovi(){
                             <Form onSubmit={odradiSubmit}>
                             {/* Naziv - Pun širina na svim ekranima */}
                             <Row>
-                                <Col xs={12}>
-                                    <Form.Group controlId="naziv" className="mb-3">
-                                        <Form.Label className="fw-bold">Naziv</Form.Label>
+                                <Col md={6}>
+                                    <Form.Group controlId="ime" className="mb-3">
+                                        <Form.Label className="fw-bold">Ime</Form.Label>
                                         <Form.Control
                                             type="text"
-                                            name="naziv"
-                                            placeholder="Unesite naziv gosta"
+                                            name="ime"
+                                            placeholder="Unesite ime gosta"
+                                            required
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                <Col md={6}>
+                                    <Form.Group controlId="prezime" className="mb-3">
+                                        <Form.Label className="fw-bold">Prezime</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            name="prezime"
+                                            placeholder="Unesite prezime gosta"
                                             required
                                         />
                                     </Form.Group>
@@ -102,34 +113,24 @@ export default function GostiNovi(){
                             <Row>
                                 <Col md={6}>
                                     <Form.Group controlId="trajanje" className="mb-3">
-                                        <Form.Label className="fw-bold">Trajanje (sati)</Form.Label>
+                                        <Form.Label className="fw-bold">email</Form.Label>
                                         <Form.Control
-                                            type="number"
-                                            name="trajanje"
-                                            step={1}
-                                            placeholder="0"
+                                           type="text"
+                                            name="ime"
+                                            placeholder="Unesite email gosta"
+                                            required
                                         />
                                     </Form.Group>
                                 </Col>
-                                <Col md={6}>
-                                    <Form.Group controlId="cijena" className="mb-3">
-                                        <Form.Label className="fw-bold">Cijena (€)</Form.Label>
-                                        <Form.Control
-                                            type="number"
-                                            name="cijena"
-                                            step={0.01}
-                                            placeholder="0,00"
-                                        />
-                                    </Form.Group>
-                                </Col>
+                                
                             </Row>
 
                             <Row className="align-items-center">
                                 {/* Datum pokretanja */}
                                 <Col md={6}>
-                                    <Form.Group controlId="datumPokretanja" className="mb-3">
-                                        <Form.Label className="fw-bold">Datum pokretanja</Form.Label>
-                                        <Form.Control type="date" name="datumPokretanja" 
+                                    <Form.Group controlId="datumRezervacijeOd" className="mb-3">
+                                        <Form.Label className="fw-bold">Datum rezervacije od</Form.Label>
+                                        <Form.Control type="date" name="datumRezervacijeOd" 
                                         // Dodajemo onClick i onFocus za bolju pristupačnost
                                         onClick={(e) => e.target.showPicker()} 
                                         onFocus={(e) => e.target.showPicker()}
