@@ -18,74 +18,154 @@ export default function GostiNovi(){
     function odradiSubmit(e){ //e je event
         e.preventDefault() // nemoj odraditi submit
         const podaci = new FormData(e.target)
+        
+         // --- KONTROLA 1: Ime (Postojanje) ---
+        if (!podaci.get('ime') || podaci.get('ime').trim().length === 0) {
+            alert("Ime je obavezno i ne smije sadržavati samo razmake!");
+            return;
+        }
+
+        // --- KONTROLA 2: Ime (Minimalna duljina) ---
+        if (podaci.get('ime').trim().length < 2) {
+            alert("Ime mora imati najmanje 2 znaka!");
+            return;
+        }
+
+        // --- KONTROLA 3: Prezime (Postojanje) ---
+        if (!podaci.get('prezime') || podaci.get('prezime').trim().length === 0) {
+            alert("Prezime je obavezno i ne smije sadržavati samo razmake!");
+            return;
+        }
+
+        // --- KONTROLA 4: Prezime (Minimalna duljina) ---
+        if (podaci.get('prezime').trim().length < 2) {
+            alert("Prezime mora imati najmanje 2 znaka!");
+            return;
+        }
+
+        // --- KONTROLA 5: Email (Postojanje) ---
+        if (!podaci.get('email') || podaci.get('email').trim().length === 0) {
+            alert("Email je obavezan!");
+            return;
+        }
+
+        // --- KONTROLA 6: Email (Format) ---
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(podaci.get('email'))) {
+            alert("Email nije u ispravnom formatu!");
+            return;
+        }
+        
+        
+        
         dodaj({
             ime: podaci.get('ime'),
             prezime: podaci.get('prezime'),
-            cijena: parseFloat(podaci.get('cijena')),
-            datumRezervacije: new Date().toISOString(),
-            datumPocetka: new Date(podaci.get('datumPocetka')).toISOString(),
-            datumKraja: new Date(podaci.get('datumKraja')).toISOString(),
+            email: podaci.get('email'),
+            datumPokretanja: new Date(podaci.get('datumPokretanja')).toISOString(),
             aktivan: podaci.get('aktivan') === 'on',
-            platio: podaci.get('platio') === 'on'
+            platio: podaci.get('platio') === 'on',
         })
     }
+
+
+
+
+
 
     return(
         <>
         <h3>
             Unos novog gosta
         </h3>
-        <Form onSubmit={odradiSubmit}>
-            <Form.Group controlId="ime">
-                <Form.Label>Ime</Form.Label>
-                <Form.Control type="text" name="ime" required />
-            </Form.Group>
+         <Container className="mt-4">
+                    <Card className="shadow-sm">
+                        <Card.Body>
+                            <Card.Title className="mb-4">Podaci o gostu</Card.Title>
 
-            <Form.Group controlId="prezime">
-                <Form.Label>Prezime</Form.Label>
-                <Form.Control type="text" name="prezime" required />
-            </Form.Group>
+                            {/* Naziv - Pun širina na svim ekranima */}
+                            <Row>
+                                <Col xs={12}>
+                                    <Form.Group controlId="naziv" className="mb-3">
+                                        <Form.Label className="fw-bold">Naziv</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            name="naziv"
+                                            placeholder="Unesite naziv gosta"
+                                            required
+                                        />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
 
-            <Form.Group controlId="cijena">
-                <Form.Label>Cijena</Form.Label>
-                <Form.Control type="number" name="cijena" step={0.01} />
-            </Form.Group>
+                            {/* Trajanje i Cijena - Jedno pored drugog na md+, jedno ispod drugog na mobitelu */}
+                            <Row>
+                                <Col md={6}>
+                                    <Form.Group controlId="trajanje" className="mb-3">
+                                        <Form.Label className="fw-bold">Trajanje (sati)</Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            name="trajanje"
+                                            step={1}
+                                            placeholder="0"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                <Col md={6}>
+                                    <Form.Group controlId="cijena" className="mb-3">
+                                        <Form.Label className="fw-bold">Cijena (€)</Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            name="cijena"
+                                            step={0.01}
+                                            placeholder="0,00"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
 
-            <Form.Group controlId="datumPocetka">
-                <Form.Label>Rezervirano od</Form.Label>
-                <Form.Control type="date" name="datumPocetka" />
-            </Form.Group>
+                            <Row className="align-items-center">
+                                {/* Datum pokretanja */}
+                                <Col md={6}>
+                                    <Form.Group controlId="datumPokretanja" className="mb-3">
+                                        <Form.Label className="fw-bold">Datum pokretanja</Form.Label>
+                                        <Form.Control type="date" name="datumPokretanja" 
+                                        // Dodajemo onClick i onFocus za bolju pristupačnost
+                                        onClick={(e) => e.target.showPicker()} 
+                                        onFocus={(e) => e.target.showPicker()}
+                                        />
+                                    </Form.Group>
+                                </Col>
 
-            <Form.Group controlId="datumKraja">
-                <Form.Label>Rezervirano do</Form.Label>
-                <Form.Control type="date" name="datumKraja" />
-            </Form.Group>
+                                {/* Aktivan - Switch umjesto checkboxa za moderniji izgled */}
+                                <Col md={6}>
+                                    <Form.Group controlId="aktivan" className="mb-3 mt-md-3">
+                                        <Form.Check
+                                            type="switch"
+                                            label="Gost je aktivan"
+                                            name="aktivan"
+                                            className="fs-5"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
 
-            <Form.Group controlId="aktivan">
-                <Form.Check label="Aktivan" name="aktivan" />
-            </Form.Group>
+                            <hr />
 
-             <Form.Group controlId="platio">
-                <Form.Check label="Platio" name="platio" />
-            </Form.Group>
+                            {/* Gumbi za akciju - RWD pozicioniranje */}
+                            <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                                <Link to={RouteNames.GOSTI} className="btn btn-danger px-4">
+                                    Odustani
+                                </Link>
+                                <Button type="submit" variant="success">
+                                    Dodaj novi gost
+                                </Button>
+                            </div>
+                        </Card.Body>
+                    </Card>
+                </Container>
 
-
-            <hr style={{marginTop: '50px', border: '0'}} />
-
-            <Row>
-                <Col>
-                    <Link to={RouteNames.GOSTI} className="btn btn-danger">
-                    Odustani
-                    </Link>
-                </Col>
-                <Col>
-                    <Button type="submit" variant="success">
-                        Dodaj novog gosta
-                    </Button>
-                </Col>
-            </Row>
-
-        </Form>
+            </Form>
         </>
     )
 }
