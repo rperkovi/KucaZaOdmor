@@ -62,9 +62,7 @@ export default function GostiNovi(){
             ime: podaci.get('ime'),
             prezime: podaci.get('prezime'),
             email: podaci.get('email'),
-            datumPokretanja: new Date(podaci.get('datumPokretanja')).toISOString(),
             aktivan: podaci.get('aktivan') === 'on',
-            platio: podaci.get('platio') === 'on',
         })
     }
 
@@ -112,11 +110,11 @@ export default function GostiNovi(){
                             {/* Trajanje i Cijena - Jedno pored drugog na md+, jedno ispod drugog na mobitelu */}
                             <Row>
                                 <Col md={6}>
-                                    <Form.Group controlId="trajanje" className="mb-3">
+                                    <Form.Group controlId="email" className="mb-3">
                                         <Form.Label className="fw-bold">email</Form.Label>
                                         <Form.Control
                                            type="text"
-                                            name="ime"
+                                            name="email"
                                             placeholder="Unesite email gosta"
                                             required
                                         />
@@ -126,17 +124,7 @@ export default function GostiNovi(){
                             </Row>
 
                             <Row className="align-items-center">
-                                {/* Datum pokretanja */}
-                                <Col md={6}>
-                                    <Form.Group controlId="datumRezervacijeOd" className="mb-3">
-                                        <Form.Label className="fw-bold">Datum rezervacije od</Form.Label>
-                                        <Form.Control type="date" name="datumRezervacijeOd" 
-                                        // Dodajemo onClick i onFocus za bolju pristupačnost
-                                        onClick={(e) => e.target.showPicker()} 
-                                        onFocus={(e) => e.target.showPicker()}
-                                        />
-                                    </Form.Group>
-                                </Col>
+                                
 
                                 {/* Aktivan - Switch umjesto checkboxa za moderniji izgled */}
                                 <Col md={6}>

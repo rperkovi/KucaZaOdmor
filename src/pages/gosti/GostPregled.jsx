@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react"
 import GostService from "../../services/gosti/GostService.js"
 import { Button, Table } from "react-bootstrap"
-import { NumericFormat } from "react-number-format"
-import FormatDatuma from "../../components/FormatDatuma.jsx"
 import { GrValidate } from "react-icons/gr"
 import { Link, useNavigate } from "react-router-dom"
 import { RouteNames } from "../../constants.js"
@@ -19,6 +17,12 @@ export default function GostPregled(){
     
     async function ucitajGoste() {
         await GostService.get().then((odgovor)=>{
+
+             if(!odgovor.success){
+                alert('Nije implementiran servis')
+                return
+            }
+
             setGosti(odgovor.data)
         })
     }
@@ -52,10 +56,8 @@ export default function GostPregled(){
                     <tr>
                         <th>Ime</th>
                         <th>Prezime</th>
-                        <th>Datumi</th>
-                        <th>Cijena</th>
+                        <th>Email</th>
                         <th>Aktivan</th>
-                        <th>Platio</th>
                         <th>Akcija</th>
                     </tr>
                 </thead>
@@ -64,35 +66,15 @@ export default function GostPregled(){
                     <tr key={gost.sifra}>
                             <td>{gost.ime}</td>
                             <td>{gost.prezime}</td>
-                            <td>Rezervirano 
-                                
-                                 <FormatDatuma datum={gost.datumRezervacije} /> <br />  za
-                                razdoblje <br /> <FormatDatuma datum={gost.datumPocetka} /> - <FormatDatuma datum={gost.datumKraja} />
-                                &nbsp;({brojDana(gost.datumPocetka,gost.datumKraja)} dana)
-                            </td>
-                            <td>
-                                <NumericFormat 
-                                value={gost.cijena}
-                                displayType={'text'}
-                                thousandSeparator='.'
-                                decimalSeparator=','
-                                suffix={'€'}
-                                decimalScale={2}
-                                fixedDecimalScale
-                                />
-                            </td>
+                           <td>{gost.email}</td>
+                           
                             <td>
                                 <GrValidate
                                 size={25}
                                 color={gost.aktivan ? 'green' : 'red'}
                                 />
                                 </td>
-                            <td>
-                                 <GrValidate
-                                size={25}
-                                color={gost.platio ? 'green' : 'red'}
-                                />
-                            </td>
+                           
                             <td>
                                 <Button onClick={()=>{navigate(`/gosti/${gost.sifra}`)}}>
                                     Promjena

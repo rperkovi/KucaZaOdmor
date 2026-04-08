@@ -10,20 +10,20 @@ export default function GostPromjena(){
     const params = useParams()
     const [gost,setGost] = useState({})
     const [aktivan,setAktivan] = useState(false)
-    const [platio,setPlatio] = useState(false)
 
     async function ucitajGost() {
         await GostService.getBySifra(params.sifra).then((odgovor)=>{
-            
+             if(!odgovor.success){
+                alert('Nije implementiran servis')
+                return
+            }
+
             const s = odgovor.data
             // po potrebi prilagođavam podatke
             
-            s.datumPocetka = s.datumPocetka.substring(0,10)
-            s.datumKraja = s.datumKraja.substring(0,10)
             setGost(s)
 
             setAktivan(s.aktivan)
-            setPlatio(s.platio)
         })
     }
 
@@ -86,12 +86,7 @@ export default function GostPromjena(){
             ime: podaci.get('ime'),
             prezime: podaci.get('prezime'),
             email: podaci.get('email'),
-            datumRezervacije: new Date().toISOString(),
-            datumPocetka: new Date(podaci.get('datumPocetka')).toISOString(),
-            datumKraja: new Date(podaci.get('datumKraja')).toISOString(),
-            cijena: parseFloat(podaci.get('cijena')),
             aktivan: aktivan,
-            platio: platio
         })
     }
 
@@ -121,23 +116,7 @@ export default function GostPromjena(){
 
 
 
-            <Form.Group controlId="datumPocetka">
-                <Form.Label>Rezervirano od</Form.Label>
-                <Form.Control type="date" name="datumPocetka" 
-                defaultValue={gost.datumPocetka}/>
-            </Form.Group>
-
-            <Form.Group controlId="datumKraja">
-                <Form.Label>Rezervirano do</Form.Label>
-                <Form.Control type="date" name="datumKraja" 
-                defaultValue={gost.datumKraja}/>
-            </Form.Group>
-
-            <Form.Group controlId="cijena">
-                <Form.Label>Cijena</Form.Label>
-                <Form.Control type="number" name="cijena" step={0.01} 
-                defaultValue={gost.cijena}/>
-                </Form.Group>
+         
 
             <Form.Group controlId="aktivan">
                 <Form.Check label="Aktivan" name="aktivan" 
@@ -146,12 +125,7 @@ export default function GostPromjena(){
                 />
             </Form.Group>
 
-             <Form.Group controlId="platio">
-                <Form.Check label="Platio" name="platio" 
-                checked={platio}
-                onChange={(e)=>{setPlatio(e.target.checked)}}
-                />
-            </Form.Group>
+           
             <hr style={{marginTop: '50px', border: '0'}} />
 
             <Row className="mt-4">
