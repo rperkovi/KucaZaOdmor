@@ -1,15 +1,34 @@
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
-import RezervacijaService from "../../services/rezervacija/RezervacijaService";
+import RezervacijaService from "../../services/rezervacije/RezervacijaService";
+import { useEffect, useState } from "react";
+import GostService from "../../services/gosti/GostService";
 
 export default function RezervacijaNovi(){
 
     const navigate = useNavigate()
+    const [gosti, setGosti] = useState([])
+
+     useEffect(()=>{
+            ucitajGoste()
+        },[])   
+        
+        async function ucitajGoste() {
+            await GostService.get().then((odgovor)=>{
+    
+                 if(!odgovor.success){
+                    alert('Nije implementiran servis')
+                    return
+                }
+    
+                setGosti(odgovor.data)
+            })
+        }
 
     async function dodaj(rezervacija){
         //console.table(smjer) // ovo je za kontrolu da li je sve OK
-        await GostService.dodaj(rezervacija).then(()=>{
+        await RezervacijaService.dodaj(rezervacija).then(()=>{
             navigate(RouteNames.REZERVACIJE)
         })
     }
@@ -19,50 +38,16 @@ export default function RezervacijaNovi(){
         e.preventDefault() // nemoj odraditi submit
         const podaci = new FormData(e.target)
         
-         // --- KONTROLA 1: Ime (Postojanje) ---
-        if (!podaci.get('ime') || podaci.get('ime').trim().length === 0) {
-            alert("Ime je obavezno i ne smije sadržavati samo razmake!");
-            return;
-        }
-
-        // --- KONTROLA 2: Ime (Minimalna duljina) ---
-        if (podaci.get('ime').trim().length < 2) {
-            alert("Ime mora imati najmanje 2 znaka!");
-            return;
-        }
-
-        // --- KONTROLA 3: Prezime (Postojanje) ---
-        if (!podaci.get('prezime') || podaci.get('prezime').trim().length === 0) {
-            alert("Prezime je obavezno i ne smije sadržavati samo razmake!");
-            return;
-        }
-
-        // --- KONTROLA 4: Prezime (Minimalna duljina) ---
-        if (podaci.get('prezime').trim().length < 2) {
-            alert("Prezime mora imati najmanje 2 znaka!");
-            return;
-        }
-
-        // --- KONTROLA 5: Email (Postojanje) ---
-        if (!podaci.get('email') || podaci.get('email').trim().length === 0) {
-            alert("Email je obavezan!");
-            return;
-        }
-
-        // --- KONTROLA 6: Email (Format) ---
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(podaci.get('email'))) {
-            alert("Email nije u ispravnom formatu!");
-            return;
-        }
         
         
         
         dodaj({
-            ime: podaci.get('ime'),
-            prezime: podaci.get('prezime'),
-            email: podaci.get('email'),
-            aktivan: podaci.get('aktivan') === 'on',
+            gost: parseInt(podaci.get('gost')),
+            cijena:parseFloat(podaci.get('cijena')),
+            datumRezervacije: new Date().toISOString(),
+            datumPocetka: new Date(podaci.get('datumPocetka')).toISOString(),
+            datumKraja: new Date(podaci.get('datumKraja')).toISOString(),
+            platio: podaci.get('platio') === 'on'
         })
     }
 
@@ -81,43 +66,19 @@ export default function RezervacijaNovi(){
                         <Card.Body>
                             <Card.Title className="mb-4">Podaci o rezervaciji</Card.Title>
                             <Form onSubmit={odradiSubmit}>
-                            {/* Naziv - Pun širina na svim ekranima */}
+                           
                             <Row>
                                 <Col md={6}>
-                                    <Form.Group controlId="ime" className="mb-3">
-                                        <Form.Label className="fw-bold">Ime</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            name="ime"
-                                            placeholder="Unesite ime rezervacije"
-                                            required
-                                        />
-                                    </Form.Group>
-                                </Col>
-                                <Col md={6}>
-                                    <Form.Group controlId="prezime" className="mb-3">
-                                        <Form.Label className="fw-bold">Prezime</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            name="prezime"
-                                            placeholder="Unesite prezime rezervacije"
-                                            required
-                                        />
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-
-                            {/* Trajanje i Cijena - Jedno pored drugog na md+, jedno ispod drugog na mobitelu */}
-                            <Row>
-                                <Col md={6}>
-                                    <Form.Group controlId="email" className="mb-3">
-                                        <Form.Label className="fw-bold">email</Form.Label>
-                                        <Form.Control
-                                           type="text"
-                                            name="email"
-                                            placeholder="Unesite email rezervacije"
-                                            required
-                                        />
+                                   <Form.Group controlId="gost" className="mb-3">
+                                        <Form.Label className="fw-bold">Gost</Form.Label>
+                                        <Form.Select name="gost" required>
+                                            <option value="">Odaberite gosta</option>
+                                            {gosti && gosti.map((gost) => (
+                                                <option key={gost.sifra} value={gost.sifra}>
+                                                    {gost.ime + ' ' + gost.prezime}
+                                                </option>
+                                            ))}
+                                        </Form.Select>
                                     </Form.Group>
                                 </Col>
                                 
@@ -128,11 +89,11 @@ export default function RezervacijaNovi(){
 
                                 {/* Aktivan - Switch umjesto checkboxa za moderniji izgled */}
                                 <Col md={6}>
-                                    <Form.Group controlId="aktivan" className="mb-3 mt-md-3">
+                                    <Form.Group controlId="platio" className="mb-3 mt-md-3">
                                         <Form.Check
                                             type="switch"
-                                            label="Rezervacija je aktivna"
-                                            name="aktivan"
+                                            label="Rezervacija je plaćena"
+                                            name="platio"
                                             className="fs-5"
                                         />
                                     </Form.Group>
