@@ -8,7 +8,7 @@ export default function GostiNovi(){
     const navigate = useNavigate()
 
     async function dodaj(gost){
-        //console.table(smjer) // ovo je za kontrolu da li je sve OK
+        //console.table(gost) // ovo je za kontrolu da li je sve OK
         await GostService.dodaj(gost).then(()=>{
             navigate(RouteNames.GOSTI)
         })

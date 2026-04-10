@@ -132,7 +132,7 @@ export default function RezervacijaNovi() {
                                     <Form.Group controlId="platio" className="mb-3 mt-md-3">
                                         <Form.Check
                                             type="switch"
-                                            label="Rezervacija je plaćena"
+                                            label="Rezervacija je potvrđena"
                                             name="platio"
                                             className="fs-5"
                                         />
