@@ -8,7 +8,11 @@ export const RouteNames = {
 
     REZERVACIJE: '/rezervacije',
     REZERVACIJE_NOVI: '/rezervacije/novi',
-    REZERVACIJE_PROMJENA: '/rezervacije/:sifra'
+    REZERVACIJE_PROMJENA: '/rezervacije/:sifra',
+
+    CIJENE: '/cijene',
+    CIJENE_NOVI: '/cijene/novi',
+    CIJENE_PROMJENA: '/cijene/:sifra'
 }
 
 
