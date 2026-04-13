@@ -7,11 +7,12 @@ import GostService from "../../services/gosti/GostService";
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import hr from 'date-fns/locale/hr';
+import CijenaService from "../../services/cijene/CijenaService";
 
 export default function CijenaNovi() {
 
     const navigate = useNavigate()
-    const [gosti, setCijena] = useState([])
+    const [gosti, setCijene] = useState([])
 
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
@@ -35,9 +36,9 @@ export default function CijenaNovi() {
         })
     }
 
-    async function dodaj(rezervacija) {
+    async function dodaj(cijena) {
         //console.table(smjer) // ovo je za kontrolu da li je sve OK
-        await RezervacijaService.dodaj(rezervacija).then(() => {
+        await CijenaService.dodaj(cijena).then(() => {
             navigate(RouteNames.CIJENE)
         })
     }
@@ -51,7 +52,7 @@ export default function CijenaNovi() {
 
 
         dodaj({
-            gost: parseInt(podaci.get('gost')),
+            gost: parseInt(podaci.get('cijena')),
             cijena: 100, //parseFloat(podaci.get('cijena')), -- Ovdje će se dovući cijena iz cjenika za to razdoblje
             datumPromjena: new Date().toISOString(),
             datumPocetka: startDate.toISOString(),
@@ -81,26 +82,14 @@ export default function CijenaNovi() {
             <Container className="mt-4">
                 <Card className="shadow-sm">
                     <Card.Body>
-                        <Card.Title className="mb-4">Podaci o rezervaciji</Card.Title>
+                        <Card.Title className="mb-4">Razdoblje</Card.Title>
                         <Form onSubmit={odradiSubmit}>
 
                             <Row>
-                                <Col md={12}>
-                                    <Form.Group controlId="gost" className="mb-3">
-                                        <Form.Label className="fw-bold">Gost</Form.Label>
-                                        <Form.Select name="gost" required>
-                                            <option value="">Odaberite gosta</option>
-                                            {gosti && gosti.map((gost) => (
-                                                <option key={gost.sifra} value={gost.sifra}>
-                                                    {gost.ime + ' ' + gost.prezime}
-                                                </option>
-                                            ))}
-                                        </Form.Select>
-                                    </Form.Group>
-                                </Col>
+                               
                                 <Col md={12}>
                                            <p className="fw-bold form-label">
-                                             Razdoblje rezervacije {brojDana()}
+                                             Razdoblje {brojDana()}
                                             </p>
                                         <DatePicker
                                             name="razdoblje"

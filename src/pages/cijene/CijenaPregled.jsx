@@ -49,7 +49,7 @@ export default function CijenaPregled(){
         <>
         <Link to={RouteNames.CIJENE_NOVI}
         className="btn btn-success w-100 mb-3 mt-3">
-            Unos novog cijene
+            Unos nove Cijene i Razdoblja
         </Link>
         <Table>
                 <thead>
