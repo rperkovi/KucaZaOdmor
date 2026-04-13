@@ -27,7 +27,7 @@ async function promjeni(sifra,cijena) {
 }
 
 function nadiIndex(sifra){
-    return cijena.findIndex(s => s.sifra === parseInt(sifra))
+    return cijene.findIndex(s => s.sifra === parseInt(sifra))
 }
 
 

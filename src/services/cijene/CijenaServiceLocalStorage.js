@@ -1,5 +1,3 @@
-import CijenaServis from "./CijenaServis";
-
 const STORAGE_KEY = 'cijene';
 
 function dohvatiSveIzStorage() {
@@ -18,7 +16,7 @@ async function get() {
 
 async function getBySifra(sifra) {
     const cijene = dohvatiSveIzStorage();
-    const cijene = rezervacije.find(s => s.sifra === parseInt(sifra));
+    const cijena = rezervacije.find(s => s.sifra === parseInt(sifra));
     return {success: true,  data: cijena };
 }
 
