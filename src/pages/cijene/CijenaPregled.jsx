@@ -3,6 +3,7 @@ import CijenaService from "../../services/cijene/CijenaService.js"
 import { Button, Table } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom"
 import { RouteNames } from "../../constants.js"
+import FormatDatuma from "../../components/FormatDatuma.jsx"
 
 export default function CijenaPregled(){
     
@@ -35,6 +36,14 @@ export default function CijenaPregled(){
         ucitajCijene()
     }
 
+    function brojDana(odDatuma, doDatuma) {
+        const d1 = new Date(odDatuma);
+        const d2 = new Date(doDatuma);
+        const razlikaUMilisekundama = Math.abs(d1 - d2);
+        const milisekundiUDanu = 1000 * 60 * 60 * 24;
+        return Math.round(razlikaUMilisekundama / milisekundiUDanu);
+    }
+
     
     return(
         <>
@@ -45,8 +54,7 @@ export default function CijenaPregled(){
         <Table>
                 <thead>
                     <tr>
-                        <th>Datum od</th>
-                        <th>Datum do</th>
+                        <th>Razdoblje</th>
                         <th>Cijena</th>
                         <th>Popust</th>
                         <th>Akcija</th>
