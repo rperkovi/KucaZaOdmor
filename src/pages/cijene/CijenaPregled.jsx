@@ -55,8 +55,11 @@ export default function CijenaPregled(){
                 <tbody>
                     {cijene && cijene.map((cijena)=>(
                     <tr key={cijena.sifra}>
-                            <td>{cijena.datumPocetka}</td>
-                            <td>{cijena.datumKraja}</td>
+
+                            <td>
+                                <FormatDatuma datum={cijena.datumPocetka} /> - <FormatDatuma datum={cijena.datumKraja} />
+                                &nbsp;({brojDana(cijena.datumPocetka, cijena.datumKraja)})
+                            </td>
                            <td>{cijena.cijena}</td>
                            
                             <td>
