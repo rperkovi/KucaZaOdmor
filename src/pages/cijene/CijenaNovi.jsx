@@ -47,7 +47,11 @@ export default function CijenaNovi() {
         e.preventDefault() // nemoj odraditi submit
         const podaci = new FormData(e.target)
 
-
+            // --- KONTROLA 4: Upisnina (Negativne vrijednosti) ---
+        if (podaci.get('cijena') < 0) {
+            alert("Cijena ne može biti negativan broj!")
+            return // Prekid
+        }
 
 
         dodaj({
@@ -61,14 +65,7 @@ export default function CijenaNovi() {
     }
 
 
-    function brojDana() {
-        console.log(endDate)
-        if (endDate == null) {
-            return ''
-        }
-        const razlikaUMilisekundama = Math.abs(endDate - startDate);
-        const milisekundiUDanu = 1000 * 60 * 60 * 24;
-        return Math.round(razlikaUMilisekundama / milisekundiUDanu) + ' dana';
+
     }
 
 
@@ -162,4 +159,3 @@ export default function CijenaNovi() {
 
         </>
     )
-}

@@ -16,7 +16,7 @@ async function dodaj(cijena){
         cijena.sifra = 1
     }
     
-    cijene.push(gost);
+    cijene.push(cijena);
 }
 
 

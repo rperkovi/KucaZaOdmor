@@ -51,52 +51,93 @@ export default function GostPromjena(){
         })
     }
 
-    return(
+     return (
         <>
-        <h3>
-            Unos nove Cijene i Razdoblja
-        </h3>
-        <Form onSubmit={odradiSubmit}>
-            <Form.Group controlId="ime">
-                <Form.Label>Ime</Form.Label>
-                <Form.Control type="text" name="ime" required 
-                defaultValue={rezervacija.ime} />
-            </Form.Group>
+            <h3>
+                Unos nove Cijene i Razdoblja
+            </h3>
+            <Container className="mt-4">
+                <Card className="shadow-sm">
+                    <Card.Body>
+                        <Card.Title className="mb-4">
 
-            <Form.Group controlId="email">
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control type="email" name="email" required 
-                    defaultValue={rezervacija.email}/>
-                </Form.Group>
+                        </Card.Title>
+                        <Form onSubmit={odradiSubmit}>
+
+                            <Row>
+                                
+                                <Col md={3}>
+                                    <Form.Group controlId="cijena" className="mb-3">
+                                        <Form.Label className="fw-bold">Cijena (€)</Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            name="cijena"
+                                            step={0.01}
+                                            placeholder="0,00"
+                                        />
+                                    </Form.Group>
+                                </Col>
+
+                                <Col md={12}>
+                                           <p className="fw-bold form-label">
+                                             za Razdoblje
+                                            </p>
+                                        <DatePicker
+                                            name="razdoblje"
+                                            id="razdoblje"
+                                            dateFormat="dd.MM.yyyy."
+                                            locale="hr"
+                                            selectsRange={true}
+                                            startDate={startDate}
+                                            endDate={endDate}
+                                            onChange={(update) => {
+                                                setDateRange(update);
+                                            }}
+                                            isClearable={true}
+                                            // Dodavanje Bootstrap klase input polju
+                                            className="form-control odabirDatuma"
+                                            placeholderText="Klikni za odabir..."
+                                        />
+                                        
+
+                                </Col>
+
+                            </Row>
+
+                            <Row className="align-items-center" style={{marginBottom: '10px'}}>
 
 
+                                {/* Aktivan - Switch umjesto checkboxa za moderniji izgled */}
+                                <Col md={6}>
+                                    <Form.Group controlId="platio" className="mb-3 mt-md-3">
+                                        <Form.Check
+                                            type="switch"
+                                            label="Cjenik je potvrđen"
+                                            name="platio"
+                                            className="fs-5"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
 
-         
+                            <hr />
 
-            <Form.Group controlId="aktivan">
-                <Form.Check label="Aktivan" name="aktivan" 
-                checked={aktivan}
-                onChange={(e)=>{setAktivan(e.target.checked)}}
-                />
-            </Form.Group>
+                            {/* Gumbi za akciju - RWD pozicioniranje */}
+                            <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                                <Link to={RouteNames.CIJENE} className="btn btn-danger px-4">
+                                    Odustani
+                                </Link>
+                                <Button type="submit" variant="success">
+                                    Dodaj novu cijenu
+                                </Button>
+                            </div>
 
-           
-            <hr style={{marginTop: '50px', border: '0'}} />
+                        </Form>
+                    </Card.Body>
+                </Card>
+            </Container>
 
-            <Row className="mt-4">
-                <Col>
-                    <Link to={RouteNames.REZERVACIJE} className="btn btn-danger">
-                    Odustani
-                    </Link>
-                </Col>
-                <Col>
-                    <Button type="submit" variant="success">
-                       Promjeni rezervaciju
-                    </Button>
-                </Col>
-            </Row>
 
-        </Form>
         </>
     )
 }

@@ -30,6 +30,7 @@ function App() {
 
           <Route path={RouteNames.CIJENE} element={<CijenaPregled />} />
           <Route path={RouteNames.CIJENE_NOVI} element={<CijenaNovi />} />
+          <Route path={RouteNames.CIJENE_PROMJENA} element={<CijenaPromjena />} />
           
         </Routes>
         <hr />
