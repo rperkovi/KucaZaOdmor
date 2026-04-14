@@ -11,6 +11,7 @@ import GostPromjena from './pages/gosti/GostPromjena'
 import RezervacijaPregled from './pages/rezervacije/RezervacijaPregled'
 import RezervacijaNovi from './pages/rezervacije/RezervacijaNovi'
 import CijenaPregled from './pages/cijene/CijenaPregled'
+import CijenaNovi from './pages/cijene/CijenaNovi'
 
 function App() {
 
@@ -28,6 +29,8 @@ function App() {
           <Route path={RouteNames.REZERVACIJE_NOVI} element={<RezervacijaNovi />} />
 
           <Route path={RouteNames.CIJENE} element={<CijenaPregled />} />
+          <Route path={RouteNames.CIJENE_NOVI} element={<CijenaNovi />} />
+          
         </Routes>
         <hr />
         &copy; Roberto

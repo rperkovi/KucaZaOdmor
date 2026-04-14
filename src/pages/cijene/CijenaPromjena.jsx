@@ -46,15 +46,15 @@ export default function GostPromjena(){
         promjeni({
             Razdoblje: podaci.get('ime'),
             Cijena: podaci.get('prezime'),
-            Popust:10%
-            aktivan: aktivan,
+            Popust:10%,
+            aktivan: aktivan
         })
     }
 
     return(
         <>
         <h3>
-            Unos nove Cijene
+            Unos nove Cijene i Razdoblja
         </h3>
         <Form onSubmit={odradiSubmit}>
             <Form.Group controlId="ime">

@@ -51,12 +51,12 @@ export default function CijenaNovi() {
 
 
         dodaj({
-            gost: parseInt(podaci.get('cijena')),
-            cijena: 100, //parseFloat(podaci.get('cijena')), -- Ovdje će se dovući cijena iz cjenika za to razdoblje
+            cijena: parseFloat(podaci.get('cijena')), //parseFloat(podaci.get('cijena')), -- Ovdje će se dovući cijena iz cjenika za to razdoblje
             datumPromjena: new Date().toISOString(),
             datumPocetka: startDate.toISOString(),
             datumKraja: endDate.toISOString(),
-            platio: podaci.get('platio') === 'on'
+            platio: podaci.get('platio') === 'on',
+            
         })
     }
 
@@ -81,14 +81,28 @@ export default function CijenaNovi() {
             <Container className="mt-4">
                 <Card className="shadow-sm">
                     <Card.Body>
-                        <Card.Title className="mb-4">Razdoblje</Card.Title>
+                        <Card.Title className="mb-4">
+
+                        </Card.Title>
                         <Form onSubmit={odradiSubmit}>
 
                             <Row>
-                               
+                                
+                                <Col md={3}>
+                                    <Form.Group controlId="cijena" className="mb-3">
+                                        <Form.Label className="fw-bold">Cijena (€)</Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            name="cijena"
+                                            step={0.01}
+                                            placeholder="0,00"
+                                        />
+                                    </Form.Group>
+                                </Col>
+
                                 <Col md={12}>
                                            <p className="fw-bold form-label">
-                                             Razdoblje {brojDana()}
+                                             za Razdoblje
                                             </p>
                                         <DatePicker
                                             name="razdoblje"
@@ -120,7 +134,7 @@ export default function CijenaNovi() {
                                     <Form.Group controlId="platio" className="mb-3 mt-md-3">
                                         <Form.Check
                                             type="switch"
-                                            label="Rezervacija je potvrđena"
+                                            label="Cjenik je potvrđen"
                                             name="platio"
                                             className="fs-5"
                                         />
@@ -132,11 +146,11 @@ export default function CijenaNovi() {
 
                             {/* Gumbi za akciju - RWD pozicioniranje */}
                             <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                                <Link to={RouteNames.REZERVACIJE} className="btn btn-danger px-4">
+                                <Link to={RouteNames.CIJENE} className="btn btn-danger px-4">
                                     Odustani
                                 </Link>
                                 <Button type="submit" variant="success">
-                                    Dodaj novu rezervaciju
+                                    Dodaj novu cijenu
                                 </Button>
                             </div>
 
