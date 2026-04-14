@@ -1,7 +1,6 @@
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
-import RezervacijaService from "../../services/rezervacije/RezervacijaService";
 import { useEffect, useState } from "react";
 import GostService from "../../services/gosti/GostService";
 import DatePicker, { registerLocale } from 'react-datepicker';
@@ -12,7 +11,7 @@ import CijenaService from "../../services/cijene/CijenaService";
 export default function CijenaNovi() {
 
     const navigate = useNavigate()
-    const [gosti, setCijene] = useState([])
+    const [cijena, setCijene] = useState([])
 
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
