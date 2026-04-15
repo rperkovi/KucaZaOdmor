@@ -59,6 +59,7 @@ export default function CijenaNovi() {
             datumPromjena: new Date().toISOString(),
             datumPocetka: startDate.toISOString(),
             datumKraja: endDate.toISOString(),
+            popust: parseFloat(podaci.get('popust')),
             platio: podaci.get('platio') === 'on',
             
         })
@@ -118,21 +119,30 @@ export default function CijenaNovi() {
                                             placeholderText="Klikni za odabir..."
                                         />
                                         
-
                                 </Col>
 
+                                <Col md={6}>
+                                    <Form.Group controlId="popust" className="mb-3">
+                                        <Form.Label className="fw-bold">Popust (%)</Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            name="popust"
+                                            step={1}
+                                            placeholder="0"
+                                        />
+                                    </Form.Group>
+                                </Col>
                             </Row>
-
                             <Row className="align-items-center" style={{marginBottom: '10px'}}>
 
 
                                 {/* Aktivan - Switch umjesto checkboxa za moderniji izgled */}
                                 <Col md={6}>
-                                    <Form.Group controlId="platio" className="mb-3 mt-md-3">
+                                    <Form.Group controlId="potvrda" className="mb-3 mt-md-3">
                                         <Form.Check
                                             type="switch"
                                             label="Cjenik je potvrđen"
-                                            name="platio"
+                                            name="potvrda"
                                             className="fs-5"
                                         />
                                     </Form.Group>
