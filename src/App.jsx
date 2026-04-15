@@ -12,6 +12,7 @@ import RezervacijaPregled from './pages/rezervacije/RezervacijaPregled'
 import RezervacijaNovi from './pages/rezervacije/RezervacijaNovi'
 import CijenaPregled from './pages/cijene/CijenaPregled'
 import CijenaNovi from './pages/cijene/CijenaNovi'
+import CijenaPromjena from './pages/cijene/CijenaPromjena'
 
 function App() {
 

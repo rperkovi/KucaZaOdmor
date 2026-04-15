@@ -4,11 +4,11 @@ import { RouteNames } from "../../constants";
 import { useEffect, useState } from "react";
 import CijenaService from "../../services/cijene/CijenaService";
 
-export default function GostPromjena(){
+export default function CijenaPromjena(){
 
     const navigate = useNavigate()
     const params = useParams()
-    const [cijena,setRezervacija] = useState({})
+    const [cijena,setCijena] = useState({})
     const [aktivan,setAktivan] = useState(false)
 
     async function ucitajRezervacija() {
@@ -39,17 +39,6 @@ export default function GostPromjena(){
     }
 
 
-
-       
-       
-       
-        promjeni({
-            Razdoblje: podaci.get('ime'),
-            Cijena: podaci.get('prezime'),
-            Popust:10%,
-            aktivan: aktivan
-        })
-    }
 
      return (
         <>

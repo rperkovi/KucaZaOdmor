@@ -66,7 +66,7 @@ export default function CijenaNovi() {
 
 
 
-    }
+    
 
 
 
@@ -159,3 +159,4 @@ export default function CijenaNovi() {
 
         </>
     )
+}
