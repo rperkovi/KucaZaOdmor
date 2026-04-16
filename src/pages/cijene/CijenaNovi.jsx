@@ -56,7 +56,6 @@ export default function CijenaNovi() {
 
         dodaj({
             cijena: parseFloat(podaci.get('cijena')), //parseFloat(podaci.get('cijena')), -- Ovdje će se dovući cijena iz cjenika za to razdoblje
-            datumPromjena: new Date().toISOString(),
             datumPocetka: startDate.toISOString(),
             datumKraja: endDate.toISOString(),
             popust: parseFloat(podaci.get('popust')),
