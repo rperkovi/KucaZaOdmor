@@ -1,8 +1,9 @@
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { useEffect, useState } from "react";
 import CijenaService from "../../services/cijene/CijenaService";
+import DatePicker from "react-datepicker";
 
 export default function CijenaPromjena(){
 
@@ -11,7 +12,10 @@ export default function CijenaPromjena(){
     const [cijena,setCijena] = useState({})
     const [aktivan,setAktivan] = useState(false)
 
-    async function ucitajRezervacija() {
+    const [dateRange, setDateRange] = useState([null, null]);
+    const [startDate, endDate] = dateRange;
+
+    async function ucitajCijena() {
         await CijenaService.getBySifra(params.sifra).then((odgovor)=>{
              if(!odgovor.success){
                 alert('Nije implementiran servis')
@@ -33,10 +37,33 @@ export default function CijenaPromjena(){
 
     async function promjeni(cijena){
         //console.table(gost) // ovo je za kontrolu da li je sve OK
-        await CijenaService.promjeni(params.sifra,rezervacija).then(()=>{
+        await CijenaService.promjeni(params.sifra,cijena).then(()=>{
             navigate(RouteNames.CIJENE)
         })
     }
+
+    function odradiSubmit(e) { //e je event
+        e.preventDefault() // nemoj odraditi submit
+        const podaci = new FormData(e.target)
+
+            // --- KONTROLA 4: Upisnina (Negativne vrijednosti) ---
+        if (podaci.get('cijena') < 0) {
+            alert("Cijena ne može biti negativan broj!")
+            return // Prekid
+        }
+
+
+        promjeni({
+            cijena: parseFloat(podaci.get('cijena')), //parseFloat(podaci.get('cijena')), -- Ovdje će se dovući cijena iz cjenika za to razdoblje
+            datumPromjena: new Date().toISOString(),
+            datumPocetka: startDate.toISOString(),
+            datumKraja: endDate.toISOString(),
+            popust: parseFloat(podaci.get('popust')),
+            platio: podaci.get('platio') === 'on',
+            
+        })
+    }
+
 
 
 
