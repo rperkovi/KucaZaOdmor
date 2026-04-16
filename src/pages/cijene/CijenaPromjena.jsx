@@ -1,8 +1,9 @@
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { useEffect, useState } from "react";
 import CijenaService from "../../services/cijene/CijenaService";
+import DatePicker from "react-datepicker";
 
 export default function CijenaPromjena(){
 
@@ -11,7 +12,7 @@ export default function CijenaPromjena(){
     const [cijena,setCijena] = useState({})
     const [aktivan,setAktivan] = useState(false)
 
-    async function ucitajRezervacija() {
+    async function ucitajCijena() {
         await CijenaService.getBySifra(params.sifra).then((odgovor)=>{
              if(!odgovor.success){
                 alert('Nije implementiran servis')
@@ -88,9 +89,18 @@ export default function CijenaPromjena(){
                                             placeholderText="Klikni za odabir..."
                                         />
                                         
-
                                 </Col>
-
+                                <Col md={6}>
+                                    <Form.Group controlId="popust" className="mb-3">
+                                        <Form.Label className="fw-bold">Popust (%)</Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            name="popust"
+                                            step={1}
+                                            placeholder="0"
+                                        />
+                                    </Form.Group>
+                                </Col>
                             </Row>
 
                             <Row className="align-items-center" style={{marginBottom: '10px'}}>
