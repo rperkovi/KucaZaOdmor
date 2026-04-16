@@ -1,18 +1,17 @@
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
+import CijenaService from "../../services/cijena/CijenaService";
 import { useEffect, useState } from "react";
-import CijenaService from "../../services/cijene/CijenaService";
-import DatePicker from "react-datepicker";
 
-export default function CijenaPromjena(){
+export default function GostPromjena(){
 
     const navigate = useNavigate()
     const params = useParams()
     const [cijena,setCijena] = useState({})
     const [aktivan,setAktivan] = useState(false)
 
-    async function ucitajCijena() {
+    async function ucitajGost() {
         await CijenaService.getBySifra(params.sifra).then((odgovor)=>{
              if(!odgovor.success){
                 alert('Nije implementiran servis')
@@ -34,17 +33,33 @@ export default function CijenaPromjena(){
 
     async function promjeni(cijena){
         //console.table(gost) // ovo je za kontrolu da li je sve OK
-        await CijenaService.promjeni(params.sifra,rezervacija).then(()=>{
+        await CijenaService.promjeni(params.sifra,cijena).then(()=>{
             navigate(RouteNames.CIJENE)
         })
     }
 
 
+    function odradiSubmit(e){ //e je event
+        e.preventDefault() // nemoj odraditi submit
+        const podaci = new FormData(e.target)
+       
+    
+       
+       
+       
+        promjeni({
+            cijena: parseFloat(podaci.get('cijena')), //parseFloat(podaci.get('cijena')), -- Ovdje će se dovući cijena iz cjenika za to razdoblje
+            datumPocetka: startDate.toISOString(),
+            datumKraja: endDate.toISOString(),
+            popust: parseFloat(podaci.get('popust')),
+            platio: podaci.get('platio') === 'on',
+        })
+    }
 
-     return (
+    return (
         <>
             <h3>
-                Unos nove Cijene i Razdoblja
+                Promjena Cijenika
             </h3>
             <Container className="mt-4">
                 <Card className="shadow-sm">
@@ -90,6 +105,7 @@ export default function CijenaPromjena(){
                                         />
                                         
                                 </Col>
+
                                 <Col md={6}>
                                     <Form.Group controlId="popust" className="mb-3">
                                         <Form.Label className="fw-bold">Popust (%)</Form.Label>
@@ -102,17 +118,16 @@ export default function CijenaPromjena(){
                                     </Form.Group>
                                 </Col>
                             </Row>
-
                             <Row className="align-items-center" style={{marginBottom: '10px'}}>
 
 
                                 {/* Aktivan - Switch umjesto checkboxa za moderniji izgled */}
                                 <Col md={6}>
-                                    <Form.Group controlId="platio" className="mb-3 mt-md-3">
+                                    <Form.Group controlId="potvrda" className="mb-3 mt-md-3">
                                         <Form.Check
                                             type="switch"
                                             label="Cjenik je potvrđen"
-                                            name="platio"
+                                            name="potvrda"
                                             className="fs-5"
                                         />
                                     </Form.Group>
