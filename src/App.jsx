@@ -29,6 +29,7 @@ function App() {
           <Route path={RouteNames.REZERVACIJE} element={<RezervacijaPregled />} />
           <Route path={RouteNames.REZERVACIJE_NOVI} element={<RezervacijaNovi />} />
 
+
           <Route path={RouteNames.CIJENE} element={<CijenaPregled />} />
           <Route path={RouteNames.CIJENE_NOVI} element={<CijenaNovi />} />
           <Route path={RouteNames.CIJENE_PROMJENA} element={<CijenaPromjena />} />

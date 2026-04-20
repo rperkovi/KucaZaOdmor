@@ -5,14 +5,14 @@ import CijenaService from "../../services/cijene/CijenaService";
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 
-export default function GostPromjena(){
+export default function CijenaPromjena(){
 
     const navigate = useNavigate()
     const params = useParams()
     const [cijena,setCijena] = useState({})
     const [aktivan,setAktivan] = useState(false)
 
-    async function ucitajGost() {
+    async function ucitajCijena() {
         await CijenaService.getBySifra(params.sifra).then((odgovor)=>{
              if(!odgovor.success){
                 alert('Nije implementiran servis')
