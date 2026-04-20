@@ -10,7 +10,7 @@ export default function CijenaPromjena(){
     const navigate = useNavigate()
     const params = useParams()
     const [cijena,setCijena] = useState({})
-    const [aktivan,setAktivan] = useState(false) // preradi na popust
+    const [popust,setPopust] = useState(false)
 
        const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
@@ -107,6 +107,7 @@ export default function CijenaPromjena(){
                                             // Dodavanje Bootstrap klase input polju
                                             className="form-control odabirDatuma"
                                             placeholderText="Klikni za odabir..."
+                                            defaultValue={cijena.razdoblje}
                                         />
                                         
                                 </Col>
@@ -119,6 +120,7 @@ export default function CijenaPromjena(){
                                             name="popust"
                                             step={1}
                                             placeholder="0"
+                                            defaultValue={cijena.popust}
                                         />
                                     </Form.Group>
                                 </Col>
