@@ -10,7 +10,10 @@ export default function CijenaPromjena(){
     const navigate = useNavigate()
     const params = useParams()
     const [cijena,setCijena] = useState({})
-    const [aktivan,setAktivan] = useState(false)
+    const [aktivan,setAktivan] = useState(false) // preradi na popust
+
+       const [dateRange, setDateRange] = useState([null, null]);
+    const [startDate, endDate] = dateRange;
 
     async function ucitajCijena() {
         await CijenaService.getBySifra(params.sifra).then((odgovor)=>{
@@ -80,6 +83,7 @@ export default function CijenaPromjena(){
                                             name="cijena"
                                             step={0.01}
                                             placeholder="0,00"
+                                            defaultValue={cijena.cijena}
                                         />
                                     </Form.Group>
                                 </Col>
