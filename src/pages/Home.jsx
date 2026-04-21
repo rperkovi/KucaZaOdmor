@@ -8,8 +8,11 @@ export default function Home(){
     <div class="container">
   <div class="row">
  
-    <div class="col-7">
+    <div class="col-6">
       <img src={mojaSlika} alt="Opis slike" className="slika" />
+    </div>
+    <div class="col-6">
+      kasnije
     </div>
   </div>
     </div>
