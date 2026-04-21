@@ -5,11 +5,15 @@ export default function Home(){
     return(
     <>
     <h1>Dobrodošli na {IME_APLIKACIJE}</h1>
-    <div>
-        <img src={mojaSlika} alt="Opis slike" className="slika" />
+    <div class="container">
+  <div class="row">
  
+    <div class="col-7">
+      <img src={mojaSlika} alt="Opis slike" className="slika" />
     </div>
+  </div>
+    </div>
+    
     </>
     )
-
 }
