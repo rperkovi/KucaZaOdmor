@@ -13,6 +13,7 @@ import RezervacijaNovi from './pages/rezervacije/RezervacijaNovi'
 import CijenaPregled from './pages/cijene/CijenaPregled'
 import CijenaNovi from './pages/cijene/CijenaNovi'
 import CijenaPromjena from './pages/cijene/CijenaPromjena'
+import RezervacijePromjena from './pages/rezervacije/RezervacijaPromjena'
 
 function App() {
 
@@ -28,7 +29,7 @@ function App() {
 
           <Route path={RouteNames.REZERVACIJE} element={<RezervacijaPregled />} />
           <Route path={RouteNames.REZERVACIJE_NOVI} element={<RezervacijaNovi />} />
-
+          <Route path={RouteNames.REZERVACIJE_PROMJENA} element={<RezervacijePromjena />} />
 
           <Route path={RouteNames.CIJENE} element={<CijenaPregled />} />
           <Route path={RouteNames.CIJENE_NOVI} element={<CijenaNovi />} />

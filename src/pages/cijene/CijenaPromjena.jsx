@@ -12,7 +12,7 @@ export default function CijenaPromjena(){
     const [cijena,setCijena] = useState({})
     const [popust,setPopust] = useState(false)
 
-       const [dateRange, setDateRange] = useState([null, null]);
+    const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
 
     async function ucitajCijena() {
@@ -26,8 +26,10 @@ export default function CijenaPromjena(){
             // po potrebi prilagođavam podatke
             
             setCijena(s)
+            setDateRange([s.datumPocetka, s.datumKraja])
 
             setAktivan(s.aktivan)
+
         })
     }
 
@@ -130,7 +132,6 @@ export default function CijenaPromjena(){
                                             // Dodavanje Bootstrap klase input polju
                                             className="form-control odabirDatuma"
                                             placeholderText="Klikni za odabir..."
-                                            defaultValue={cijena.razdoblje}
                                         />
                                         
                                 </Col>

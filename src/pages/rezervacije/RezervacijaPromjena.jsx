@@ -4,7 +4,7 @@ import { RouteNames } from "../../constants";
 import { useEffect, useState } from "react";
 import RezervacijaService from "../../services/rezervacije/RezervacijaService";
 
-export default function GostPromjena(){
+export default function RezervacijePromjena(){
 
     const navigate = useNavigate()
     const params = useParams()
@@ -93,7 +93,7 @@ export default function GostPromjena(){
     return(
         <>
         <h3>
-            Unos nove rezervacije
+           Promjena rezervacije
         </h3>
         <Form onSubmit={odradiSubmit}>
             <Form.Group controlId="ime">

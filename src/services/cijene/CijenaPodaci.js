@@ -14,7 +14,7 @@ export const cijene = [
         popust: 0
     },
     {
-        sifra: 1,
+        sifra: 2,
         datumPocetka: '2026-05-01T00:00:00',
         datumKraja: '2026-05-31T00:00:00',
         cijena: 180,
