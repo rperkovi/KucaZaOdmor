@@ -83,7 +83,7 @@ export default function CijenaPregled(){
                                     Obriši
                                 </Button>
                             </td>
-                        </tr>
+                    </tr>
             ))}
                 </tbody>
             </Table>
