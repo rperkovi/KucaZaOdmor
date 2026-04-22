@@ -7,11 +7,13 @@ import GostService from "../../services/gosti/GostService";
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import hr from 'date-fns/locale/hr';
+import CijenaService from "../../services/cijene/CijenaService";
 
 export default function RezervacijaNovi() {
 
     const navigate = useNavigate()
     const [gosti, setGosti] = useState([])
+    const[cijene, setCijene] = useState([])
 
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
@@ -21,6 +23,7 @@ export default function RezervacijaNovi() {
 
     useEffect(() => {
         ucitajGoste()
+        ucitajCijene()
     }, [])
 
     async function ucitajGoste() {
@@ -35,6 +38,18 @@ export default function RezervacijaNovi() {
         })
     }
 
+    async function ucitajCijene() {
+            await CijenaService.get().then((odgovor)=>{
+    
+                 if(!odgovor.success){
+                    alert('Nije implementiran servis')
+                    return
+                }
+    
+                setCijene(odgovor.data)
+            })
+        }
+
     async function dodaj(rezervacija) {
         //console.table(smjer) // ovo je za kontrolu da li je sve OK
         await RezervacijaService.dodaj(rezervacija).then(() => {
@@ -47,12 +62,9 @@ export default function RezervacijaNovi() {
         e.preventDefault() // nemoj odraditi submit
         const podaci = new FormData(e.target)
 
-
-
-
         dodaj({
             gost: parseInt(podaci.get('gost')),
-            cijena: 100, //parseFloat(podaci.get('cijena')), -- Ovdje će se dovući cijena iz cjenika za to razdoblje
+            cijena: izracunajUkupnuCijenu(startDate, endDate, cijene), //parseFloat(podaci.get('cijena')), -- Ovdje će se dovući cijena iz cjenika za to razdoblje
             datumRezervacije: new Date().toISOString(),
             datumPocetka: startDate.toISOString(),
             datumKraja: endDate.toISOString(),
@@ -60,9 +72,48 @@ export default function RezervacijaNovi() {
         })
     }
 
+    function izracunajUkupnuCijenu(start, end, priceList) {
+        debugger
+        let ukupno = 0;
+
+        // Kopiramo početni datum kako ne bismo mijenjali originalni objekt
+        let trenutni = new Date(start);
+        // Postavljamo na ponoć radi precizne usporedbe
+        trenutni.setHours(0, 0, 0, 0);
+
+        const krajnji = new Date(end);
+        krajnji.setHours(0, 0, 0, 0);
+
+        // Iteriramo kroz svaki dan u rasponu (uključujući zadnji dan)
+        while (trenutni < krajnji) {
+
+            // Pronađi cjenik koji odgovara trenutnom datumu
+            const odgovarajucaCijena = priceList.find(p => {
+                const od = new Date(p.datumPocetka);
+                const doo = new Date(p.datumKraja);
+                return trenutni >= od && trenutni <= doo;
+            });
+
+            if (odgovarajucaCijena) {
+                
+                if(odgovarajucaCijena.popust>0){
+                    ukupno += (odgovarajucaCijena.cijena *  (odgovarajucaCijena.popust/100));
+                }else{
+                    ukupno += odgovarajucaCijena.cijena;
+                }
+                
+            }
+
+            // Pomakni se na sljedeći dan
+            trenutni.setDate(trenutni.getDate() + 1);
+        }
+
+        return ukupno;
+    }
+
 
     function brojDana() {
-        console.log(endDate)
+        //console.log(endDate)
         if (endDate == null) {
             return ''
         }
@@ -99,32 +150,33 @@ export default function RezervacijaNovi() {
                                     </Form.Group>
                                 </Col>
                                 <Col md={12}>
-                                           <p className="fw-bold form-label">
-                                             Razdoblje rezervacije {brojDana()}
-                                            </p>
-                                        <DatePicker
-                                            name="razdoblje"
-                                            id="razdoblje"
-                                            dateFormat="dd.MM.yyyy."
-                                            locale="hr"
-                                            selectsRange={true}
-                                            startDate={startDate}
-                                            endDate={endDate}
-                                            onChange={(update) => {
-                                                setDateRange(update);
-                                            }}
-                                            isClearable={true}
-                                            // Dodavanje Bootstrap klase input polju
-                                            className="form-control odabirDatuma"
-                                            placeholderText="Klikni za odabir..."
-                                        />
-                                        
+                                    <p className="fw-bold form-label">
+                                        Razdoblje rezervacije {brojDana()}
+                                    </p>
+                                    <DatePicker
+                                        name="razdoblje"
+                                        id="razdoblje"
+                                        dateFormat="dd.MM.yyyy."
+                                        locale="hr"
+                                        selectsRange={true}
+                                        startDate={startDate}
+                                        endDate={endDate}
+                                        onChange={(update) => {
+                                            setDateRange(update);
+                                        }}
+                                        isClearable={true}
+                                        // Dodavanje Bootstrap klase input polju
+                                        className="form-control odabirDatuma"
+                                        placeholderText="Klikni za odabir..."
+                                        autoComplete="off"
+                                    />
+
 
                                 </Col>
 
                             </Row>
 
-                            <Row className="align-items-center" style={{marginBottom: '10px'}}>
+                            <Row className="align-items-center" style={{ marginBottom: '10px' }}>
 
 
                                 {/* Aktivan - Switch umjesto checkboxa za moderniji izgled */}
