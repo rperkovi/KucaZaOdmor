@@ -28,7 +28,6 @@ export default function CijenaPromjena(){
             setCijena(s)
             setDateRange([s.datumPocetka, s.datumKraja])
 
-            setAktivan(s.aktivan)
 
         })
     }
@@ -73,15 +72,21 @@ export default function CijenaPromjena(){
         const podaci = new FormData(e.target)
        
     
-       
+       let datumPocetka = startDate
+       if(typeof startDate === 'object'){
+            datumPocetka = startDate.toISOString()
+       }
+       let datumKraja = endDate
+       if(typeof endDate === 'object'){
+            datumKraja = endDate.toISOString()
+       }
        
        
         promjeni({
             cijena: parseFloat(podaci.get('cijena')), //parseFloat(podaci.get('cijena')), -- Ovdje će se dovući cijena iz cjenika za to razdoblje
-            datumPocetka: startDate.toISOString(),
-            datumKraja: endDate.toISOString(),
-            popust: parseFloat(podaci.get('popust')),
-            platio: podaci.get('platio') === 'on',
+            datumPocetka: datumPocetka,
+            datumKraja: datumKraja,
+            popust: parseFloat(podaci.get('popust'))
         })
     }
 
@@ -132,6 +137,7 @@ export default function CijenaPromjena(){
                                             // Dodavanje Bootstrap klase input polju
                                             className="form-control odabirDatuma"
                                             placeholderText="Klikni za odabir..."
+                                            autoComplete="off"
                                         />
                                         
                                 </Col>
@@ -151,18 +157,6 @@ export default function CijenaPromjena(){
                             </Row>
                             <Row className="align-items-center" style={{marginBottom: '10px'}}>
 
-
-                                {/* Aktivan - Switch umjesto checkboxa za moderniji izgled */}
-                                <Col md={6}>
-                                    <Form.Group controlId="potvrda" className="mb-3 mt-md-3">
-                                        <Form.Check
-                                            type="switch"
-                                            label="Cjenik je potvrđen"
-                                            name="potvrda"
-                                            className="fs-5"
-                                        />
-                                    </Form.Group>
-                                </Col>
                             </Row>
 
                             <hr />
@@ -173,7 +167,7 @@ export default function CijenaPromjena(){
                                     Odustani
                                 </Link>
                                 <Button type="submit" variant="success">
-                                    Dodaj novu cijenu
+                                    Promjeni cjenik
                                 </Button>
                             </div>
 

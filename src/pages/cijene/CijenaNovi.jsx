@@ -58,7 +58,7 @@ export default function CijenaNovi() {
             cijena: parseFloat(podaci.get('cijena')), //parseFloat(podaci.get('cijena')), -- Ovdje će se dovući cijena iz cjenika za to razdoblje
             datumPocetka: startDate.toISOString(),
             datumKraja: endDate.toISOString(),
-            popust: parseFloat(podaci.get('popust')),
+            popust: podaci.get('popust')=='' ? 0 : parseFloat(podaci.get('popust')),
             platio: podaci.get('platio') === 'on',
             
         })
@@ -116,6 +116,7 @@ export default function CijenaNovi() {
                                             // Dodavanje Bootstrap klase input polju
                                             className="form-control odabirDatuma"
                                             placeholderText="Klikni za odabir..."
+                                            autoComplete="off"
                                         />
                                         
                                 </Col>
