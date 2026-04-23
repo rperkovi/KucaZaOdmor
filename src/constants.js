@@ -12,9 +12,11 @@ export const RouteNames = {
 
     CIJENE: '/cijene',
     CIJENE_NOVI: '/cijene/novi',
-    CIJENE_PROMJENA: '/cijene/:sifra'
+    CIJENE_PROMJENA: '/cijene/:sifra',
+
+    GENERIRANJE_PODATAKA: 'generiranje-podataka'
 }
 
 
 // memorija, localStorage, firebase
-export const DATA_SOURCE = 'memorija';
+export const DATA_SOURCE = 'localStorage';

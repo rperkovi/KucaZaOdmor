@@ -20,17 +20,28 @@ export default function Izbornik() {
                         >Početna</Nav.Link>
                         
                         <NavDropdown title="Programi" id="basic-nav-dropdown">
+
+                            <NavDropdown.Item
+                            onClick={()=>navigate(RouteNames.CIJENE)}
+                            >Cjenik</NavDropdown.Item>
+
                             <NavDropdown.Item
                             onClick={()=>navigate(RouteNames.GOSTI)}
                             >Gosti</NavDropdown.Item>
+
+
 
                             <NavDropdown.Item
                             onClick={()=>navigate(RouteNames.REZERVACIJE)}
                             >Rezervacije</NavDropdown.Item>
 
+                            <NavDropdown.Divider />
+
                             <NavDropdown.Item
-                            onClick={()=>navigate(RouteNames.CIJENE)}
-                            >Cjenik</NavDropdown.Item>
+                            onClick={()=>navigate(RouteNames.GENERIRANJE_PODATAKA)}
+                            >Generiranje podataka</NavDropdown.Item>
+
+                            
                         </NavDropdown>
                     </Nav>
                 </Navbar.Collapse>
