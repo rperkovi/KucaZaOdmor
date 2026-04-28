@@ -4,10 +4,12 @@ import { Faker, hr } from "@faker-js/faker";
 import { useEffect, useState } from "react";
 import GostService from "../services/gosti/GostService";
 import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
+import RezervacijaService from "../services/rezervacije/RezervacijaService";
 
 export default function GeneriranejPodataka() {
 
     const [brojGostiju, setBrojGostiju] = useState(5);
+    const [brojRezervacija, setBrojRezervacija] = useState(10);
 
 
     
@@ -35,13 +37,28 @@ export default function GeneriranejPodataka() {
         return gosti;
     };
 
-    const handleGenerirajGoste = async (e) => {
+        const generirajRezervacije = async (broj) => {
+        const rezervacije = [];
+        for (let i = 0; i < broj; i++) {
+            const rezultat = await RezervacijaService.dodaj({
+
+        datumRezervacije: faker.date.soon().toISOString().split('T')[0],
+        datumPocetka: '2026-05-02T17:00:00',
+        datumKraja: '2026-05-06T17:00:00',
+
+            });
+            rezervacije.push(rezultat.data);
+        }
+        return rezervacije;
+    };
+
+    const handleGenerirajRezervacije = async (e) => {
         e.preventDefault();
         setLoading(true);
         setPoruka(null);
 
         try {
-            const smjerovi = await generirajGoste(brojGostiju);
+            const gosti = await generirajGoste(brojGostiju);
 
             setPoruka({
                 tip: 'success',
@@ -83,6 +100,60 @@ export default function GeneriranejPodataka() {
             setPoruka({
                 tip: 'danger',
                 tekst: 'Greška pri brisanju gostiju: ' + error.message
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleGenerirajGoste = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setPoruka(null);
+
+        try {
+            const gosti = await generirajGoste(brojGostiju);
+
+            setPoruka({
+                tip: 'success',
+                tekst: `Uspješno generirano ${brojGostiju} gostiju!`
+            });
+        } catch (error) {
+            setPoruka({
+                tip: 'danger',
+                tekst: 'Greška pri generiranju gosti: ' + error.message
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+
+    const handleObrisiRezervacije = async () => {
+        if (!window.confirm('Jeste li sigurni da želite obrisati sve rezervacije?')) {
+            return;
+        }
+
+        setLoading(true);
+        setPoruka(null);
+
+        try {
+            const rezultat = await RezervacijaService.get();
+            const rezervacije = rezultat.data;
+
+            for (const rezervacija of rezervacije) {
+                await RezervacijaService.obrisi(rezervacija.sifra);
+            }
+
+            setPoruka({
+                tip: 'success',
+                tekst: `Uspješno obrisano ${rezervacija.length} rezervacije!`
+            });
+        } catch (error) {
+            setPoruka({
+                tip: 'danger',
+                tekst: 'Greška pri brisanju rezervacije: ' + error.message
             });
         } finally {
             setLoading(false);
@@ -132,7 +203,37 @@ export default function GeneriranejPodataka() {
                 
                 
             </Row>
-
+            
+            <Row>
+                <Col md={4}>
+                    <Form onSubmit={handleGenerirajRezervacije}>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Broj rezervacija</Form.Label>
+                            <Form.Control
+                                type="number"
+                                min="1"
+                                max="50"
+                                value={brojRezervacija}
+                                onChange={(e) => setBrojRezervacija(parseInt(e.target.value))}
+                                disabled={loading}
+                            />
+                            <Form.Text className="text-muted">
+                                Unesite broj rezervacija
+                            </Form.Text>
+                        </Form.Group>
+                        <Button
+                            variant="primary"
+                            type="submit"
+                            disabled={loading}
+                            className="w-100"
+                        >
+                            {loading ? 'Generiranje...' : 'Generiraj rezervacije'}
+                        </Button>
+                    </Form>
+                </Col>
+                
+                
+            </Row>
             <Alert variant="warning" className="mt-3">
                 <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
                 Ako želite početi ispočetka, prvo obrišite postojeće podatke.
@@ -153,7 +254,7 @@ export default function GeneriranejPodataka() {
                         disabled={loading}
                         className="w-100 mb-2"
                     >
-                        {loading ? 'Brisanje...' : 'Obriši svih gostiju'}
+                        {loading ? 'Brisanje...' : 'Obriši svih podataka'}
                     </Button>
                 </Col>
                 
