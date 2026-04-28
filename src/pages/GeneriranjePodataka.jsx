@@ -12,7 +12,7 @@ export default function GeneriranejPodataka() {
     const [brojRezervacija, setBrojRezervacija] = useState(10);
 
 
-    
+
     const [poruka, setPoruka] = useState(null);
     const [loading, setLoading] = useState(false);
 
@@ -37,22 +37,7 @@ export default function GeneriranejPodataka() {
         return gosti;
     };
 
-        const generirajRezervacije = async (broj) => {
-        const rezervacije = [];
-        for (let i = 0; i < broj; i++) {
-            const rezultat = await RezervacijaService.dodaj({
-
-        datumRezervacije: faker.date.soon().toISOString().split('T')[0],
-        datumPocetka: '2026-05-02T17:00:00',
-        datumKraja: '2026-05-06T17:00:00',
-
-            });
-            rezervacije.push(rezultat.data);
-        }
-        return rezervacije;
-    };
-
-    const handleGenerirajRezervacije = async (e) => {
+    const handleGenerirajGoste = async (e) => {
         e.preventDefault();
         setLoading(true);
         setPoruka(null);
@@ -106,28 +91,48 @@ export default function GeneriranejPodataka() {
         }
     };
 
-    const handleGenerirajGoste = async (e) => {
+
+
+
+
+
+
+    const generirajRezervacije = async (broj) => {
+        const rezervacije = [];
+        for (let i = 0; i < broj; i++) {
+            const rezultat = await RezervacijaService.dodaj({
+                korisnik: 1, // staviti slučajnu vrijednost
+                datumRezervacije: faker.date.soon().toISOString().split('T')[0],
+                datumPocetka: '2026-05-02T17:00:00',
+                datumKraja: '2026-05-06T17:00:00',
+
+            });
+            rezervacije.push(rezultat.data);
+        }
+        return rezervacije;
+    };
+
+    const handleGenerirajRezervacije = async (e) => {
         e.preventDefault();
         setLoading(true);
         setPoruka(null);
 
         try {
-            const gosti = await generirajGoste(brojGostiju);
+            const gosti = await generirajRezervacije(brojRezervacija);
 
             setPoruka({
                 tip: 'success',
-                tekst: `Uspješno generirano ${brojGostiju} gostiju!`
+                tekst: `Uspješno generirano ${brojRezervacija} rez.!`
             });
         } catch (error) {
             setPoruka({
                 tip: 'danger',
-                tekst: 'Greška pri generiranju gosti: ' + error.message
+                tekst: 'Greška pri generiranju rez.: ' + error.message
             });
         } finally {
             setLoading(false);
         }
     };
-
 
 
     const handleObrisiRezervacije = async () => {
@@ -148,7 +153,7 @@ export default function GeneriranejPodataka() {
 
             setPoruka({
                 tip: 'success',
-                tekst: `Uspješno obrisano ${rezervacija.length} rezervacije!`
+                tekst: `Uspješno obrisano ${rezervacije.length} rezervacije!`
             });
         } catch (error) {
             setPoruka({
@@ -161,7 +166,7 @@ export default function GeneriranejPodataka() {
     };
 
     return (
-         <Container className="mt-4">
+        <Container className="mt-4">
             <h1>Generiranje podataka</h1>
             <p className="text-muted">
                 Koristite ovaj alat za generiranje testnih podataka s lažnim (fake) podacima na hrvatskom jeziku.
@@ -200,11 +205,6 @@ export default function GeneriranejPodataka() {
                         </Button>
                     </Form>
                 </Col>
-                
-                
-            </Row>
-            
-            <Row>
                 <Col md={4}>
                     <Form onSubmit={handleGenerirajRezervacije}>
                         <Form.Group className="mb-3">
@@ -231,8 +231,8 @@ export default function GeneriranejPodataka() {
                         </Button>
                     </Form>
                 </Col>
-                
-                
+
+
             </Row>
             <Alert variant="warning" className="mt-3">
                 <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
@@ -254,18 +254,29 @@ export default function GeneriranejPodataka() {
                         disabled={loading}
                         className="w-100 mb-2"
                     >
-                        {loading ? 'Brisanje...' : 'Obriši svih podataka'}
+                        {loading ? 'Brisanje...' : 'Obriši goset'}
                     </Button>
                 </Col>
-                
-                
+
+                <Col md={4}>
+                    <Button
+                        variant="danger"
+                        onClick={handleObrisiRezervacije}
+                        disabled={loading}
+                        className="w-100 mb-2"
+                    >
+                        {loading ? 'Brisanje...' : 'Obriši rezervacije'}
+                    </Button>
+                </Col>
+
+
             </Row>
 
             <Alert variant="danger" className="mt-3">
                 <strong>Oprez!</strong> Brisanje podataka je trajna akcija i ne može se poništiti.
             </Alert>
 
-            
+
         </Container>
     )
 }
