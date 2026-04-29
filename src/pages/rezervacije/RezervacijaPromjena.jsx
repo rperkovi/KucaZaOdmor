@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import RezervacijaService from "../../services/rezervacije/RezervacijaService";
 import DatePicker from "react-datepicker";
 import GostService from "../../services/gosti/GostService";
+import CijenaService from "../../services/cijene/CijenaService";
+import { izracunajUkupnuCijenu } from "../../utils";
 
 export default function RezervacijePromjena(){
 
@@ -13,15 +15,30 @@ export default function RezervacijePromjena(){
     const [gosti, setGosti] = useState([])
     const [rezervacija,setRezervacija] = useState({})
     const [platio,setPlatio] = useState(false)
+    const[cijene, setCijene] = useState([])
 
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
 
 
     useEffect(()=>{
+        ucitajCijene()
          ucitajGoste()
         ucitajRezervacija()
     },[])
+
+    async function ucitajCijene() {
+                await CijenaService.get().then((odgovor)=>{
+        
+                     if(!odgovor.success){
+                        alert('Nije implementiran servis')
+                        return
+                    }
+        
+                    setCijene(odgovor.data)
+                })
+            }
+    
 
     async function ucitajRezervacija() {
         await RezervacijaService.getBySifra(params.sifra).then((odgovor)=>{
@@ -34,7 +51,7 @@ export default function RezervacijePromjena(){
             // po potrebi prilagođavam podatke
             
             setRezervacija(s)
-            setDateRange([s.datumPocetka, s.datumKraja])
+            setDateRange([new Date(s.datumPocetka), new Date(s.datumKraja)])
 
             setPlatio(s.platio)
         })
@@ -68,7 +85,7 @@ export default function RezervacijePromjena(){
         
         promjeni({
             gost: parseInt(podaci.get('gost')),
-            cijena: 100, //parseFloat(podaci.get('cijena')), -- Ovdje će se dovući cijena iz cjenika za to razdoblje
+            cijena: izracunajUkupnuCijenu(startDate, endDate, cijene), //parseFloat(podaci.get('cijena')), -- Ovdje će se dovući cijena iz cjenika za to razdoblje
             datumRezervacije: new Date().toISOString(),
             datumPocetka: startDate.toISOString(),
             datumKraja: endDate.toISOString(),
@@ -78,7 +95,6 @@ export default function RezervacijePromjena(){
 
 
     function brojDana() {
-        console.log(endDate)
         if (endDate == null) {
             return ''
         }

@@ -98,15 +98,31 @@ export default function GeneriranejPodataka() {
 
 
     const generirajRezervacije = async (broj) => {
+
+        const gosti = await GostService.get()
+        const gostiData = gosti.data
+
         const rezervacije = [];
         for (let i = 0; i < broj; i++) {
-            const rezultat = await RezervacijaService.dodaj({
-                korisnik: 1, // staviti slučajnu vrijednost
-                datumRezervacije: faker.date.soon().toISOString().split('T')[0],
-                datumPocetka: '2026-05-02T17:00:00',
-                datumKraja: '2026-05-06T17:00:00',
+            // 1. Generiraj nasumičan datum početka (npr. u idućih 30 dana)
+            const pocetak = faker.date.soon({ days: 30 });
 
+            // 2. Definiraj trajanje (između 2 i 5 dana)
+            const trajanjeUDanima = faker.number.int({ min: 2, max: 5 });
+
+            // 3. Izračunaj datum kraja dodavanjem dana na početni datum
+            const kraj = new Date(pocetak);
+            kraj.setDate(pocetak.getDate() + trajanjeUDanima);
+
+            const rezultat = await RezervacijaService.dodaj({
+                gost: gostiData[faker.number.int({ min: 0, max: gostiData.length - 1 })].sifra,
+                datumRezervacije: faker.date.past().toISOString().split('T')[0],
+                // Slanje u ISO formatu (ili samo datum ovisno o tvom backendu)
+                datumPocetka: pocetak.toISOString(),
+                datumKraja: kraj.toISOString(),
+                cijena: 100 // prvo napraviti generiranje cjenika
             });
+
             rezervacije.push(rezultat.data);
         }
         return rezervacije;
@@ -179,6 +195,7 @@ export default function GeneriranejPodataka() {
             )}
 
             <Row>
+                {/* Ovdje prije gostiju staviti sučelje za generiranje cijena */}
                 <Col md={4}>
                     <Form onSubmit={handleGenerirajGoste}>
                         <Form.Group className="mb-3">

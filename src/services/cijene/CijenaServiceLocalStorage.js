@@ -11,12 +11,12 @@ function spremiUStorage(podaci) {
 
 async function get() {
     const cijene = dohvatiSveIzStorage();
-    return {success: true,  data: [...rezervacije] };
+    return {success: true,  data: [...cijene] };
 }
 
 async function getBySifra(sifra) {
     const cijene = dohvatiSveIzStorage();
-    const cijena = rezervacije.find(s => s.sifra === parseInt(sifra));
+    const cijena = cijene.find(s => s.sifra === parseInt(sifra));
     return {success: true,  data: cijena };
 }
 
@@ -30,17 +30,17 @@ async function dodaj(cijena) {
         cijena.sifra = maxSifra + 1;
     }
     
-    rezervacije.push(cijene);
+    cijene.push(cijena);
     spremiUStorage(cijene);
     return { data: cijena };
 }
 
 async function promjeni(sifra, cijena) {
-    const rezervacije = dohvatiSveIzStorage();
-    const index = rezervacije.findIndex(s => s.sifra === parseInt(sifra));
+    const cijene = dohvatiSveIzStorage();
+    const index = cijene.findIndex(s => s.sifra === parseInt(sifra));
     
     if (index !== -1) {
-        cijene[index] = { ...rezervacije[index], ...cijena};
+        cijene[index] = { ...cijene[index], ...cijena};
         spremiUStorage(cijene);
     }
     return { data: cijene[index] };
