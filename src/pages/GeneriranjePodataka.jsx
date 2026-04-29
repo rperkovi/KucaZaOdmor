@@ -196,6 +196,32 @@ export default function GeneriranejPodataka() {
 
             <Row>
                 {/* Ovdje prije gostiju staviti sučelje za generiranje cijena */}
+                {/*<Col md={4}>
+                    <Form onSubmit={handleGenerirajCijene}>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Broj razlicitih cijena</Form.Label>
+                            <Form.Control
+                                type="number"
+                                min="1"
+                                max="5"
+                                value={brojCijena}
+                                onChange={(e) => setBrojCijena(parseInt(e.target.value))}
+                                disabled={loading}
+                            />
+                            <Form.Text className="text-muted">
+                                Unesite broj razlicitih cijena u cjenku
+                            </Form.Text>
+                        </Form.Group>
+                        <Button
+                            variant="primary"
+                            type="submit"
+                            disabled={loading}
+                            className="w-100"
+                        >
+                            {loading ? 'Generiranje...' : 'Generiraj cijene'}
+                        </Button>
+                    </Form>
+                </Col>*/}
                 <Col md={4}>
                     <Form onSubmit={handleGenerirajGoste}>
                         <Form.Group className="mb-3">
