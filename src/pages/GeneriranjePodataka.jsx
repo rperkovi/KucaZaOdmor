@@ -297,7 +297,7 @@ export default function GeneriranejPodataka() {
                         disabled={loading}
                         className="w-100 mb-2"
                     >
-                        {loading ? 'Brisanje...' : 'Obriši goset'}
+                        {loading ? 'Brisanje...' : 'Obriši goste'}
                     </Button>
                 </Col>
 
