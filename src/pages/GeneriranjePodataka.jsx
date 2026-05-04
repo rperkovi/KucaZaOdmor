@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 import GostService from "../services/gosti/GostService";
 import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
 import RezervacijaService from "../services/rezervacije/RezervacijaService";
+import { cijene } from "../services/cijene/CijenaPodaci";
+import { gosti } from "../services/gosti/GostPodaci";
+import { rezervacije } from "../services/rezervacije/RezervacijaPodaci";
 
 export default function GeneriranejPodataka() {
 
@@ -181,6 +184,34 @@ export default function GeneriranejPodataka() {
         }
     };
 
+    function handlePresipavanjePodatakaMemorijaULocalStorage(){
+         if (!window.confirm('Jeste li sigurni da želite pretočiti iz memorije u localStorage?')) {
+            return;
+        }
+
+        setLoading(true);
+        setPoruka(null);
+
+        try {
+
+            localStorage.setItem('cijene', JSON.stringify(cijene));
+            localStorage.setItem('gosti', JSON.stringify(gosti));
+            localStorage.setItem('rezervacije', JSON.stringify(rezervacije));
+
+            setPoruka({
+                tip: 'success',
+                tekst: `Uspješno presipano`
+            });
+        } catch (error) {
+            setPoruka({
+                tip: 'danger',
+                tekst: 'Greška pri presipavanju memorija - localStorage: ' + error.message
+            });
+        } finally {
+            setLoading(false);
+        }
+    }
+
     return (
         <Container className="mt-4">
             <h1>Generiranje podataka</h1>
@@ -273,6 +304,18 @@ export default function GeneriranejPodataka() {
                             {loading ? 'Generiranje...' : 'Generiraj rezervacije'}
                         </Button>
                     </Form>
+                </Col>
+
+                <Col md={4}>
+                        <Button
+                            variant="primary"
+                            type="submit"
+                            disabled={loading}
+                            className="w-100"
+                            onClick={handlePresipavanjePodatakaMemorijaULocalStorage}
+                        >
+                            {loading ? 'Presipavanje...' : 'Presipaj iz memorije u localStorage'}
+                        </Button>
                 </Col>
 
 
