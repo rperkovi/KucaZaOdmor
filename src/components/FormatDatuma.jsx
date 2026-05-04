@@ -10,6 +10,6 @@ export default function FormatDatuma({datum,prikazZadano='-'}){
         day: '2-digit',
         month: '2-digit',
         year: 'numeric'
-    }).format(d) + (datum.includes('T') ? '' : '.')
+    }).format(d) //+ (datum.includes('T') ? '' : '.')
 }
     
