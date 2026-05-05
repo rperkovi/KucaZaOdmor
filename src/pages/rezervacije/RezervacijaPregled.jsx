@@ -7,6 +7,7 @@ import { RouteNames } from "../../constants.js"
 import RezervacijaService from "../../services/rezervacije/RezervacijaService.js"
 import FormatDatuma from "../../components/FormatDatuma.jsx"
 import { NumericFormat } from "react-number-format"
+import RezervacijaPDFGenerator from "../../components/RezervacijaPDFGenerator.jsx"
 
 export default function RezervacijaPregled() {
 
@@ -63,6 +64,36 @@ export default function RezervacijaPregled() {
     function dohvatiPodatkeGosta(sifraGosta) {
         const gost = gosti.find(s => s.sifra === sifraGosta)
         return gost ? gost.ime + ' ' + gost.prezime + '<' + gost.email + '>' : 'Nepoznat gost'
+    }
+    
+    // PDF
+
+    async function generirajPDFZaRezervacija(gosti) {
+        // Dohvati smjer
+        const rezervacija = rezervacija.find(s => s.sifra === rezervacija.gost)
+        if (!gost) {
+            alert('gost nije pronađen')
+            return
+        }
+
+        // Dohvati sve polaznike
+        const odgovorGoste = await GostService.get()
+        if (!odgovorGosti.success) {
+            alert('Nije moguće dohvatiti goste')
+            return
+        }
+
+        // Filtriraj polaznike koji pripadaju ovoj grupi
+        const gostiRezervacije = odgovorGosti.data.filter(p => 
+            rezervacija.gosti && rezervacija.gosti.includes(p.sifra)
+        )
+
+        // Generiraj PDF
+        const generiraj = RezervacijaPDFGenerator({ 
+            grupa, 
+            gosti: gostiRezervacije 
+        })
+        await generiraj()
     }
 
 
@@ -122,6 +153,11 @@ export default function RezervacijaPregled() {
                                 <Button variant="danger" onClick={() => { obrisi(rezervacija.sifra) }}>
                                     Obriši
                                 </Button>
+                                                            &nbsp;&nbsp;
+                            <Button variant="info" onClick={() => generirajPDFZaGrupu(grupa)}>
+                                PDF
+                            </Button>
+
                             </td>
                         </tr>
                     ))}
