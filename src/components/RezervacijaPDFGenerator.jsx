@@ -46,7 +46,7 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost }) {
         doc.setFont('Roboto', 'bold');
         doc.setFontSize(16);
         doc.setTextColor(0, 0, 0);
-        doc.text('POPIS REZERVACIJA', 20, 45);
+        doc.text('POPIS REZERVACIJE', 20, 45);
 
         // Linija ispod naslova
         doc.setDrawColor(46, 125, 50);
@@ -58,14 +58,14 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost }) {
         // Podaci o grupi
         doc.setFontSize(14);
         doc.setFont(undefined, 'bold');
-        doc.text('Podaci o rezervaciji:', 20, yPosition);
+        doc.text('Početni podaci rezervacije:', 20, yPosition);
         yPosition += 10;
 
         doc.setFontSize(11);
         doc.setFont(undefined, 'normal');
-        doc.text(`Naziv: ${rezervacija.datumRezervacije}`, 25, yPosition);
+        doc.text(`Datum rezervacije: ${new Date(rezervacija.datumRezervacije).toLocaleDateString('hr-HR')}`, 25, yPosition);
         yPosition += 7;
-        doc.text(`Gost: ${rezervacija.datumPocetka}`, 25, yPosition);
+        doc.text(`Gost: ${gost.ime} ${gost.prezime}`, 25, yPosition);
         yPosition += 15;
 
         // Podaci o smjeru
@@ -76,25 +76,32 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost }) {
 
         doc.setFontSize(11);
         doc.setFont(undefined, 'normal');
-        doc.text(`Naziv: ${rezervacija.datumKraja}`, 25, yPosition);
+        doc.text(`Datum početka rezervacije: ${rezervacija.datumKraja}`, 25, yPosition);
         yPosition += 7;
-        doc.text(`Platio: ${rezervacija.platio ? 'DA' : 'NE'}`, 25, yPosition);
+        doc.text(`Datum završetka rezervacije: ${rezervacija.cijena} EUR`, 25, yPosition);
+        yPosition += 7;
+        doc.text(`Ukupno dana: ${rezervacija.cijena} EUR`, 25, yPosition);
         yPosition += 7;
         doc.text(`Cijena: ${rezervacija.cijena} EUR`, 25, yPosition);
         yPosition += 7;
         doc.text(`Datum rezervacije: ${new Date(rezervacija.datumRezervacije).toLocaleDateString('hr-HR')}`, 25, yPosition);
         yPosition += 7;
-
-        doc.text(`Gost: ${gost.ime} ${gost.prezime}`, 25, yPosition);
-        yPosition += 7;
+        doc.text(`Platio: ${rezervacija.platio ? 'DA' : 'NE'}`, 25, yPosition);
+        yPosition += 15;
 
         // Popis gosta
         doc.setFontSize(14);
         doc.setFont(undefined, 'bold');
-        doc.text('Popis gosta:', 20, yPosition);
+        doc.text('Podaci o gostu:', 20, yPosition);
         yPosition += 10;
-
-       
+        doc.setFontSize(11);
+        doc.setFont(undefined, 'normal');
+        doc.text(`Gost: ${gost.ime} ${gost.prezime}`, 25, yPosition);
+        yPosition += 7;
+        doc.text(`Država prebivališta: `, 25, yPosition);
+        yPosition += 7;
+        doc.text(`OIB: `, 25, yPosition);
+        yPosition += 7;
 
         // Footer
         const pageCount = doc.internal.getNumberOfPages();
