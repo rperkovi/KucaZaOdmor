@@ -1,7 +1,7 @@
 import { jsPDF } from 'jspdf';
 import { autoTable } from 'jspdf-autotable';
 
-export default function RezervacijaPDFGenerator({ rezervacije }) {
+export default function RezervacijaPDFGenerator({ rezervacija, gost }) {
 
     const fetchFontAsBase64 = async (url) => {
         const response = await fetch(url);
@@ -63,9 +63,9 @@ export default function RezervacijaPDFGenerator({ rezervacije }) {
 
         doc.setFontSize(11);
         doc.setFont(undefined, 'normal');
-        doc.text(`Naziv: ${rezervacija.naziv}`, 25, yPosition);
+        doc.text(`Naziv: ${rezervacija.datumRezervacije}`, 25, yPosition);
         yPosition += 7;
-        doc.text(`Gost: ${rezervacija.polaznici ? rezervacija.polaznici.length : 0}`, 25, yPosition);
+        doc.text(`Gost: ${rezervacija.datumPocetka}`, 25, yPosition);
         yPosition += 15;
 
         // Podaci o smjeru
@@ -76,16 +76,17 @@ export default function RezervacijaPDFGenerator({ rezervacije }) {
 
         doc.setFontSize(11);
         doc.setFont(undefined, 'normal');
-        doc.text(`Naziv: ${rezervacija.naziv}`, 25, yPosition);
+        doc.text(`Naziv: ${rezervacija.datumKraja}`, 25, yPosition);
         yPosition += 7;
-        doc.text(`Trajanje: ${rezervacija.trajanje} sati`, 25, yPosition);
+        doc.text(`Platio: ${rezervacija.platio ? 'DA' : 'NE'}`, 25, yPosition);
         yPosition += 7;
         doc.text(`Cijena: ${rezervacija.cijena} EUR`, 25, yPosition);
         yPosition += 7;
-        doc.text(`Datum pokretanja: ${new Date(rezervacija.datumPokretanja).toLocaleDateString('hr-HR')}`, 25, yPosition);
+        doc.text(`Datum rezervacije: ${new Date(rezervacija.datumRezervacije).toLocaleDateString('hr-HR')}`, 25, yPosition);
         yPosition += 7;
-        doc.text(`Aktivan: ${rezervacija.aktivan ? 'Da' : 'Ne'}`, 25, yPosition);
-        yPosition += 15;
+
+        doc.text(`Gost: ${gost.ime} ${gost.prezime}`, 25, yPosition);
+        yPosition += 7;
 
         // Popis gosta
         doc.setFontSize(14);
@@ -93,51 +94,7 @@ export default function RezervacijaPDFGenerator({ rezervacije }) {
         doc.text('Popis gosta:', 20, yPosition);
         yPosition += 10;
 
-        if (gosti && gosti.length > 0) {
-            // Tablica s polaznicima
-            const tableData = gosti.map(gost => [
-                gost.ime,
-                gost.prezime,
-                gost.email,
-                gost.oib
-            ]);
-
-            autoTable(doc,{
-                startY: yPosition,
-                head: [['Ime', 'Prezime', 'Email', 'OIB']],
-                body: tableData,
-               // 1. Postavi ukupnu širinu tablice na širinu dostupnog prostora (npr. 180mm)
-    tableWidth: 'auto', 
-    
-    // 2. Margine (lijevo, desno) - osiguraj da ima mjesta
-    margin: { left: 15, right: 15 },
-
-    styles: { 
-        font: 'Roboto', 
-        fontStyle: 'normal',
-        fontSize: 10, // Smanji malo font ako i dalje ne stane (default je 12)
-        overflow: 'linebreak' // Prebaci dugački tekst u novi red
-    },
-    
-    headStyles: { 
-        font: 'Roboto', 
-        fontStyle: 'bold',
-        fillColor: [46, 125, 50] 
-    },
-
-    // 3. Ručno podešavanje širine stupaca (ukupno cca 180mm za A4)
-    columnStyles: {
-        0: { cellWidth: 35 }, // Ime
-        1: { cellWidth: 35 }, // Prezime
-        2: { cellWidth: 70 }, // Email (njemu treba najviše mjesta)
-        3: { cellWidth: 40 }, // OIB (uvijek je fiksne dužine)
-    }
-            });
-        } else {
-            doc.setFontSize(11);
-            doc.setFont(undefined, 'italic');
-            doc.text('Nema gosta u ovoj rezervaciji.', 25, yPosition);
-        }
+       
 
         // Footer
         const pageCount = doc.internal.getNumberOfPages();

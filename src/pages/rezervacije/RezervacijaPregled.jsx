@@ -68,30 +68,23 @@ export default function RezervacijaPregled() {
     
     // PDF
 
-    async function generirajPDFZaRezervacija(gosti) {
-        // Dohvati smjer
-        const rezervacija = rezervacija.find(s => s.sifra === rezervacija.gost)
-        if (!gost) {
-            alert('gost nije pronađen')
-            return
-        }
+    async function generirajPDFZaRezervacija(rezervacija) {
+       
 
         // Dohvati sve polaznike
-        const odgovorGoste = await GostService.get()
+        const odgovorGosti = await GostService.get()
         if (!odgovorGosti.success) {
             alert('Nije moguće dohvatiti goste')
             return
         }
 
         // Filtriraj polaznike koji pripadaju ovoj grupi
-        const gostiRezervacije = odgovorGosti.data.filter(p => 
-            rezervacija.gosti && rezervacija.gosti.includes(p.sifra)
-        )
-
+        const gostRezervacije = odgovorGosti.data.find(p => rezervacija.gost === p.sifra)
+        console.log(gostRezervacije)
         // Generiraj PDF
         const generiraj = RezervacijaPDFGenerator({ 
-            grupa, 
-            gosti: gostiRezervacije 
+            rezervacija, 
+            gost: gostRezervacije 
         })
         await generiraj()
     }
@@ -154,7 +147,7 @@ export default function RezervacijaPregled() {
                                     Obriši
                                 </Button>
                                                             &nbsp;&nbsp;
-                            <Button variant="info" onClick={() => generirajPDFZaGrupu(grupa)}>
+                            <Button variant="info" onClick={() => generirajPDFZaRezervacija(rezervacija)}>
                                 PDF
                             </Button>
 
