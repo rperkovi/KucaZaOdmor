@@ -76,7 +76,7 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost }) {
 
         doc.setFontSize(11);
         doc.setFont(undefined, 'normal');
-        doc.text(`Datum početka rezervacije: ${rezervacija.datumKraja}`, 25, yPosition);
+        doc.text(`Datum početka rezervacije: ${rezervacija.cijena} EUR}`, 25, yPosition);
         yPosition += 7;
         doc.text(`Datum završetka rezervacije: ${rezervacija.cijena} EUR`, 25, yPosition);
         yPosition += 7;
@@ -84,7 +84,7 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost }) {
         yPosition += 7;
         doc.text(`Cijena: ${rezervacija.cijena} EUR`, 25, yPosition);
         yPosition += 7;
-        doc.text(`Datum rezervacije: ${new Date(rezervacija.datumRezervacije).toLocaleDateString('hr-HR')}`, 25, yPosition);
+        doc.text(`Datum podnošenja rezervacije: ${new Date(rezervacija.datumRezervacije).toLocaleDateString('hr-HR')}`, 25, yPosition);
         yPosition += 7;
         doc.text(`Platio: ${rezervacija.platio ? 'DA' : 'NE'}`, 25, yPosition);
         yPosition += 15;
