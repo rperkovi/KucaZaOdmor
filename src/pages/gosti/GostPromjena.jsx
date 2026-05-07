@@ -2,7 +2,9 @@ import { Button, Col, Form, Row } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import GostService from "../../services/gosti/GostService";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import Select from 'react-select'
+import countryList from 'react-select-country-list'
 
 export default function GostPromjena(){
 
@@ -10,6 +12,9 @@ export default function GostPromjena(){
     const params = useParams()
     const [gost,setGost] = useState({})
     const [aktivan,setAktivan] = useState(false)
+
+    const [drzava, setDrzava] = useState('')
+    const options = useMemo(() => countryList().getData(), [])
 
     async function ucitajGost() {
         await GostService.getBySifra(params.sifra).then((odgovor)=>{
@@ -22,6 +27,10 @@ export default function GostPromjena(){
             // po potrebi prilagođavam podatke
             
             setGost(s)
+
+            setDrzava(countryList().getData().find(e=>e.value==s.drzava))
+
+           // console.log(countryList().getData())
 
             setAktivan(s.aktivan)
         })
@@ -86,6 +95,7 @@ export default function GostPromjena(){
             ime: podaci.get('ime'),
             prezime: podaci.get('prezime'),
             email: podaci.get('email'),
+            drzava: drzava.value,
             aktivan: aktivan,
         })
     }
@@ -107,6 +117,9 @@ export default function GostPromjena(){
                 <Form.Control type="text" name="prezime" step={1} 
                 defaultValue={gost.prezime}/>
             </Form.Group>
+            <hr />
+            <Select options={options} value={drzava} onChange={(e)=>{setDrzava(e)}} />
+                            
 
             <Form.Group controlId="email">
                     <Form.Label>Email</Form.Label>

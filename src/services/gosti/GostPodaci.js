@@ -4,6 +4,7 @@ export const gosti = [
         ime: 'Luka',
         prezime: 'Modrić',
         email: 'lmodric@gmail.com',
+        drzava: 'HR',
         aktivan: true
     },
     {
@@ -11,6 +12,7 @@ export const gosti = [
         ime: 'Diego',
         prezime: 'Maradona',
         email: 'dmaradona@gmail.com',
+        drzava: 'HR',
         aktivan: false
     },
     {
@@ -18,6 +20,7 @@ export const gosti = [
         ime: 'Siniša',
         prezime: 'Rimac',
         email: 'srimac@gmail.com',
+        drzava: 'HR',
         aktivan: true
     },
     {
@@ -25,6 +28,7 @@ export const gosti = [
         ime: 'Darko',
         prezime: 'Zubak',
         email: 'dzubak@hotmail.com',
+        drzava: 'HR',
         aktivan: true
 
     },
@@ -33,6 +37,7 @@ export const gosti = [
         ime: 'Zvonko',
         prezime: 'Zvonkić',
         email: 'z.zvonkic@gmail.com',
+        drzava: 'HR',
         aktivan: false
     }
 ]

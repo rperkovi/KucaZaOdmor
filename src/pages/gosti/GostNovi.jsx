@@ -2,24 +2,29 @@ import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import GostService from "../../services/gosti/GostService";
+import React, { useState, useMemo } from 'react'
+import Select from 'react-select'
+import countryList from 'react-select-country-list'
 
-export default function GostiNovi(){
+export default function GostiNovi() {
 
     const navigate = useNavigate()
+    const [drzava, setDrzava] = useState('')
+    const options = useMemo(() => countryList().getData(), [])
 
-    async function dodaj(gost){
+    async function dodaj(gost) {
         //console.table(gost) // ovo je za kontrolu da li je sve OK
-        await GostService.dodaj(gost).then(()=>{
+        await GostService.dodaj(gost).then(() => {
             navigate(RouteNames.GOSTI)
         })
     }
 
 
-    function odradiSubmit(e){ //e je event
+    function odradiSubmit(e) { //e je event
         e.preventDefault() // nemoj odraditi submit
         const podaci = new FormData(e.target)
-        
-         // --- KONTROLA 1: Ime (Postojanje) ---
+
+        // --- KONTROLA 1: Ime (Postojanje) ---
         if (!podaci.get('ime') || podaci.get('ime').trim().length === 0) {
             alert("Ime je obavezno i ne smije sadržavati samo razmake!");
             return;
@@ -55,14 +60,15 @@ export default function GostiNovi(){
             alert("Email nije u ispravnom formatu!");
             return;
         }
-        
-        
-        
+
+
+
         dodaj({
             ime: podaci.get('ime'),
             prezime: podaci.get('prezime'),
             email: podaci.get('email'),
             aktivan: podaci.get('aktivan') === 'on',
+            drzava: drzava.value
         })
     }
 
@@ -71,19 +77,19 @@ export default function GostiNovi(){
 
 
 
-    return(
+    return (
         <>
-        <h3>
-            Unos novog gosta
-        </h3>
-         <Container className="mt-4">
-                    <Card className="shadow-sm">
-                        <Card.Body>
-                            <Card.Title className="mb-4">Podaci o gostu</Card.Title>
-                            <Form onSubmit={odradiSubmit}>
+            <h3>
+                Unos novog gosta
+            </h3>
+            <Container className="mt-4">
+                <Card className="shadow-sm">
+                    <Card.Body>
+                        <Card.Title className="mb-4">Podaci o gostu</Card.Title>
+                        <Form onSubmit={odradiSubmit}>
                             {/* Naziv - Pun širina na svim ekranima */}
                             <Row>
-                                <Col md={6}>
+                                <Col md={4}>
                                     <Form.Group controlId="ime" className="mb-3">
                                         <Form.Label className="fw-bold">Ime</Form.Label>
                                         <Form.Control
@@ -94,7 +100,7 @@ export default function GostiNovi(){
                                         />
                                     </Form.Group>
                                 </Col>
-                                <Col md={6}>
+                                <Col md={4}>
                                     <Form.Group controlId="prezime" className="mb-3">
                                         <Form.Label className="fw-bold">Prezime</Form.Label>
                                         <Form.Control
@@ -105,6 +111,9 @@ export default function GostiNovi(){
                                         />
                                     </Form.Group>
                                 </Col>
+                                <Col md={4}>
+                                    <Select options={options} value={drzava} onChange={(e)=>{setDrzava(e)}} />
+                                </Col>
                             </Row>
 
                             {/* Trajanje i Cijena - Jedno pored drugog na md+, jedno ispod drugog na mobitelu */}
@@ -113,18 +122,18 @@ export default function GostiNovi(){
                                     <Form.Group controlId="email" className="mb-3">
                                         <Form.Label className="fw-bold">email</Form.Label>
                                         <Form.Control
-                                           type="text"
+                                            type="text"
                                             name="email"
                                             placeholder="Unesite email gosta"
                                             required
                                         />
                                     </Form.Group>
                                 </Col>
-                                
+
                             </Row>
 
                             <Row className="align-items-center">
-                                
+
 
                                 {/* Aktivan - Switch umjesto checkboxa za moderniji izgled */}
                                 <Col md={6}>
@@ -151,12 +160,12 @@ export default function GostiNovi(){
                                 </Button>
                             </div>
 
-                            </Form>
-                        </Card.Body>
-                    </Card>
-                </Container>
+                        </Form>
+                    </Card.Body>
+                </Card>
+            </Container>
 
-            
+
         </>
     )
 }
