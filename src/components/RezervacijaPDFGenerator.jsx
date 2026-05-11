@@ -79,9 +79,9 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost }) {
         doc.setFont(undefined, 'normal');
         doc.text(`Datum početka rezervacije: ${new Date(rezervacija.datumPocetka).toLocaleDateString('hr-HR')}`, 25, yPosition);
         yPosition += 7;
-        doc.text(`Datum završetka rezervacije: ${rezervacija.cijena} EUR`, 25, yPosition);
+        doc.text(`Datum završetka rezervacije: ${new Date(rezervacija.datumKraja).toLocaleDateString('hr-HR')}`, 25, yPosition);
         yPosition += 7;
-        doc.text(`Ukupno dana: ${rezervacija.cijena} EUR`, 25, yPosition);
+        doc.text(`Ukupno dana: ${broj.dana}`, 25, yPosition);
         yPosition += 7;
         doc.text(`Cijena: ${rezervacija.cijena} EUR`, 25, yPosition);
         yPosition += 7;
@@ -101,8 +101,7 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost }) {
         yPosition += 7;
         doc.text(`Država prebivališta: ${countryList().getData().find(e=>e.value==gost.drzava).label}`, 25, yPosition);
         yPosition += 7;
-        doc.text(`OIB: `, 25, yPosition);
-        yPosition += 7;
+        
 
         // Footer
         const pageCount = doc.internal.getNumberOfPages();
