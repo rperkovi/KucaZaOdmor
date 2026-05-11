@@ -14,9 +14,19 @@ import CijenaPregled from './pages/cijene/CijenaPregled'
 import CijenaNovi from './pages/cijene/CijenaNovi'
 import CijenaPromjena from './pages/cijene/CijenaPromjena'
 import RezervacijePromjena from './pages/rezervacije/RezervacijaPromjena'
-import GeneriranejPodataka from './pages/GeneriranjePodataka'
+import GeneriranjePodataka from './pages/GeneriranjePodataka'
+import OperaterPregled from './pages/operateri/OperaterPregled'
+import OperaterNovi from './pages/operateri/OperaterNovi'
+import OperaterPromjena from './pages/operateri/OperaterPromjena'
+import OperaterPromjenaLozinke from './pages/operateri/OperaterPromjenaLozinke'
+import useAuth from './hooks/useAuth'
+import Login from './pages/login/Login'
+import Registracija from './pages/registracija/Registracija'
+import NadzornaPloca from './pages/NadzornaPloca'
 
 function App() {
+
+  const { isLoggedIn, authUser } = useAuth()
 
   return (
     <>
@@ -24,6 +34,9 @@ function App() {
         <Izbornik />
         <Routes>
           <Route path={RouteNames.HOME} element={<Home />} />
+
+          {isLoggedIn ? (<>
+          
           <Route path={RouteNames.GOSTI} element={<GostPregled />} />
           <Route path={RouteNames.GOSTI_NOVI} element={<GostNovi />} />
           <Route path={RouteNames.GOSTI_PROMJENA} element={<GostPromjena />} />
@@ -36,8 +49,24 @@ function App() {
           <Route path={RouteNames.CIJENE_NOVI} element={<CijenaNovi />} />
           <Route path={RouteNames.CIJENE_PROMJENA} element={<CijenaPromjena />} />
 
-          <Route path={RouteNames.GENERIRANJE_PODATAKA} element={<GeneriranejPodataka />} />
-          
+          <Route path={RouteNames.NADZORNA_PLOCA} element={<NadzornaPloca />} />
+
+
+             {authUser.uloga === 'admin' && (
+                  <>
+                    <Route path={RouteNames.OPERATERI} element={<OperaterPregled />} />
+                    <Route path={RouteNames.OPERATERI_NOVI} element={<OperaterNovi />} />
+                    <Route path={RouteNames.OPERATERI_PROMJENA} element={<OperaterPromjena />} />
+                    <Route path={RouteNames.OPERATERI_PROMJENA_LOZINKE} element={<OperaterPromjenaLozinke />} />
+                    <Route path={RouteNames.GENERIRANJE_PODATAKA} element={<GeneriranjePodataka />} />
+                  </>
+                )}
+
+          </>) : (
+              <>
+                <Route path={RouteNames.LOGIN} element={<Login />} />
+                <Route path={RouteNames.REGISTRACIJA} element={<Registracija />} />
+              </>)}
         </Routes>
         <hr />
         &copy; Roberto

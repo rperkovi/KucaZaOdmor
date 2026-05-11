@@ -8,8 +8,9 @@ import RezervacijaService from "../services/rezervacije/RezervacijaService";
 import { cijene } from "../services/cijene/CijenaPodaci";
 import { gosti } from "../services/gosti/GostPodaci";
 import { rezervacije } from "../services/rezervacije/RezervacijaPodaci";
+import { operateri } from "../services/operateri/OperaterPodaci";
 
-export default function GeneriranejPodataka() {
+export default function GeneriranjePodataka() {
 
     const [brojGostiju, setBrojGostiju] = useState(5);
     const [brojRezervacija, setBrojRezervacija] = useState(10);
@@ -197,6 +198,7 @@ export default function GeneriranejPodataka() {
             localStorage.setItem('cijene', JSON.stringify(cijene));
             localStorage.setItem('gosti', JSON.stringify(gosti));
             localStorage.setItem('rezervacije', JSON.stringify(rezervacije));
+            localStorage.setItem('operateri', JSON.stringify(operateri));
 
             setPoruka({
                 tip: 'success',

@@ -14,6 +14,16 @@ export const RouteNames = {
     CIJENE_NOVI: '/cijene/novi',
     CIJENE_PROMJENA: '/cijene/:sifra',
 
+    OPERATERI: '/operateri',
+    OPERATERI_NOVI: '/operateri/novi',
+    OPERATERI_PROMJENA: '/operateri/:sifra',
+    OPERATERI_PROMJENA_LOZINKE: '/operateri/:sifra/lozinka',
+
+    LOGIN: '/login',
+    REGISTRACIJA: '/registracija',
+
+    NADZORNA_PLOCA: '/nadzorna-ploca',
+
     GENERIRANJE_PODATAKA: 'generiranje-podataka'
 }
 
