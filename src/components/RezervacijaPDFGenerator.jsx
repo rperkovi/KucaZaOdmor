@@ -15,6 +15,14 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost }) {
         });
     };
 
+     function brojDana(odDatuma, doDatuma) {
+        const d1 = new Date(odDatuma);
+        const d2 = new Date(doDatuma);
+        const razlikaUMilisekundama = Math.abs(d1 - d2);
+        const milisekundiUDanu = 1000 * 60 * 60 * 24;
+        return Math.round(razlikaUMilisekundama / milisekundiUDanu);
+    }
+
     const generirajPDF = async () => {
         const [regBase64, boldBase64] = await Promise.all([
             fetchFontAsBase64('/fonts/Roboto-Regular.ttf'),
@@ -81,7 +89,7 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost }) {
         yPosition += 7;
         doc.text(`Datum završetka rezervacije: ${new Date(rezervacija.datumKraja).toLocaleDateString('hr-HR')}`, 25, yPosition);
         yPosition += 7;
-        doc.text(`Ukupno dana: ${broj.dana}`, 25, yPosition);
+        doc.text(`Ukupno dana: ${brojDana(rezervacija.datumPocetka,rezervacija.datumKraja)}`, 25, yPosition);
         yPosition += 7;
         doc.text(`Cijena: ${rezervacija.cijena} EUR`, 25, yPosition);
         yPosition += 7;
