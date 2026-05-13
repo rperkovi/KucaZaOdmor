@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RouteNames } from '../constants';
+import OperaterServiceMemorija from '../services/operateri/OperaterServiceMemorija';
 import OperaterService from '../services/operateri/OperaterService';
 
 export const AuthContext = createContext();
@@ -23,7 +24,15 @@ export function AuthProvider({ children }) {
   }, []);
 
   async function login(email, lozinka) {
-    const odgovor = await OperaterService.prijava(email, lozinka);
+
+    const operateriLS = localStorage.getItem('operateri') || []
+   
+    const odgovor =
+    operateriLS.length==0 ? 
+    await OperaterServiceMemorija.prijava(email, lozinka) 
+    :
+    await OperaterService.prijava(email, lozinka) 
+
     if (odgovor.success) {
       localStorage.setItem('operater', JSON.stringify(odgovor.data));
       setAuthUser(odgovor.data);

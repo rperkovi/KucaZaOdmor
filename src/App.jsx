@@ -3,7 +3,7 @@ import './App.css'
 import { Container } from 'react-bootstrap'
 import Izbornik from './components/Izbornik'
 import { Route, Routes } from 'react-router-dom'
-import { RouteNames } from './constants'
+import { DATA_SOURCE, RouteNames } from './constants'
 import Home from './pages/Home'
 import GostPregled from './pages/gosti/GostPregled'
 import GostNovi from './pages/gosti/GostNovi'
@@ -69,7 +69,7 @@ function App() {
               </>)}
         </Routes>
         <hr />
-        &copy; Roberto
+        &copy; Roberto, {DATA_SOURCE}
       </Container>
     </>
   )
