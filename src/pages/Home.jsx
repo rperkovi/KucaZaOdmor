@@ -12,7 +12,7 @@ export default function Home(){
       <img src={mojaSlika} alt="Opis slike" className="slika" />
     </div>
     <div className="col-6">
-      kasnije
+    
     </div>
   </div>
     </div>
