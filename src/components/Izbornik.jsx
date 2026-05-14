@@ -23,18 +23,23 @@ export default function Izbornik() {
 
                         {isLoggedIn && (
                             <>
-                            <Nav.Link
+                                <Nav.Link
                                     onClick={() => navigate(RouteNames.NADZORNA_PLOCA)}
                                 >Nadzorna ploča</Nav.Link>
                                 <NavDropdown title="Programi" id="basic-nav-dropdown">
 
-                                    <NavDropdown.Item
-                                        onClick={() => navigate(RouteNames.CIJENE)}
-                                    >Cjenik</NavDropdown.Item>
+                                    {authUser.uloga === 'admin' && (<>
+                                        <NavDropdown.Item
+                                            onClick={() => navigate(RouteNames.CIJENE)}
+                                        >Cjenik</NavDropdown.Item>
+                                        <NavDropdown.Item
+                                            onClick={() => navigate(RouteNames.GOSTI)}
+                                        >Gosti</NavDropdown.Item>
 
-                                    <NavDropdown.Item
-                                        onClick={() => navigate(RouteNames.GOSTI)}
-                                    >Gosti</NavDropdown.Item>
+                                    </>)}
+
+
+
 
 
 
@@ -61,23 +66,23 @@ export default function Izbornik() {
                     </Nav>
                     <Nav className="ms-auto">
                         <div className="btn-group">
-                            
-                        {isLoggedIn ? (
-                            <Button
-                                className="me-2"
-                                onClick={() => logout()}
-                            >Logout {authUser.email}</Button>
-                        ) : (
-                            <>
+
+                            {isLoggedIn ? (
                                 <Button
                                     className="me-2"
-                                    onClick={() => navigate(RouteNames.REGISTRACIJA)}
-                                >Registracija</Button>
-                                <Button
-                                    onClick={() => navigate(RouteNames.LOGIN)}
-                                >Login</Button>
-                            </>)}
-                            </div>
+                                    onClick={() => logout()}
+                                >Logout {authUser.email}</Button>
+                            ) : (
+                                <>
+                                    <Button
+                                        className="me-2"
+                                        onClick={() => navigate(RouteNames.REGISTRACIJA)}
+                                    >Registracija</Button>
+                                    <Button
+                                        onClick={() => navigate(RouteNames.LOGIN)}
+                                    >Login</Button>
+                                </>)}
+                        </div>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
