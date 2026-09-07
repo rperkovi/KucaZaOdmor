@@ -56,6 +56,62 @@ export const cijene = [
         datumKraja: '2026-10-09T00:00:00',
         cijena: 120,
         popust: 0
+    },
+    {
+        sifra: 9,
+        datumPocetka: '2027-03-23T00:00:00',
+        datumKraja: '2027-05-07T00:00:00',
+        cijena: 120,
+        popust: 0
+    },
+    {
+        sifra: 10,
+        datumPocetka: '2027-05-08T00:00:00',
+        datumKraja: '2027-06-04T00:00:00',
+        cijena: 160,
+        popust: 0
+    },
+    {
+        sifra: 11,
+        datumPocetka: '2027-06-05T00:00:00',
+        datumKraja: '2027-06-18T00:00:00',
+        cijena: 220,
+        popust: 0
+    },
+    {
+        sifra: 12,
+        datumPocetka: '2027-06-19T00:00:00',
+        datumKraja: '2027-07-02T00:00:00',
+        cijena: 280,
+        popust: 0
+    },
+    {
+        sifra: 13,
+        datumPocetka: '2027-07-03T00:00:00',
+        datumKraja: '2027-08-13T00:00:00',
+        cijena: 350,
+        popust: 0
+    },
+    {
+        sifra: 14,
+        datumPocetka: '2027-08-14T00:00:00',
+        datumKraja: '2027-08-27T00:00:00',
+        cijena: 260,
+        popust: 0
+    },
+    {
+        sifra: 15,
+        datumPocetka: '2027-08-28T00:00:00',
+        datumKraja: '2027-09-10T00:00:00',
+        cijena: 200,
+        popust: 0
+    },
+    {
+        sifra: 16,
+        datumPocetka: '2027-09-11T00:00:00',
+        datumKraja: '2027-10-08T00:00:00',
+        cijena: 140,
+        popust: 0
     }
 ]
 

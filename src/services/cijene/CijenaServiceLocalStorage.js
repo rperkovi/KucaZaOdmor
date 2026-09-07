@@ -1,8 +1,42 @@
+import { cijene as zadaneCijene } from './CijenaPodaci';
+
 const STORAGE_KEY = 'cijene';
 
 function dohvatiSveIzStorage() {
     const podaci = localStorage.getItem(STORAGE_KEY);
-    return podaci ? JSON.parse(podaci) : [];
+
+    if (!podaci) {
+        const inicijalneCijene = [...zadaneCijene];
+        spremiUStorage(inicijalneCijene);
+        return inicijalneCijene;
+    }
+
+    try {
+        const parsed = JSON.parse(podaci);
+
+        if (!Array.isArray(parsed) || parsed.length === 0) {
+            const inicijalneCijene = [...zadaneCijene];
+            spremiUStorage(inicijalneCijene);
+            return inicijalneCijene;
+        }
+
+        const ima2027 = parsed.some(item => item.datumPocetka && item.datumPocetka.startsWith('2027'));
+
+        if (!ima2027) {
+            const spojeneCijene = [
+                ...zadaneCijene,
+                ...parsed.filter(item => !zadaneCijene.some(zadana => zadana.sifra === item.sifra))
+            ];
+            spremiUStorage(spojeneCijene);
+            return spojeneCijene;
+        }
+
+        return parsed;
+    } catch (error) {
+        const inicijalneCijene = [...zadaneCijene];
+        spremiUStorage(inicijalneCijene);
+        return inicijalneCijene;
+    }
 }
 
 function spremiUStorage(podaci) {
