@@ -5,6 +5,8 @@ import { GrValidate } from "react-icons/gr"
 import { Link, useNavigate } from "react-router-dom"
 import { RouteNames } from "../../constants.js"
 import RezervacijaService from "../../services/rezervacije/RezervacijaService.js"
+import CijenaService from "../../services/cijene/CijenaService"
+import { izracunajUkupnuCijenu } from "../../utils"
 import FormatDatuma from "../../components/FormatDatuma.jsx"
 import { NumericFormat } from "react-number-format"
 import RezervacijaPDFGenerator from "../../components/RezervacijaPDFGenerator.jsx"
@@ -14,10 +16,12 @@ export default function RezervacijaPregled() {
     const navigate = useNavigate()
     const [rezervacije, setRezervacije] = useState([])
     const [gosti, setGosti] = useState([])
+    const [cijene, setCijene] = useState([])
 
     useEffect(() => {
         ucitajGoste()
         ucitajRezervacije()
+        ucitajCijene()
     }, [])
 
     async function ucitajRezervacije() {
@@ -52,6 +56,16 @@ export default function RezervacijaPregled() {
         }
         await RezervacijaService.obrisi(sifra)
         ucitajRezervacije()
+    }
+
+    async function ucitajCijene() {
+        await CijenaService.get().then((odgovor) => {
+            if (!odgovor.success) {
+                setCijene([])
+                return
+            }
+            setCijene(odgovor.data)
+        })
     }
 
     function brojDana(odDatuma, doDatuma) {
@@ -125,7 +139,7 @@ export default function RezervacijaPregled() {
                         <th>Gost</th>
                         <th>Datum rezerviranja</th>
                         <th>Razdoblje rezervacije</th>
-                        <th>Ukupno</th>
+                        <th>Ukupno (izračunato)</th>
                         <th>Potvrdio</th>
                         <th>Ugovorena cijena</th>
                         <th>Uplaćeno</th>
@@ -145,16 +159,18 @@ export default function RezervacijaPregled() {
                                 &nbsp;({brojDana(rezervacija.datumPocetka, rezervacija.datumKraja)})
                             </td>
                             <td>
-                                <NumericFormat
-                                    value={rezervacija.cijena}
-                                    displayType={'text'}
-                                    thousandSeparator='.'
-                                    decimalSeparator=','
-                                    suffix=' €'
-                                    prefix='='
-                                    decimalScale={2}
-                                    fixedDecimalScale
-                                />
+                                {cijene && cijene.length > 0 ? (
+                                    <NumericFormat
+                                        value={Number(izracunajUkupnuCijenu(rezervacija.datumPocetka, rezervacija.datumKraja, cijene))}
+                                        displayType={'text'}
+                                        thousandSeparator='.'
+                                        decimalSeparator=','
+                                        suffix=' €'
+                                        prefix='='
+                                        decimalScale={2}
+                                        fixedDecimalScale
+                                    />
+                                ) : '-'}
                             </td>
 
                             <td>
