@@ -45,6 +45,7 @@ export default function RezervacijaPregled() {
     }
 
 
+
     async function obrisi(sifra) {
         if (!confirm('Sigurno obrisati')) {
             return
@@ -64,6 +65,28 @@ export default function RezervacijaPregled() {
     function dohvatiPodatkeGosta(sifraGosta) {
         const gost = gosti.find(s => s.sifra === sifraGosta)
         return gost ? gost.ime + ' ' + gost.prezime + '<' + gost.email + '>' : 'Nepoznat gost'
+    }
+
+    function jePotvrdena(rezervacija) {
+        return Boolean(rezervacija?.potvrdio ?? rezervacija?.platio ?? false)
+    }
+
+    function izracunajUgovorenuCijenu(rezervacija) {
+        // Ugovorena cijena se sada čita iz samog objekta rezervacije (unos na stranici Promjena)
+        return rezervacija?.cijena != null ? Number(rezervacija.cijena) : null
+    }
+
+    function izracunajUplaceno(rezervacija) {
+        // Uplaćeno se sada čita iz rezervacija.uplaceno; vraća broj (0 kada nije postavljeno)
+        return Number(rezervacija?.uplaceno ?? 0)
+    }
+
+    function izracunajZaPlatiti(rezervacija) {
+        // Za platiti = cijena - uplaceno; ne smije biti negativno
+        const cijena = Number(rezervacija?.cijena ?? 0)
+        const uplaceno = izracunajUplaceno(rezervacija)
+        const razlika = cijena - uplaceno
+        return razlika > 0 ? razlika : 0
     }
     
     // PDF
@@ -102,8 +125,11 @@ export default function RezervacijaPregled() {
                         <th>Gost</th>
                         <th>Datum rezerviranja</th>
                         <th>Razdoblje rezervacije</th>
-                        <th>Cijena</th>
-                        <th>Platio</th>
+                        <th>Ukupno</th>
+                        <th>Potvrdio</th>
+                        <th>Ugovorena cijena</th>
+                        <th>Uplaćeno</th>
+                        <th>Za platiti</th>
                         <th>Akcija</th>
                     </tr>
                 </thead>
@@ -134,7 +160,48 @@ export default function RezervacijaPregled() {
                             <td>
                                 <GrValidate
                                     size={25}
-                                    color={rezervacija.platio ? 'green' : 'red'}
+                                    color={jePotvrdena(rezervacija) ? 'green' : 'red'}
+                                />
+                            </td>
+
+                            <td>
+                                {izracunajUgovorenuCijenu(rezervacija) == null ? '-' : (
+                                    <NumericFormat
+                                        value={izracunajUgovorenuCijenu(rezervacija)}
+                                        displayType={'text'}
+                                        thousandSeparator='.'
+                                        decimalSeparator=','
+                                        suffix=' €'
+                                        prefix='='
+                                        decimalScale={2}
+                                        fixedDecimalScale
+                                    />
+                                )}
+                            </td>
+
+                            <td>
+                                <NumericFormat
+                                    value={izracunajUplaceno(rezervacija)}
+                                    displayType={'text'}
+                                    thousandSeparator='.'
+                                    decimalSeparator=','
+                                    suffix=' €'
+                                    prefix='='
+                                    decimalScale={2}
+                                    fixedDecimalScale
+                                />
+                            </td>
+
+                            <td>
+                                <NumericFormat
+                                    value={izracunajZaPlatiti(rezervacija)}
+                                    displayType={'text'}
+                                    thousandSeparator='.'
+                                    decimalSeparator=','
+                                    suffix=' €'
+                                    prefix='='
+                                    decimalScale={2}
+                                    fixedDecimalScale
                                 />
                             </td>
 

@@ -7,6 +7,7 @@ import DatePicker from "react-datepicker";
 import GostService from "../../services/gosti/GostService";
 import CijenaService from "../../services/cijene/CijenaService";
 import { izracunajUkupnuCijenu } from "../../utils";
+import { NumericFormat } from 'react-number-format';
 
 export default function RezervacijePromjena(){
 
@@ -85,11 +86,12 @@ export default function RezervacijePromjena(){
         
         promjeni({
             gost: parseInt(podaci.get('gost')),
-            cijena: izracunajUkupnuCijenu(startDate, endDate, cijene), //parseFloat(podaci.get('cijena')), -- Ovdje će se dovući cijena iz cjenika za to razdoblje
+        cijena: (podaci.get('cijena') !== null && podaci.get('cijena') !== '') ? Number(podaci.get('cijena')) : izracunajUkupnuCijenu(startDate, endDate, cijene),
             datumRezervacije: new Date().toISOString(),
             datumPocetka: startDate.toISOString(),
             datumKraja: endDate.toISOString(),
-            platio: podaci.get('platio') === 'on'
+            platio: podaci.get('platio') === 'on',
+        uplaceno: (podaci.get('uplaceno') !== null && podaci.get('uplaceno') !== '') ? Number(podaci.get('uplaceno')) : 0
         })
     }
 
@@ -158,12 +160,59 @@ export default function RezervacijePromjena(){
                             <Row className="align-items-center" style={{marginBottom: '10px'}}>
 
 
+                                {/* Uplaćeno - uređivo numeričko polje (sada lijevo) */}
+                                <Col md={6}>
+                                    <Form.Group controlId="izracunatoUkupno" className="mb-2 mt-md-3 text-start">
+                                        <Form.Label className="fw-bold">Ukupno (izračunato)</Form.Label>
+                                        <div className="form-control-plaintext">
+                                            {startDate && endDate ? (
+                                                <NumericFormat
+                                                    value={Number(izracunajUkupnuCijenu(startDate, endDate, cijene))}
+                                                    displayType={'text'}
+                                                    thousandSeparator='.'
+                                                    decimalSeparator=','
+                                                    decimalScale={2}
+                                                    fixedDecimalScale
+                                                    suffix=' €'
+                                                    prefix='='
+                                                />
+                                            ) : '-'}
+                                        </div>
+                                    </Form.Group>
+
+                                    <Form.Group controlId="ugovorenaCijena" className="mb-2 mt-md-1 text-start">
+                                        <Form.Label className="fw-bold">Ugovorena cijena</Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            name="cijena"
+                                            step="any"
+                                            min="0"
+                                            value={rezervacija.cijena ?? ''}
+                                            onChange={(e) => setRezervacija({...rezervacija, cijena: e.target.value})}
+                                            placeholder="Unesite iznos (npr. 100.00)"
+                                        />
+                                    </Form.Group>
+
+                                    <Form.Group controlId="uplaceno" className="mb-3 mt-md-2 text-start">
+                                        <Form.Label className="fw-bold">Uplaćeno</Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            name="uplaceno"
+                                            step="any"
+                                            min="0"
+                                            value={rezervacija.uplaceno ?? ''}
+                                            onChange={(e) => setRezervacija({...rezervacija, uplaceno: e.target.value})}
+                                            placeholder="Unesite iznos (npr. 100.50)"
+                                        />
+                                    </Form.Group>
+                                </Col>
+
                                 {/* Aktivan - Switch umjesto checkboxa za moderniji izgled */}
                                 <Col md={6}>
-                                    <Form.Group controlId="platio" className="mb-3 mt-md-3">
+                                    <Form.Group controlId="platio" className="mb-3 mt-md-3 text-start">
                                         <Form.Check
                                             type="switch"
-                                            label="Rezervacija je potvrđena"
+                                            label="Rezervacija je plaćena"
                                             name="platio"
                                             className="fs-5"
                                             checked={platio}
