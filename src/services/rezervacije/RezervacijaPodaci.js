@@ -6,7 +6,7 @@ export const rezervacije = [
         datumRezervacije: '2026-03-02T17:00:00',
         datumPocetka: '2026-04-02T17:00:00',
         datumKraja: '2026-04-04T17:00:00',
-        platio: true
+        platio: false
     },
     {
         sifra: 2,
@@ -24,7 +24,7 @@ export const rezervacije = [
         datumRezervacije: '2026-03-02T17:00:00',
         datumPocetka: '2026-04-28T17:00:00',
         datumKraja: '2026-05-02T17:00:00',
-        platio: true
+        platio: false
     },
     {
         sifra: 4,
@@ -33,7 +33,7 @@ export const rezervacije = [
         datumRezervacije: '2026-05-22T17:00:00',
         datumPocetka: '2026-08-22T17:00:00',
         datumKraja: '2026-09-04T17:00:00',
-        platio: true
+        platio: false
     },
     {
         sifra: 5,
@@ -42,6 +42,26 @@ export const rezervacije = [
         datumRezervacije: '2026-01-02T17:00:00',
         datumPocetka: '2026-08-02T17:00:00',
         datumKraja: '2026-08-14T17:00:00',
-        platio: true
+        platio: false
+    },
+    {
+        sifra: 6,
+        gost: 7,
+        cijena: 1260,
+        datumRezervacije: '2026-09-09T00:00:00',
+        datumPocetka: '2027-08-27T00:00:00',
+        datumKraja: '2027-09-02T00:00:00',
+        platio: false,
+        uplaceno: 0
+    },
+    {
+        sifra: 7,
+        gost: 6,
+        cijena: 2160,
+        datumRezervacije: '2026-09-09T00:00:00',
+        datumPocetka: '2027-09-02T00:00:00',
+        datumKraja: '2027-09-14T00:00:00',
+        platio: false,
+        uplaceno: 0
     }
 ]
