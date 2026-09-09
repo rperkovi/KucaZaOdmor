@@ -1,5 +1,6 @@
 import GostServiceLocalStorage from "./GostServiceLocalStorage";
 import GostServiceMemorija from "./GostServiceMemorija";
+import GostServiceFirebase from "./GostServiceFirebase";
 import { DATA_SOURCE } from "../../constants";
 
 let Servis = null;
@@ -11,6 +12,9 @@ switch (DATA_SOURCE) {
         break;
     case 'localStorage':
         Servis = GostServiceLocalStorage;
+        break;
+    case 'firebase':
+        Servis = GostServiceFirebase;
         break;
     default:
         Servis = null;
