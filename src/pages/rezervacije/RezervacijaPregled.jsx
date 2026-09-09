@@ -180,7 +180,7 @@ export default function RezervacijaPregled() {
                                 />
                             </td>
 
-                            <td>
+                            <td className="fw-bold">
                                 {izracunajUgovorenuCijenu(rezervacija) == null ? '-' : (
                                     <NumericFormat
                                         value={izracunajUgovorenuCijenu(rezervacija)}
@@ -208,7 +208,7 @@ export default function RezervacijaPregled() {
                                 />
                             </td>
 
-                            <td>
+                            <td className="text-danger fw-bold">
                                 <NumericFormat
                                     value={izracunajZaPlatiti(rezervacija)}
                                     displayType={'text'}

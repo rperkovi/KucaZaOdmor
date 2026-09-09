@@ -59,6 +59,7 @@ export default function GostPregled() {
                         <th>Prezime</th>
                         <th>Država</th>
                         <th>Email</th>
+                        <th>Broj telefona</th>
                         <th>Aktivan</th>
                         <th>Akcija</th>
                     </tr>
@@ -70,6 +71,7 @@ export default function GostPregled() {
                             <td>{gost.prezime}</td>
                             <td>{countryList().getData().find(e=>e.value==gost.drzava).label}</td>
                             <td>{gost.email}</td>
+                            <td>{gost.telefon || '-'}</td>
 
                             <td>
                                 <GrValidate

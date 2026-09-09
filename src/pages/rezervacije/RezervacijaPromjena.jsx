@@ -105,6 +105,12 @@ export default function RezervacijePromjena(){
         return Math.round(razlikaUMilisekundama / milisekundiUDanu) + ' dana';
     }
 
+    function izracunajZaPlatiti() {
+        const cijena = Number(rezervacija.cijena ?? 0)
+        const uplaceno = Number(rezervacija.uplaceno ?? 0)
+        return Math.max(cijena - uplaceno, 0)
+    }
+
 
     return(
         <>
@@ -212,7 +218,7 @@ export default function RezervacijePromjena(){
                                     <Form.Group controlId="platio" className="mb-3 mt-md-3 text-start">
                                         <Form.Check
                                             type="switch"
-                                            label="Rezervacija je plaćena"
+                                            label="Rezervacija je potvrđena"
                                             name="platio"
                                             className="fs-5"
                                             checked={platio}
@@ -221,6 +227,22 @@ export default function RezervacijePromjena(){
                                     </Form.Group>
                                 </Col>
                             </Row>
+
+                            <Form.Group controlId="zaPlatiti" className="mb-3 mt-2 text-start">
+                                <Form.Label className="fw-bold text-danger">Za Platiti</Form.Label>
+                                <div className="form-control-plaintext text-danger fw-bold">
+                                    <NumericFormat
+                                        value={izracunajZaPlatiti()}
+                                        displayType={'text'}
+                                        thousandSeparator='.'
+                                        decimalSeparator=','
+                                        decimalScale={2}
+                                        fixedDecimalScale
+                                        prefix='='
+                                        suffix=' €'
+                                    />
+                                </div>
+                            </Form.Group>
 
                             <hr />
 

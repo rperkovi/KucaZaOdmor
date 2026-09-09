@@ -9,12 +9,16 @@ import 'react-datepicker/dist/react-datepicker.css';
 import hr from 'date-fns/locale/hr';
 import CijenaService from "../../services/cijene/CijenaService";
 import { izracunajUkupnuCijenu } from "../../utils";
+import { NumericFormat } from 'react-number-format';
 
 export default function RezervacijaNovi() {
 
     const navigate = useNavigate()
     const [gosti, setGosti] = useState([])
     const[cijene, setCijene] = useState([])
+    const [cijena, setCijena] = useState('')
+    const [uplaceno, setUplaceno] = useState('')
+    const [platio, setPlatio] = useState(false)
 
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
@@ -65,11 +69,12 @@ export default function RezervacijaNovi() {
 
         dodaj({
             gost: parseInt(podaci.get('gost')),
-            cijena: izracunajUkupnuCijenu(startDate, endDate, cijene), //parseFloat(podaci.get('cijena')), -- Ovdje će se dovući cijena iz cjenika za to razdoblje
+            cijena: podaci.get('cijena') !== '' ? Number(podaci.get('cijena')) : izracunajUkupnuCijenu(startDate, endDate, cijene),
             datumRezervacije: new Date().toISOString(),
             datumPocetka: startDate.toISOString(),
             datumKraja: endDate.toISOString(),
-            platio: podaci.get('platio') === 'on'
+            platio: podaci.get('platio') === 'on',
+            uplaceno: podaci.get('uplaceno') !== '' ? Number(podaci.get('uplaceno')) : 0
         })
     }
 
@@ -85,6 +90,10 @@ export default function RezervacijaNovi() {
         return Math.round(razlikaUMilisekundama / milisekundiUDanu) + ' dana';
     }
 
+    function izracunajZaPlatiti() {
+        const ukupnaCijena = cijena !== '' ? Number(cijena) : (startDate && endDate ? izracunajUkupnuCijenu(startDate, endDate, cijene) : 0)
+        return Math.max(ukupnaCijena - Number(uplaceno || 0), 0)
+    }
 
 
     return (
@@ -140,20 +149,80 @@ export default function RezervacijaNovi() {
                             </Row>
 
                             <Row className="align-items-center" style={{ marginBottom: '10px' }}>
-
-
-                                {/* Aktivan - Switch umjesto checkboxa za moderniji izgled */}
                                 <Col md={6}>
-                                    <Form.Group controlId="platio" className="mb-3 mt-md-3">
+                                    <Form.Group controlId="izracunatoUkupno" className="mb-2 mt-md-3 text-start">
+                                        <Form.Label className="fw-bold">Ukupno (izračunato)</Form.Label>
+                                        <div className="form-control-plaintext">
+                                            {startDate && endDate ? (
+                                                <NumericFormat
+                                                    value={Number(izracunajUkupnuCijenu(startDate, endDate, cijene))}
+                                                    displayType={'text'}
+                                                    thousandSeparator='.'
+                                                    decimalSeparator=','
+                                                    decimalScale={2}
+                                                    fixedDecimalScale
+                                                    prefix='='
+                                                    suffix=' €'
+                                                />
+                                            ) : '-'}
+                                        </div>
+                                    </Form.Group>
+
+                                    <Form.Group controlId="ugovorenaCijena" className="mb-2 mt-md-1 text-start">
+                                        <Form.Label className="fw-bold">Ugovorena cijena</Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            name="cijena"
+                                            step="any"
+                                            min="0"
+                                            value={cijena}
+                                            onChange={(e) => setCijena(e.target.value)}
+                                            placeholder="Unesite iznos (npr. 100.00)"
+                                        />
+                                    </Form.Group>
+
+                                    <Form.Group controlId="uplaceno" className="mb-3 mt-md-2 text-start">
+                                        <Form.Label className="fw-bold">Uplaćeno</Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            name="uplaceno"
+                                            step="any"
+                                            min="0"
+                                            value={uplaceno}
+                                            onChange={(e) => setUplaceno(e.target.value)}
+                                            placeholder="Unesite iznos (npr. 100.50)"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                <Col md={6}>
+                                    <Form.Group controlId="platio" className="mb-3 mt-md-3 text-start">
                                         <Form.Check
                                             type="switch"
-                                            label="Rezervacija je plaćena"
+                                            label="Rezervacija je potvrđena"
                                             name="platio"
                                             className="fs-5"
+                                            checked={platio}
+                                            onChange={(e) => setPlatio(e.target.checked)}
                                         />
                                     </Form.Group>
                                 </Col>
                             </Row>
+
+                            <Form.Group controlId="zaPlatiti" className="mb-3 mt-2 text-start">
+                                <Form.Label className="fw-bold text-danger">Za Platiti</Form.Label>
+                                <div className="form-control-plaintext text-danger fw-bold">
+                                    <NumericFormat
+                                        value={izracunajZaPlatiti()}
+                                        displayType={'text'}
+                                        thousandSeparator='.'
+                                        decimalSeparator=','
+                                        decimalScale={2}
+                                        fixedDecimalScale
+                                        prefix='='
+                                        suffix=' €'
+                                    />
+                                </div>
+                            </Form.Group>
 
                             <hr />
 

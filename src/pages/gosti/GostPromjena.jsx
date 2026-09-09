@@ -95,6 +95,7 @@ export default function GostPromjena(){
             ime: podaci.get('ime'),
             prezime: podaci.get('prezime'),
             email: podaci.get('email'),
+            telefon: podaci.get('telefon'),
             drzava: drzava.value,
             aktivan: aktivan,
         })
@@ -126,6 +127,12 @@ export default function GostPromjena(){
                     <Form.Control type="email" name="email" required 
                     defaultValue={gost.email}/>
                 </Form.Group>
+
+            <Form.Group controlId="telefon">
+                <Form.Label>Broj telefona</Form.Label>
+                <Form.Control type="tel" name="telefon"
+                defaultValue={gost.telefon}/>
+            </Form.Group>
 
 
 

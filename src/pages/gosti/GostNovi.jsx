@@ -67,6 +67,7 @@ export default function GostiNovi() {
             ime: podaci.get('ime'),
             prezime: podaci.get('prezime'),
             email: podaci.get('email'),
+            telefon: podaci.get('telefon'),
             aktivan: podaci.get('aktivan') === 'on',
             drzava: drzava.value
         })
@@ -126,6 +127,16 @@ export default function GostiNovi() {
                                             name="email"
                                             placeholder="Unesite email gosta"
                                             required
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                <Col md={6}>
+                                    <Form.Group controlId="telefon" className="mb-3">
+                                        <Form.Label className="fw-bold">Broj telefona</Form.Label>
+                                        <Form.Control
+                                            type="tel"
+                                            name="telefon"
+                                            placeholder="Unesite broj telefona gosta"
                                         />
                                     </Form.Group>
                                 </Col>
