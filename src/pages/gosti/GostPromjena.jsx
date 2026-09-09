@@ -28,7 +28,7 @@ export default function GostPromjena(){
             
             setGost(s)
 
-            setDrzava(countryList().getData().find(e=>e.value==s.drzava))
+            setDrzava(countryList().getData().find(e=>e.value === s.drzava) || '')
 
            // console.log(countryList().getData())
 

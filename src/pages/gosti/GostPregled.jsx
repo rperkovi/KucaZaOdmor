@@ -45,6 +45,10 @@ export default function GostPregled() {
         return Math.round(razlikaUMilisekundama / milisekundiUDanu);
     }
 
+    function nazivDrzave(sifra) {
+        return countryList().getData().find(e => e.value === sifra)?.label || sifra || '-'
+    }
+
 
     return (
         <>
@@ -69,7 +73,7 @@ export default function GostPregled() {
                         <tr key={gost.sifra}>
                             <td>{gost.ime}</td>
                             <td>{gost.prezime}</td>
-                            <td>{countryList().getData().find(e=>e.value==gost.drzava).label}</td>
+                            <td>{nazivDrzave(gost.drzava)}</td>
                             <td>{gost.email}</td>
                             <td>{gost.telefon || '-'}</td>
 

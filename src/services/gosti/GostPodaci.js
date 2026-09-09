@@ -51,7 +51,7 @@ export const gosti = [
         prezime: 'Delor',
         email: 'd.delor@web.de',
         telefon: '+49 170 4705335',
-        drzava: 'GER',
+        drzava: 'DE',
         aktivan: true
     },
     {
@@ -60,7 +60,7 @@ export const gosti = [
         prezime: 'Mattersdorfer',
         email: 'karin.mattersdorfer@gmail.com',
         telefon: '+49 200 1234567',
-        drzava: 'GER',
+        drzava: 'AT',
         aktivan: true
     },
     {
@@ -69,7 +69,7 @@ export const gosti = [
         prezime: 'Koessler',
         email: 'guenther.koessler@gmail.com',
         telefon: '+49 100 1234567',
-        drzava: 'GER',
+        drzava: 'DE',
         aktivan: true
     },
     {
@@ -78,7 +78,7 @@ export const gosti = [
         prezime: 'Rainer',
         email: 'd.rainer@web.de',
         telefon: '+49 175 3497192',
-        drzava: 'GER',
+        drzava: 'DE',
         aktivan: true
     }
 ]
