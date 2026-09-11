@@ -12,11 +12,12 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost, language = 
         guestData: 'Gästedaten:',
         reservationDate: 'Reservierungsdatum',
         guest: 'Gast',
+        email: 'E-Mail',
+        phone: 'Telefonnummer',
         startDate: 'Beginn der Reservierung',
         endDate: 'Ende der Reservierung',
         totalDays: 'Gesamtdauer',
         total: 'Gesamtbetrag',
-        submittedDate: 'Datum der Reservierungsanfrage',
         confirmed: 'Bestätigt',
         country: 'Wohnsitzland',
         yes: 'JA',
@@ -32,11 +33,12 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost, language = 
         guestData: 'Podaci o gostu:',
         reservationDate: 'Datum rezervacije',
         guest: 'Gost',
+        email: 'E-mail',
+        phone: 'Broj telefona',
         startDate: 'Datum početka rezervacije',
         endDate: 'Datum završetka rezervacije',
         totalDays: 'Ukupno dana',
         total: 'Ukupno',
-        submittedDate: 'Datum podnošenja rezervacije',
         confirmed: 'Potvrdio',
         country: 'Država prebivališta',
         yes: 'DA',
@@ -135,8 +137,6 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost, language = 
         yPosition += 7;
         doc.text(`${text.total}: ${rezervacija.cijena} EUR`, 25, yPosition);
         yPosition += 7;
-        doc.text(`${text.submittedDate}: ${new Date(rezervacija.datumRezervacije).toLocaleDateString(locale)}`, 25, yPosition);
-        yPosition += 7;
         doc.text(`${text.confirmed}: ${rezervacija.platio ? text.yes : text.no}`, 25, yPosition);
         yPosition += 15;
 
@@ -148,6 +148,10 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost, language = 
         doc.setFontSize(11);
         doc.setFont(undefined, 'normal');
         doc.text(`${text.guest}: ${gost.ime} ${gost.prezime}`, 25, yPosition);
+        yPosition += 7;
+        doc.text(`${text.email}: ${gost.email || '-'}`, 25, yPosition);
+        yPosition += 7;
+        doc.text(`${text.phone}: ${gost.telefon || '-'}`, 25, yPosition);
         yPosition += 7;
         doc.text(`${text.country}: ${countryList().getData().find(e=>e.value==gost.drzava).label}`, 25, yPosition);
         yPosition += 7;
