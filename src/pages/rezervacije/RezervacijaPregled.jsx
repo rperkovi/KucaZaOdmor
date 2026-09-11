@@ -105,7 +105,7 @@ export default function RezervacijaPregled() {
     
     // PDF
 
-    async function generirajPDFZaRezervacija(rezervacija) {
+    async function generirajPDFZaRezervacija(rezervacija, language = 'hr') {
        
 
         // Dohvati sve polaznike
@@ -121,7 +121,8 @@ export default function RezervacijaPregled() {
         // Generiraj PDF
         const generiraj = RezervacijaPDFGenerator({ 
             rezervacija, 
-            gost: gostRezervacije 
+            gost: gostRezervacije,
+            language
         })
         await generiraj()
     }
@@ -232,6 +233,10 @@ export default function RezervacijaPregled() {
                                                             &nbsp;&nbsp;
                             <Button variant="info" onClick={() => generirajPDFZaRezervacija(rezervacija)}>
                                 PDF
+                            </Button>
+                            &nbsp;&nbsp;
+                            <Button variant="secondary" onClick={() => generirajPDFZaRezervacija(rezervacija, 'de')}>
+                                PDF DE
                             </Button>
 
                             </td>

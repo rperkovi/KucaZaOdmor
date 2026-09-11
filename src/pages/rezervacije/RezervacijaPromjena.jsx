@@ -6,7 +6,7 @@ import RezervacijaService from "../../services/rezervacije/RezervacijaService";
 import DatePicker from "react-datepicker";
 import GostService from "../../services/gosti/GostService";
 import CijenaService from "../../services/cijene/CijenaService";
-import { izracunajUkupnuCijenu } from "../../utils";
+import { datumJeRezerviran, izracunajUkupnuCijenu, rezervacijaPreklapaRaspon } from "../../utils";
 import { NumericFormat } from 'react-number-format';
 
 export default function RezervacijePromjena(){
@@ -17,6 +17,7 @@ export default function RezervacijePromjena(){
     const [rezervacija,setRezervacija] = useState({})
     const [platio,setPlatio] = useState(false)
     const[cijene, setCijene] = useState([])
+    const [rezervacije, setRezervacije] = useState([])
 
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
@@ -26,6 +27,7 @@ export default function RezervacijePromjena(){
         ucitajCijene()
          ucitajGoste()
         ucitajRezervacija()
+        ucitajRezervacije()
     },[])
 
     async function ucitajCijene() {
@@ -35,10 +37,19 @@ export default function RezervacijePromjena(){
                         alert('Nije implementiran servis')
                         return
                     }
-        
+
                     setCijene(odgovor.data)
                 })
             }
+
+    async function ucitajRezervacije() {
+        const odgovor = await RezervacijaService.get()
+        if (!odgovor.success) {
+            alert('Nije moguće dohvatiti postojeće rezervacije')
+            return
+        }
+        setRezervacije(odgovor.data)
+    }
     
 
     async function ucitajRezervacija() {
@@ -82,6 +93,14 @@ export default function RezervacijePromjena(){
 
     function odradiSubmit(e){ //e je event
         e.preventDefault() // nemoj odraditi submit
+        if (!startDate || !endDate) {
+            alert('Odaberite početak i kraj rezervacije')
+            return
+        }
+        if (rezervacijaPreklapaRaspon(rezervacije, startDate, endDate, params.sifra)) {
+            alert('Odabrani termin je već rezerviran')
+            return
+        }
         const podaci = new FormData(e.target)
         
         promjeni({
@@ -150,8 +169,15 @@ export default function RezervacijePromjena(){
                                             startDate={startDate}
                                             endDate={endDate}
                                             onChange={(update) => {
+                                                if (update[0] && update[1] && rezervacijaPreklapaRaspon(rezervacije, update[0], update[1], params.sifra)) {
+                                                    alert('Odabrani termin je već rezerviran')
+                                                    setDateRange([null, null])
+                                                    return
+                                                }
                                                 setDateRange(update);
                                             }}
+                                            filterDate={(date) => !datumJeRezerviran(rezervacije, date, params.sifra)}
+                                            dayClassName={(date) => datumJeRezerviran(rezervacije, date, params.sifra) ? 'rezervirani-dan' : undefined}
                                             isClearable={true}
                                             // Dodavanje Bootstrap klase input polju
                                             className="form-control odabirDatuma"

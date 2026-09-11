@@ -7,3 +7,10 @@
 .odabirDatuma{
   width: 300px;
 }
+
+.react-datepicker__day.rezervirani-dan,
+.react-datepicker__day--disabled.rezervirani-dan {
+  background-color: #343a40;
+  color: #fff;
+  border-radius: 0.3rem;
+}

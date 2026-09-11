@@ -1,8 +1,50 @@
 import { jsPDF } from 'jspdf';
-import { autoTable } from 'jspdf-autotable';
 import countryList from 'react-select-country-list'
 
-export default function RezervacijaPDFGenerator({ rezervacija, gost }) {
+export default function RezervacijaPDFGenerator({ rezervacija, gost, language = 'hr' }) {
+    const isGerman = language === 'de';
+    const locale = isGerman ? 'de-DE' : 'hr-HR';
+    const text = isGerman ? {
+        subtitle: 'RESERVIERUNGS- UND GÄSTEVERZEICHNIS',
+        title: 'RESERVIERUNGSÜBERSICHT',
+        initialData: 'Grunddaten der Reservierung:',
+        reservationData: 'Reservierungsdaten:',
+        guestData: 'Gästedaten:',
+        reservationDate: 'Reservierungsdatum',
+        guest: 'Gast',
+        startDate: 'Beginn der Reservierung',
+        endDate: 'Ende der Reservierung',
+        totalDays: 'Gesamtdauer',
+        total: 'Gesamtbetrag',
+        submittedDate: 'Datum der Reservierungsanfrage',
+        confirmed: 'Bestätigt',
+        country: 'Wohnsitzland',
+        yes: 'JA',
+        no: 'NEIN',
+        page: 'Seite',
+        of: 'von',
+        generated: 'Erstellt'
+    } : {
+        subtitle: 'EVIDENCIJA REZERVACIJA I GOSTA',
+        title: 'POPIS REZERVACIJE',
+        initialData: 'Početni podaci rezervacije:',
+        reservationData: 'Podaci o rezervaciji:',
+        guestData: 'Podaci o gostu:',
+        reservationDate: 'Datum rezervacije',
+        guest: 'Gost',
+        startDate: 'Datum početka rezervacije',
+        endDate: 'Datum završetka rezervacije',
+        totalDays: 'Ukupno dana',
+        total: 'Ukupno',
+        submittedDate: 'Datum podnošenja rezervacije',
+        confirmed: 'Potvrdio',
+        country: 'Država prebivališta',
+        yes: 'DA',
+        no: 'NE',
+        page: 'Stranica',
+        of: 'od',
+        generated: 'Generirano'
+    };
 
     const fetchFontAsBase64 = async (url) => {
         const response = await fetch(url);
@@ -49,13 +91,13 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost }) {
 
         doc.setFontSize(10);
         doc.setTextColor(102, 102, 102);
-        doc.text('EVIDENCIJA REZERVACIJA I GOSTA', 20, 27);
+        doc.text(text.subtitle, 20, 27);
 
         // Naslov dokumenta
         doc.setFont('Roboto', 'bold');
         doc.setFontSize(16);
         doc.setTextColor(0, 0, 0);
-        doc.text('POPIS REZERVACIJE', 20, 45);
+        doc.text(text.title, 20, 45);
 
         // Linija ispod naslova
         doc.setDrawColor(46, 125, 50);
@@ -67,47 +109,47 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost }) {
         // Podaci o grupi
         doc.setFontSize(14);
         doc.setFont(undefined, 'bold');
-        doc.text('Početni podaci rezervacije:', 20, yPosition);
+        doc.text(text.initialData, 20, yPosition);
         yPosition += 10;
 
         doc.setFontSize(11);
         doc.setFont(undefined, 'normal');
-        doc.text(`Datum rezervacije: ${new Date(rezervacija.datumRezervacije).toLocaleDateString('hr-HR')}`, 25, yPosition);
+        doc.text(`${text.reservationDate}: ${new Date(rezervacija.datumRezervacije).toLocaleDateString(locale)}`, 25, yPosition);
         yPosition += 7;
-        doc.text(`Gost: ${gost.ime} ${gost.prezime}`, 25, yPosition);
+        doc.text(`${text.guest}: ${gost.ime} ${gost.prezime}`, 25, yPosition);
         yPosition += 15;
 
         // Podaci o smjeru
         doc.setFontSize(14);
         doc.setFont(undefined, 'bold');
-        doc.text('Podaci o rezervaciji:', 20, yPosition);
+        doc.text(text.reservationData, 20, yPosition);
         yPosition += 10;
 
         doc.setFontSize(11);
         doc.setFont(undefined, 'normal');
-        doc.text(`Datum početka rezervacije: ${new Date(rezervacija.datumPocetka).toLocaleDateString('hr-HR')}`, 25, yPosition);
+        doc.text(`${text.startDate}: ${new Date(rezervacija.datumPocetka).toLocaleDateString(locale)}`, 25, yPosition);
         yPosition += 7;
-        doc.text(`Datum završetka rezervacije: ${new Date(rezervacija.datumKraja).toLocaleDateString('hr-HR')}`, 25, yPosition);
+        doc.text(`${text.endDate}: ${new Date(rezervacija.datumKraja).toLocaleDateString(locale)}`, 25, yPosition);
         yPosition += 7;
-        doc.text(`Ukupno dana: ${brojDana(rezervacija.datumPocetka,rezervacija.datumKraja)}`, 25, yPosition);
+        doc.text(`${text.totalDays}: ${brojDana(rezervacija.datumPocetka,rezervacija.datumKraja)}`, 25, yPosition);
         yPosition += 7;
-        doc.text(`Ukupno: ${rezervacija.cijena} EUR`, 25, yPosition);
+        doc.text(`${text.total}: ${rezervacija.cijena} EUR`, 25, yPosition);
         yPosition += 7;
-        doc.text(`Datum podnošenja rezervacije: ${new Date(rezervacija.datumRezervacije).toLocaleDateString('hr-HR')}`, 25, yPosition);
+        doc.text(`${text.submittedDate}: ${new Date(rezervacija.datumRezervacije).toLocaleDateString(locale)}`, 25, yPosition);
         yPosition += 7;
-        doc.text(`Potvrdio: ${rezervacija.platio ? 'DA' : 'NE'}`, 25, yPosition);
+        doc.text(`${text.confirmed}: ${rezervacija.platio ? text.yes : text.no}`, 25, yPosition);
         yPosition += 15;
 
         // Popis gosta
         doc.setFontSize(14);
         doc.setFont(undefined, 'bold');
-        doc.text('Podaci o gostu:', 20, yPosition);
+        doc.text(text.guestData, 20, yPosition);
         yPosition += 10;
         doc.setFontSize(11);
         doc.setFont(undefined, 'normal');
-        doc.text(`Gost: ${gost.ime} ${gost.prezime}`, 25, yPosition);
+        doc.text(`${text.guest}: ${gost.ime} ${gost.prezime}`, 25, yPosition);
         yPosition += 7;
-        doc.text(`Država prebivališta: ${countryList().getData().find(e=>e.value==gost.drzava).label}`, 25, yPosition);
+        doc.text(`${text.country}: ${countryList().getData().find(e=>e.value==gost.drzava).label}`, 25, yPosition);
         yPosition += 7;
         
 
@@ -118,13 +160,13 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost }) {
             doc.setFontSize(8);
             doc.setTextColor(128, 128, 128);
             doc.text(
-                `Stranica ${i} od ${pageCount}`,
+                `${text.page} ${i} ${text.of} ${pageCount}`,
                 doc.internal.pageSize.getWidth() / 2,
                 doc.internal.pageSize.getHeight() - 10,
                 { align: 'center' }
             );
             doc.text(
-                `Generirano: ${new Date().toLocaleString('hr-HR')}`,
+                `${text.generated}: ${new Date().toLocaleString(locale)}`,
                 20,
                 doc.internal.pageSize.getHeight() - 10
             );
