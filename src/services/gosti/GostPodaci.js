@@ -23,14 +23,14 @@ export const gosti = [
         prezime: 'Koessler',
         email: 'guenther.koessler@gmail.com',
         telefon: '+49 100 1234567',
-        drzava: 'DE',
+        drzava: 'AT',
         aktivan: true
     },
     {
         sifra: 9,
-        ime: 'Denis',
-        prezime: 'Rainer',
-        email: 'd.rainer@web.de',
+        ime: 'Rainer',
+        prezime: 'Siesel',
+        email: 'rainer.siesel@gmail.com',
         telefon: '+49 175 3497192',
         drzava: 'DE',
         aktivan: true
