@@ -10,6 +10,7 @@ import { izracunajUkupnuCijenu } from "../../utils"
 import FormatDatuma from "../../components/FormatDatuma.jsx"
 import { NumericFormat } from "react-number-format"
 import RezervacijaPDFGenerator from "../../components/RezervacijaPDFGenerator.jsx"
+import { izracunajCijenuLjubimaca } from "../../utils"
 
 export default function RezervacijaPregled() {
 
@@ -78,7 +79,7 @@ export default function RezervacijaPregled() {
 
     function dohvatiPodatkeGosta(sifraGosta) {
         const gost = gosti.find(s => s.sifra === sifraGosta)
-        return gost ? gost.ime + ' ' + gost.prezime + '<' + gost.email + '>' : 'Nepoznat gost'
+        return gost ? gost.ime + ' ' + gost.prezime : 'Nepoznat gost'
     }
 
     function jePotvrdena(rezervacija) {
@@ -86,8 +87,15 @@ export default function RezervacijaPregled() {
     }
 
     function izracunajUgovorenuCijenu(rezervacija) {
-        // Ugovorena cijena se sada čita iz samog objekta rezervacije (unos na stranici Promjena)
-        return rezervacija?.cijena != null ? Number(rezervacija.cijena) : null
+        if (rezervacija?.osnovnaCijena != null) {
+            return Number(rezervacija.osnovnaCijena)
+        }
+        if (rezervacija?.cijena != null) {
+            return Number(rezervacija.cijena)
+        }
+        return cijene.length > 0
+            ? Number(izracunajUkupnuCijenu(rezervacija.datumPocetka, rezervacija.datumKraja, cijene))
+            : null
     }
 
     function izracunajUplaceno(rezervacija) {
@@ -97,9 +105,14 @@ export default function RezervacijaPregled() {
 
     function izracunajZaPlatiti(rezervacija) {
         // Za platiti = cijena - uplaceno; ne smije biti negativno
-        const cijena = Number(rezervacija?.cijena ?? 0)
+        const cijena = izracunajUgovorenuCijenu(rezervacija) ?? 0
+        const dodatakZaLjubimce = izracunajCijenuLjubimaca(
+            rezervacija?.kucniLjubimci,
+            rezervacija?.datumPocetka,
+            rezervacija?.datumKraja
+        )
         const uplaceno = izracunajUplaceno(rezervacija)
-        const razlika = cijena - uplaceno
+        const razlika = cijena + dodatakZaLjubimce - uplaceno
         return razlika > 0 ? razlika : 0
     }
     
@@ -138,11 +151,11 @@ export default function RezervacijaPregled() {
                 <thead>
                     <tr>
                         <th>Gost</th>
-                        <th>Datum rezerviranja</th>
-                        <th>Razdoblje rezervacije</th>
+                        <th className="razdoblje-rezervacije">Razdoblje rezervacije</th>
                         <th>Ukupno (izračunato)</th>
                         <th>Potvrdio</th>
-                        <th>Ugovorena cijena</th>
+                        <th>Ugovorena cijena (bez kućnih ljubimaca)</th>
+                        <th>Kućni ljubimci (ukupno)</th>
                         <th>Uplaćeno</th>
                         <th>Za platiti</th>
                         <th>Akcija</th>
@@ -152,10 +165,7 @@ export default function RezervacijaPregled() {
                     {rezervacije && rezervacije.map((rezervacija) => (
                         <tr key={rezervacija.sifra}>
                             <td>{dohvatiPodatkeGosta(rezervacija.gost)}</td>
-                            <td>
-                                <FormatDatuma datum={rezervacija.datumRezervacije} />
-                            </td>
-                            <td>
+                            <td className="razdoblje-rezervacije">
                                 <FormatDatuma datum={rezervacija.datumPocetka} /> - <FormatDatuma datum={rezervacija.datumKraja} />
                                 &nbsp;({brojDana(rezervacija.datumPocetka, rezervacija.datumKraja)})
                             </td>
@@ -194,6 +204,22 @@ export default function RezervacijaPregled() {
                                         fixedDecimalScale
                                     />
                                 )}
+                            </td>
+
+                            <td className="fw-bold">
+                                <NumericFormat
+                                    value={izracunajCijenuLjubimaca(
+                                        rezervacija.kucniLjubimci,
+                                        rezervacija.datumPocetka,
+                                        rezervacija.datumKraja
+                                    )}
+                                    displayType="text"
+                                    thousandSeparator="."
+                                    decimalSeparator=","
+                                    decimalScale={2}
+                                    fixedDecimalScale
+                                    suffix=" €"
+                                />
                             </td>
 
                             <td>
@@ -236,7 +262,7 @@ export default function RezervacijaPregled() {
                             </Button>
                             &nbsp;&nbsp;
                             <Button variant="secondary" onClick={() => generirajPDFZaRezervacija(rezervacija, 'de')}>
-                                PDF DE
+                                PDF GER
                             </Button>
 
                             </td>

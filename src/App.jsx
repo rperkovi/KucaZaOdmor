@@ -14,7 +14,6 @@ import CijenaPregled from './pages/cijene/CijenaPregled'
 import CijenaNovi from './pages/cijene/CijenaNovi'
 import CijenaPromjena from './pages/cijene/CijenaPromjena'
 import RezervacijePromjena from './pages/rezervacije/RezervacijaPromjena'
-import GeneriranjePodataka from './pages/GeneriranjePodataka'
 import OperaterPregled from './pages/operateri/OperaterPregled'
 import OperaterNovi from './pages/operateri/OperaterNovi'
 import OperaterPromjena from './pages/operateri/OperaterPromjena'
@@ -58,7 +57,6 @@ function App() {
                     <Route path={RouteNames.OPERATERI_NOVI} element={<OperaterNovi />} />
                     <Route path={RouteNames.OPERATERI_PROMJENA} element={<OperaterPromjena />} />
                     <Route path={RouteNames.OPERATERI_PROMJENA_LOZINKE} element={<OperaterPromjenaLozinke />} />
-                    <Route path={RouteNames.GENERIRANJE_PODATAKA} element={<GeneriranjePodataka />} />
                   </>
                 )}
 

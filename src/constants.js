@@ -24,7 +24,6 @@ export const RouteNames = {
 
     NADZORNA_PLOCA: '/nadzorna-ploca',
 
-    GENERIRANJE_PODATAKA: 'generiranje-podataka'
 }
 
 

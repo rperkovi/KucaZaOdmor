@@ -6,7 +6,7 @@ import RezervacijaService from "../../services/rezervacije/RezervacijaService";
 import DatePicker from "react-datepicker";
 import GostService from "../../services/gosti/GostService";
 import CijenaService from "../../services/cijene/CijenaService";
-import { datumJeRezerviran, izracunajUkupnuCijenu, rezervacijaPreklapaRaspon } from "../../utils";
+import { datumJeRezerviran, izracunajCijenuLjubimaca, izracunajUkupnuCijenu, rezervacijaPreklapaRaspon } from "../../utils";
 import { NumericFormat } from 'react-number-format';
 
 export default function RezervacijePromjena(){
@@ -15,6 +15,7 @@ export default function RezervacijePromjena(){
     const params = useParams()
     const [gosti, setGosti] = useState([])
     const [rezervacija,setRezervacija] = useState({})
+    const [osnovnaCijena, setOsnovnaCijena] = useState('')
     const [platio,setPlatio] = useState(false)
     const[cijene, setCijene] = useState([])
     const [rezervacije, setRezervacije] = useState([])
@@ -22,13 +23,6 @@ export default function RezervacijePromjena(){
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
 
-
-    useEffect(()=>{
-        ucitajCijene()
-         ucitajGoste()
-        ucitajRezervacija()
-        ucitajRezervacije()
-    },[])
 
     async function ucitajCijene() {
                 await CijenaService.get().then((odgovor)=>{
@@ -62,7 +56,11 @@ export default function RezervacijePromjena(){
             const s = odgovor.data
             // po potrebi prilagođavam podatke
             
-            setRezervacija(s)
+            setRezervacija({
+                ...s,
+                kucniLjubimci: Number(s.kucniLjubimci ?? s['br.kucnih ljubimaca'] ?? 0)
+            })
+            setOsnovnaCijena(s.osnovnaCijena ?? s.cijena ?? '')
             setDateRange([new Date(s.datumPocetka), new Date(s.datumKraja)])
 
             setPlatio(s.platio)
@@ -76,10 +74,17 @@ export default function RezervacijePromjena(){
                     alert('Nije implementiran servis')
                     return
                 }
-    
-                setGosti(odgovor.data)
-            })
-        }
+
+                        setGosti(odgovor.data)
+                    })
+                }
+
+    useEffect(() => {
+                ucitajCijene()
+                ucitajGoste()
+                ucitajRezervacija()
+                ucitajRezervacije()
+    }, [])
 
     
 
@@ -105,11 +110,17 @@ export default function RezervacijePromjena(){
         
         promjeni({
             gost: parseInt(podaci.get('gost')),
-        cijena: (podaci.get('cijena') !== null && podaci.get('cijena') !== '') ? Number(podaci.get('cijena')) : izracunajUkupnuCijenu(startDate, endDate, cijene),
+        cijena: podaci.get('cijena') !== ''
+            ? Number(podaci.get('cijena'))
+            : izracunajUkupnuCijenu(startDate, endDate, cijene),
+        osnovnaCijena: podaci.get('cijena') !== ''
+            ? Number(podaci.get('cijena'))
+            : izracunajUkupnuCijenu(startDate, endDate, cijene),
             datumRezervacije: new Date().toISOString(),
             datumPocetka: startDate.toISOString(),
             datumKraja: endDate.toISOString(),
             platio: podaci.get('platio') === 'on',
+            kucniLjubimci: Number(podaci.get('kucniLjubimci') || 0),
         uplaceno: (podaci.get('uplaceno') !== null && podaci.get('uplaceno') !== '') ? Number(podaci.get('uplaceno')) : 0
         })
     }
@@ -125,9 +136,14 @@ export default function RezervacijePromjena(){
     }
 
     function izracunajZaPlatiti() {
-        const cijena = Number(rezervacija.cijena ?? 0)
+        const cijena = Number(osnovnaCijena || 0)
+        const dodatakZaLjubimce = izracunajCijenuLjubimaca(
+            rezervacija.kucniLjubimci,
+            startDate,
+            endDate
+        )
         const uplaceno = Number(rezervacija.uplaceno ?? 0)
-        return Math.max(cijena - uplaceno, 0)
+        return Math.max(cijena + dodatakZaLjubimce - uplaceno, 0)
     }
 
 
@@ -213,14 +229,14 @@ export default function RezervacijePromjena(){
                                     </Form.Group>
 
                                     <Form.Group controlId="ugovorenaCijena" className="mb-2 mt-md-1 text-start">
-                                        <Form.Label className="fw-bold">Ugovorena cijena</Form.Label>
+                                        <Form.Label className="fw-bold text-primary">Ugovorena cijena (bez kućnih ljubimaca)</Form.Label>
                                         <Form.Control
                                             type="number"
                                             name="cijena"
                                             step="any"
                                             min="0"
-                                            value={rezervacija.cijena ?? ''}
-                                            onChange={(e) => setRezervacija({...rezervacija, cijena: e.target.value})}
+                                            value={osnovnaCijena}
+                                            onChange={(e) => setOsnovnaCijena(e.target.value)}
                                             placeholder="Unesite iznos (npr. 100.00)"
                                         />
                                     </Form.Group>
@@ -236,6 +252,23 @@ export default function RezervacijePromjena(){
                                             onChange={(e) => setRezervacija({...rezervacija, uplaceno: e.target.value})}
                                             placeholder="Unesite iznos (npr. 100.50)"
                                         />
+                                    </Form.Group>
+                                    <Form.Group controlId="kucniLjubimci" className="mb-3 mt-md-2 text-start">
+                                        <Form.Label className="fw-bold">Kućni ljubimci (broj)</Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            name="kucniLjubimci"
+                                            min="0"
+                                            step="1"
+                                            value={rezervacija.kucniLjubimci ?? 0}
+                                            onChange={(e) => setRezervacija({
+                                                ...rezervacija,
+                                                kucniLjubimci: e.target.value
+                                            })}
+                                        />
+                                        <div className="form-text">
+                                            Dodatak: {izracunajCijenuLjubimaca(rezervacija.kucniLjubimci, startDate, endDate)} €
+                                        </div>
                                     </Form.Group>
                                 </Col>
 

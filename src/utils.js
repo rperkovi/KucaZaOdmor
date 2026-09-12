@@ -62,3 +62,14 @@ export function datumJeRezerviran(rezervacije, datum, izuzmiSifru) {
             && dan < pocetakDana(rezervacija.datumKraja);
     });
 }
+
+export function izracunajCijenuLjubimaca(brojLjubimaca, start, end) {
+    if (!brojLjubimaca || !start || !end) {
+        return 0;
+    }
+
+    const brojDana = Math.round(
+        Math.abs(new Date(end) - new Date(start)) / (1000 * 60 * 60 * 24)
+    );
+    return Number(brojLjubimaca) * 10 * brojDana;
+}

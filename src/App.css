@@ -8,6 +8,11 @@
   width: 300px;
 }
 
+.razdoblje-rezervacije {
+  min-width: 230px;
+  white-space: nowrap;
+}
+
 .react-datepicker__day.rezervirani-dan,
 .react-datepicker__day--disabled.rezervirani-dan {
   background-color: #343a40;

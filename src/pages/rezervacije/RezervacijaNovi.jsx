@@ -8,7 +8,7 @@ import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import hr from 'date-fns/locale/hr';
 import CijenaService from "../../services/cijene/CijenaService";
-import { datumJeRezerviran, izracunajUkupnuCijenu, rezervacijaPreklapaRaspon } from "../../utils";
+import { datumJeRezerviran, izracunajCijenuLjubimaca, izracunajUkupnuCijenu, rezervacijaPreklapaRaspon } from "../../utils";
 import { NumericFormat } from 'react-number-format';
 
 export default function RezervacijaNovi() {
@@ -19,6 +19,7 @@ export default function RezervacijaNovi() {
     const [cijena, setCijena] = useState('')
     const [uplaceno, setUplaceno] = useState('')
     const [platio, setPlatio] = useState(false)
+    const [brojLjubimaca, setBrojLjubimaca] = useState(0)
     const [rezervacije, setRezervacije] = useState([])
 
     const [dateRange, setDateRange] = useState([null, null]);
@@ -26,12 +27,6 @@ export default function RezervacijaNovi() {
 
     registerLocale('hr', hr);
 
-
-    useEffect(() => {
-        ucitajGoste()
-        ucitajCijene()
-        ucitajRezervacije()
-    }, [])
 
     async function ucitajGoste() {
         await GostService.get().then((odgovor) => {
@@ -73,6 +68,12 @@ export default function RezervacijaNovi() {
         })
     }
 
+    useEffect(() => {
+        ucitajGoste()
+        ucitajCijene()
+        ucitajRezervacije()
+    }, [])
+
 
     function odradiSubmit(e) { //e je event
         e.preventDefault() // nemoj odraditi submit
@@ -88,11 +89,17 @@ export default function RezervacijaNovi() {
 
         dodaj({
             gost: parseInt(podaci.get('gost')),
-            cijena: podaci.get('cijena') !== '' ? Number(podaci.get('cijena')) : izracunajUkupnuCijenu(startDate, endDate, cijene),
+            cijena: podaci.get('cijena') !== ''
+                ? Number(podaci.get('cijena'))
+                : izracunajUkupnuCijenu(startDate, endDate, cijene),
+            osnovnaCijena: podaci.get('cijena') !== ''
+                ? Number(podaci.get('cijena'))
+                : izracunajUkupnuCijenu(startDate, endDate, cijene),
             datumRezervacije: new Date().toISOString(),
             datumPocetka: startDate.toISOString(),
             datumKraja: endDate.toISOString(),
             platio: podaci.get('platio') === 'on',
+            kucniLjubimci: Number(podaci.get('kucniLjubimci') || 0),
             uplaceno: podaci.get('uplaceno') !== '' ? Number(podaci.get('uplaceno')) : 0
         })
     }
@@ -111,7 +118,8 @@ export default function RezervacijaNovi() {
 
     function izracunajZaPlatiti() {
         const ukupnaCijena = cijena !== '' ? Number(cijena) : (startDate && endDate ? izracunajUkupnuCijenu(startDate, endDate, cijene) : 0)
-        return Math.max(ukupnaCijena - Number(uplaceno || 0), 0)
+        const dodatakZaLjubimce = izracunajCijenuLjubimaca(brojLjubimaca, startDate, endDate)
+        return Math.max(ukupnaCijena + dodatakZaLjubimce - Number(uplaceno || 0), 0)
     }
 
 
@@ -195,7 +203,7 @@ export default function RezervacijaNovi() {
                                     </Form.Group>
 
                                     <Form.Group controlId="ugovorenaCijena" className="mb-2 mt-md-1 text-start">
-                                        <Form.Label className="fw-bold">Ugovorena cijena</Form.Label>
+                                        <Form.Label className="fw-bold text-primary">Ugovorena cijena (bez kućnih ljubimaca)</Form.Label>
                                         <Form.Control
                                             type="number"
                                             name="cijena"
@@ -218,6 +226,20 @@ export default function RezervacijaNovi() {
                                             onChange={(e) => setUplaceno(e.target.value)}
                                             placeholder="Unesite iznos (npr. 100.50)"
                                         />
+                                    </Form.Group>
+                                    <Form.Group controlId="kucniLjubimci" className="mb-3 mt-md-2 text-start">
+                                        <Form.Label className="fw-bold">Kućni ljubimci (broj)</Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            name="kucniLjubimci"
+                                            min="0"
+                                            step="1"
+                                            value={brojLjubimaca}
+                                            onChange={(e) => setBrojLjubimaca(e.target.value)}
+                                        />
+                                        <div className="form-text">
+                                            Dodatak: {izracunajCijenuLjubimaca(brojLjubimaca, startDate, endDate)} €
+                                        </div>
                                     </Form.Group>
                                 </Col>
                                 <Col md={6}>

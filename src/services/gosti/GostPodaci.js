@@ -13,7 +13,7 @@ export const gosti = [
         ime: 'Karin',
         prezime: 'Mattersdorfer',
         email: 'karin.mattersdorfer@gmail.com',
-        telefon: '+49 200 1234567',
+        telefon: '+43 200 1234567',
         drzava: 'AT',
         aktivan: true
     },
@@ -22,15 +22,15 @@ export const gosti = [
         ime: 'Guenther',
         prezime: 'Koessler',
         email: 'guenther.koessler@gmail.com',
-        telefon: '+49 100 1234567',
+        telefon: '+43 100 1234567',
         drzava: 'AT',
         aktivan: true
     },
     {
         sifra: 9,
         ime: 'Rainer',
-        prezime: 'Siesel',
-        email: 'rainer.siesel@gmail.com',
+        prezime: 'Giesel',
+        email: 'rainergiesel@yahoo.com',
         telefon: '+49 175 3497192',
         drzava: 'DE',
         aktivan: true

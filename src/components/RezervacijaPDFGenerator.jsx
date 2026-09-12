@@ -1,5 +1,6 @@
 import { jsPDF } from 'jspdf';
 import countryList from 'react-select-country-list'
+import { izracunajCijenuLjubimaca } from '../utils'
 
 export default function RezervacijaPDFGenerator({ rezervacija, gost, language = 'hr' }) {
     const isGerman = language === 'de';
@@ -18,6 +19,8 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost, language = 
         endDate: 'Ende der Reservierung',
         totalDays: 'Gesamtdauer',
         total: 'Gesamtbetrag',
+        pets: 'Haustiere',
+        petsTotal: 'Haustiergebühr gesamt',
         confirmed: 'Bestätigt',
         country: 'Wohnsitzland',
         yes: 'JA',
@@ -39,6 +42,8 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost, language = 
         endDate: 'Datum završetka rezervacije',
         totalDays: 'Ukupno dana',
         total: 'Ukupno',
+        pets: 'Kućni ljubimci',
+        petsTotal: 'Ukupna naknada za ljubimce',
         confirmed: 'Potvrdio',
         country: 'Država prebivališta',
         yes: 'DA',
@@ -136,6 +141,10 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost, language = 
         doc.text(`${text.totalDays}: ${brojDana(rezervacija.datumPocetka,rezervacija.datumKraja)}`, 25, yPosition);
         yPosition += 7;
         doc.text(`${text.total}: ${rezervacija.cijena} EUR`, 25, yPosition);
+        yPosition += 7;
+        doc.text(`${text.pets}: ${Number(rezervacija.kucniLjubimci || 0)}`, 25, yPosition);
+        yPosition += 7;
+        doc.text(`${text.petsTotal}: ${izracunajCijenuLjubimaca(rezervacija.kucniLjubimci, rezervacija.datumPocetka, rezervacija.datumKraja)} EUR`, 25, yPosition);
         yPosition += 7;
         doc.text(`${text.confirmed}: ${rezervacija.platio ? text.yes : text.no}`, 25, yPosition);
         yPosition += 15;
