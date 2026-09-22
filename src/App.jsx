@@ -22,6 +22,7 @@ import useAuth from './hooks/useAuth'
 import Login from './pages/login/Login'
 import Registracija from './pages/registracija/Registracija'
 import NadzornaPloca from './pages/NadzornaPloca'
+import Kalendar from './pages/Kalendar'
 
 function App() {
 
@@ -43,13 +44,12 @@ function App() {
           <Route path={RouteNames.REZERVACIJE} element={<RezervacijaPregled />} />
           <Route path={RouteNames.REZERVACIJE_NOVI} element={<RezervacijaNovi />} />
           <Route path={RouteNames.REZERVACIJE_PROMJENA} element={<RezervacijePromjena />} />
+          <Route path={RouteNames.KALENDAR} element={<Kalendar />} />
+          <Route path={RouteNames.NADZORNA_PLOCA} element={<NadzornaPloca />} />
 
           <Route path={RouteNames.CIJENE} element={<CijenaPregled />} />
           <Route path={RouteNames.CIJENE_NOVI} element={<CijenaNovi />} />
           <Route path={RouteNames.CIJENE_PROMJENA} element={<CijenaPromjena />} />
-
-          <Route path={RouteNames.NADZORNA_PLOCA} element={<NadzornaPloca />} />
-
 
              {authUser.uloga === 'admin' && (
                   <>

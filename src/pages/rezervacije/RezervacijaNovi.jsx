@@ -116,6 +116,19 @@ export default function RezervacijaNovi() {
         return Math.round(razlikaUMilisekundama / milisekundiUDanu) + ' dana';
     }
 
+    function imaCijenu(date) {
+        const dan = new Date(date)
+        dan.setHours(0, 0, 0, 0)
+
+        return cijene.some((cijena) => {
+            const od = new Date(cijena.datumPocetka)
+            const doo = new Date(cijena.datumKraja)
+            od.setHours(0, 0, 0, 0)
+            doo.setHours(0, 0, 0, 0)
+            return dan >= od && dan <= doo
+        })
+    }
+
     function izracunajZaPlatiti() {
         const ukupnaCijena = cijena !== '' ? Number(cijena) : (startDate && endDate ? izracunajUkupnuCijenu(startDate, endDate, cijene) : 0)
         const dodatakZaLjubimce = izracunajCijenuLjubimaca(brojLjubimaca, startDate, endDate)
@@ -168,8 +181,13 @@ export default function RezervacijaNovi() {
                                             }
                                             setDateRange(update);
                                         }}
-                                        filterDate={(date) => !datumJeRezerviran(rezervacije, date)}
-                                        dayClassName={(date) => datumJeRezerviran(rezervacije, date) ? 'rezervirani-dan' : undefined}
+                                        filterDate={(date) => !datumJeRezerviran(rezervacije, date) && imaCijenu(date)}
+                                        dayClassName={(date) => {
+                                            if (datumJeRezerviran(rezervacije, date)) {
+                                                return 'rezervirani-dan'
+                                            }
+                                            return imaCijenu(date) ? undefined : 'nema-cijene'
+                                        }}
                                         isClearable={true}
                                         // Dodavanje Bootstrap klase input polju
                                         className="form-control odabirDatuma"

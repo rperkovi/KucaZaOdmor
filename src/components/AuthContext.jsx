@@ -19,7 +19,7 @@ export function AuthProvider({ children }) {
       setAuthUser(JSON.parse(operater));
       setIsLoggedIn(operater);
     } else {
-      navigate(RouteNames.HOME);
+      navigate(RouteNames.NADZORNA_PLOCA);
     }
   }, []);
 
@@ -37,7 +37,7 @@ export function AuthProvider({ children }) {
       localStorage.setItem('operater', JSON.stringify(odgovor.data));
       setAuthUser(odgovor.data);
       setIsLoggedIn(true);
-      navigate(RouteNames.NADZORNA_PLOCA);
+      navigate(RouteNames.HOME);
     } else {
       alert(odgovor.message);
       localStorage.setItem('operater', '');

@@ -3,7 +3,7 @@ import { DATA_SOURCE, IME_APLIKACIJE, RouteNames } from "../constants";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { useState } from "react";
-import { FaHome } from "react-icons/fa";
+import { FaCalendarAlt, FaHome } from "react-icons/fa";
 
 
 export default function Izbornik() {
@@ -40,6 +40,13 @@ export default function Izbornik() {
                             aria-label="Početna"
                         >
                             <FaHome />
+                        </Nav.Link>
+                        <Nav.Link
+                            onClick={() => navigate(RouteNames.KALENDAR)}
+                            title="Kalendar rezervacija"
+                            aria-label="Otvori kalendar rezervacija"
+                        >
+                            <FaCalendarAlt />
                         </Nav.Link>
 
                         {isLoggedIn && (

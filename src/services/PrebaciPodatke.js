@@ -1,4 +1,4 @@
-import { deleteDoc, doc, getDocs, collection, setDoc } from "firebase/firestore"
+import { doc, getDocs, collection, setDoc } from "firebase/firestore"
 import getFirebaseDB from "./Firebase"
 import { cijene as memorijskeCijene } from "./cijene/CijenaPodaci"
 import { gosti as memorijskiGosti } from "./gosti/GostPodaci"
@@ -27,20 +27,28 @@ async function procitajIzvor(izvor, naziv) {
 }
 
 async function upisiUOdrediste(odrediste, naziv, podaci) {
+    const postojece = await procitajIzvor(odrediste, naziv)
+    const podaciZaUpis = new Map(
+        postojece.map((podatak) => [String(podatak.sifra), podatak])
+    )
+
+    podaci.forEach((podatak) => {
+        podaciZaUpis.set(String(podatak.sifra), podatak)
+    })
+
+    const spojeniPodaci = Array.from(podaciZaUpis.values())
+
     if (odrediste === 'memorija') {
-        kolekcije[naziv].splice(0, kolekcije[naziv].length, ...podaci)
+        kolekcije[naziv].splice(0, kolekcije[naziv].length, ...spojeniPodaci)
         return
     }
 
     if (odrediste === 'localStorage') {
-        localStorage.setItem(naziv, JSON.stringify(podaci))
+        localStorage.setItem(naziv, JSON.stringify(spojeniPodaci))
         return
     }
 
     const db = getFirebaseDB()
-    const referenca = collection(db, naziv)
-    const postojece = await getDocs(referenca)
-    await Promise.all(postojece.docs.map((zapis) => deleteDoc(doc(db, naziv, zapis.id))))
     await Promise.all(podaci.map((podatak) => {
         const id = String(podatak.sifra)
         return setDoc(doc(db, naziv, id), podatak)
