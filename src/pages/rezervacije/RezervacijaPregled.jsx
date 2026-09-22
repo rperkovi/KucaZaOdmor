@@ -271,6 +271,10 @@ export default function RezervacijaPregled() {
                             <Button variant="secondary" onClick={() => generirajPDFZaRezervacija(rezervacija, 'de')}>
                                 PDF GER
                             </Button>
+                            &nbsp;&nbsp;
+                            <Button variant="secondary" onClick={() => generirajPDFZaRezervacija(rezervacija, 'en')}>
+                                PDF ENG
+                            </Button>
 
                             </td>
                         </tr>

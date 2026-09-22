@@ -4,7 +4,8 @@ import { izracunajCijenuLjubimaca } from '../utils'
 
 export default function RezervacijaPDFGenerator({ rezervacija, gost, language = 'hr' }) {
     const isGerman = language === 'de';
-    const locale = isGerman ? 'de-DE' : 'hr-HR';
+    const isEnglish = language === 'en';
+    const locale = isGerman ? 'de-DE' : isEnglish ? 'en-GB' : 'hr-HR';
     const text = isGerman ? {
         subtitle: 'RESERVIERUNGS- UND GÄSTEVERZEICHNIS',
         title: 'RESERVIERUNGSÜBERSICHT',
@@ -18,7 +19,7 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost, language = 
         startDate: 'Beginn der Reservierung',
         endDate: 'Ende der Reservierung',
         totalDays: 'Gesamtdauer',
-        total: 'Gesamtbetrag',
+        total: 'Gesamtbetrag (ohne Haustiere)',
         discount: 'Rabatt',
         paid: 'Bezahlt',
         toPay: 'Zu bezahlen',
@@ -31,6 +32,32 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost, language = 
         page: 'Seite',
         of: 'von',
         generated: 'Erstellt'
+    } : isEnglish ? {
+        subtitle: 'RESERVATION AND GUEST RECORD',
+        title: 'RESERVATION OVERVIEW',
+        initialData: 'Initial reservation data:',
+        reservationData: 'Reservation data:',
+        guestData: 'Guest data:',
+        reservationDate: 'Reservation date',
+        guest: 'Guest',
+        email: 'E-mail',
+        phone: 'Phone number',
+        startDate: 'Reservation start date',
+        endDate: 'Reservation end date',
+        totalDays: 'Total days',
+        total: 'Total (excluding pets)',
+        discount: 'Discount',
+        paid: 'Paid',
+        toPay: 'Amount to pay',
+        pets: 'Pets',
+        petsTotal: 'Total pet fee',
+        confirmed: 'Confirmed',
+        country: 'Country of residence',
+        yes: 'YES',
+        no: 'NO',
+        page: 'Page',
+        of: 'of',
+        generated: 'Generated'
     } : {
         subtitle: 'EVIDENCIJA REZERVACIJA I GOSTA',
         title: 'POPIS REZERVACIJE',
@@ -44,7 +71,7 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost, language = 
         startDate: 'Datum početka rezervacije',
         endDate: 'Datum završetka rezervacije',
         totalDays: 'Ukupno dana',
-        total: 'Ukupno',
+        total: 'Ukupno (bez kućnih ljubimaca)',
         discount: 'Popust',
         paid: 'Uplaćeno',
         toPay: 'Za platiti',
@@ -160,20 +187,21 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost, language = 
         yPosition += 7;
         doc.text(`${text.totalDays}: ${brojDana(rezervacija.datumPocetka,rezervacija.datumKraja)}`, 25, yPosition);
         yPosition += 7;
-        doc.text(`${text.total}: ${rezervacija.cijena} EUR`, 25, yPosition);
-        yPosition += 7;
-        doc.text(`${text.discount}: ${Number(rezervacija.popust ?? 0)} %`, 25, yPosition);
-        yPosition += 7;
-        doc.text(`${text.paid}: ${Number(rezervacija.uplaceno ?? 0)} EUR`, 25, yPosition);
+        doc.text(`${text.confirmed}: ${(rezervacija.potvrdio ?? rezervacija.platio) ? text.yes : text.no}`, 25, yPosition);
         yPosition += 7;
         doc.text(`${text.pets}: ${Number(rezervacija.kucniLjubimci || 0)}`, 25, yPosition);
         yPosition += 7;
         doc.text(`${text.petsTotal}: ${izracunajCijenuLjubimaca(rezervacija.kucniLjubimci, rezervacija.datumPocetka, rezervacija.datumKraja)} EUR`, 25, yPosition);
         yPosition += 7;
+        doc.text(`${text.total}: ${rezervacija.cijena} EUR`, 25, yPosition);
+        yPosition += 7;
+        doc.text(`${text.paid}: ${Number(rezervacija.uplaceno ?? 0)} EUR`, 25, yPosition);
+        yPosition += 7;
+        doc.text(`${text.discount}: ${Number(rezervacija.popust ?? 0)} %`, 25, yPosition);
+        yPosition += 7;
         doc.text(`${text.toPay}: ${izracunajZaPlatiti()} EUR`, 25, yPosition);
         yPosition += 7;
-        doc.text(`${text.confirmed}: ${(rezervacija.potvrdio ?? rezervacija.platio) ? text.yes : text.no}`, 25, yPosition);
-        yPosition += 15;
+        yPosition += 8;
 
         // Popis gosta
         doc.setFontSize(14);
