@@ -104,15 +104,17 @@ export default function RezervacijaPregled() {
     }
 
     function izracunajZaPlatiti(rezervacija) {
-        // Za platiti = cijena - uplaceno; ne smije biti negativno
+        // Popust se primjenjuje na ugovorenu cijenu, a ne na dodatak za ljubimce.
         const cijena = izracunajUgovorenuCijenu(rezervacija) ?? 0
+        const popust = Number(rezervacija?.popust ?? 0)
+        const cijenaSPopustom = cijena * (1 - popust / 100)
         const dodatakZaLjubimce = izracunajCijenuLjubimaca(
             rezervacija?.kucniLjubimci,
             rezervacija?.datumPocetka,
             rezervacija?.datumKraja
         )
         const uplaceno = izracunajUplaceno(rezervacija)
-        const razlika = cijena + dodatakZaLjubimce - uplaceno
+        const razlika = cijenaSPopustom + dodatakZaLjubimce - uplaceno
         return razlika > 0 ? razlika : 0
     }
     
@@ -157,6 +159,7 @@ export default function RezervacijaPregled() {
                         <th>Ugovorena cijena (bez kućnih ljubimaca)</th>
                         <th>Kućni ljubimci (ukupno)</th>
                         <th>Uplaćeno</th>
+                        <th>Popust (%)</th>
                         <th>Za platiti</th>
                         <th>Akcija</th>
                     </tr>
@@ -233,6 +236,10 @@ export default function RezervacijaPregled() {
                                     decimalScale={2}
                                     fixedDecimalScale
                                 />
+                            </td>
+
+                            <td>
+                                {Number(rezervacija?.popust ?? 0)} %
                             </td>
 
                             <td className="text-danger fw-bold">
