@@ -1,4 +1,4 @@
-export const IME_APLIKACIJE='Kuća za odmor'
+export const IME_APLIKACIJE='Kuća za odmor 4+2'
 
 export const RouteNames = {
     HOME: '/',
