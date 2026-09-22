@@ -8,7 +8,7 @@ export const rezervacije = [
         datumKraja: '2027-09-02T00:00:00',
         platio: false,
         kucniLjubimci: 0,
-        uplaceno: 0
+        uplaceno: 200
     },
     {
         sifra: 7,
@@ -19,7 +19,7 @@ export const rezervacije = [
         datumKraja: '2027-09-14T00:00:00',
         platio: false,
         kucniLjubimci: 5,
-        uplaceno: 0
+        uplaceno: 200
     },
     {
         sifra: 8,
