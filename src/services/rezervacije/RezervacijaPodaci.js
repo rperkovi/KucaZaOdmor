@@ -7,7 +7,7 @@ export const rezervacije = [
         datumRezervacije: '2026-09-09T00:00:00',
         datumPocetka: '2027-08-27T00:00:00',
         datumKraja: '2027-09-02T00:00:00',
-        platio: false,
+        potvrdio: true,
         kucniLjubimci: 0,
         uplaceno: 200
     },
@@ -19,7 +19,7 @@ export const rezervacije = [
         datumRezervacije: '2026-09-09T00:00:00',
         datumPocetka: '2027-09-02T00:00:00',
         datumKraja: '2027-09-14T00:00:00',
-        platio: false,
+        potvrdio: true,
         kucniLjubimci: 5,
         uplaceno: 200
     },
@@ -31,7 +31,7 @@ export const rezervacije = [
         datumRezervacije: '2026-09-11T00:00:00',
         datumPocetka: '2027-09-14T00:00:00',
         datumKraja: '2027-09-24T00:00:00',
-        platio: false,
+        potvrdio: true,
         kucniLjubimci: 1,
         uplaceno: 100
     }

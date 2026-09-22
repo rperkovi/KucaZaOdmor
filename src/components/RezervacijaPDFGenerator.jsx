@@ -19,6 +19,9 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost, language = 
         endDate: 'Ende der Reservierung',
         totalDays: 'Gesamtdauer',
         total: 'Gesamtbetrag',
+        discount: 'Rabatt',
+        paid: 'Bezahlt',
+        toPay: 'Zu bezahlen',
         pets: 'Haustiere',
         petsTotal: 'Haustiergebühr gesamt',
         confirmed: 'Bestätigt',
@@ -42,6 +45,9 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost, language = 
         endDate: 'Datum završetka rezervacije',
         totalDays: 'Ukupno dana',
         total: 'Ukupno',
+        discount: 'Popust',
+        paid: 'Uplaćeno',
+        toPay: 'Za platiti',
         pets: 'Kućni ljubimci',
         petsTotal: 'Ukupna naknada za ljubimce',
         confirmed: 'Potvrdio',
@@ -70,6 +76,20 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost, language = 
         const razlikaUMilisekundama = Math.abs(d1 - d2);
         const milisekundiUDanu = 1000 * 60 * 60 * 24;
         return Math.round(razlikaUMilisekundama / milisekundiUDanu);
+    }
+
+    function izracunajZaPlatiti() {
+        const cijena = Number(rezervacija?.cijena ?? rezervacija?.osnovnaCijena ?? 0);
+        const popust = Number(rezervacija?.popust ?? 0);
+        const cijenaSPopustom = cijena * (1 - popust / 100);
+        const dodatakZaLjubimce = izracunajCijenuLjubimaca(
+            rezervacija?.kucniLjubimci,
+            rezervacija?.datumPocetka,
+            rezervacija?.datumKraja
+        );
+        const uplaceno = Number(rezervacija?.uplaceno ?? 0);
+
+        return Math.max(cijenaSPopustom + dodatakZaLjubimce - uplaceno, 0);
     }
 
     const generirajPDF = async () => {
@@ -142,11 +162,17 @@ export default function RezervacijaPDFGenerator({ rezervacija, gost, language = 
         yPosition += 7;
         doc.text(`${text.total}: ${rezervacija.cijena} EUR`, 25, yPosition);
         yPosition += 7;
+        doc.text(`${text.discount}: ${Number(rezervacija.popust ?? 0)} %`, 25, yPosition);
+        yPosition += 7;
+        doc.text(`${text.paid}: ${Number(rezervacija.uplaceno ?? 0)} EUR`, 25, yPosition);
+        yPosition += 7;
         doc.text(`${text.pets}: ${Number(rezervacija.kucniLjubimci || 0)}`, 25, yPosition);
         yPosition += 7;
         doc.text(`${text.petsTotal}: ${izracunajCijenuLjubimaca(rezervacija.kucniLjubimci, rezervacija.datumPocetka, rezervacija.datumKraja)} EUR`, 25, yPosition);
         yPosition += 7;
-        doc.text(`${text.confirmed}: ${rezervacija.platio ? text.yes : text.no}`, 25, yPosition);
+        doc.text(`${text.toPay}: ${izracunajZaPlatiti()} EUR`, 25, yPosition);
+        yPosition += 7;
+        doc.text(`${text.confirmed}: ${(rezervacija.potvrdio ?? rezervacija.platio) ? text.yes : text.no}`, 25, yPosition);
         yPosition += 15;
 
         // Popis gosta

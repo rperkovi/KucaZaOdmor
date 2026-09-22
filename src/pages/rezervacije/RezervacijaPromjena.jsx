@@ -16,7 +16,7 @@ export default function RezervacijePromjena(){
     const [gosti, setGosti] = useState([])
     const [rezervacija,setRezervacija] = useState({})
     const [osnovnaCijena, setOsnovnaCijena] = useState('')
-    const [platio,setPlatio] = useState(false)
+    const [potvrdio,setPotvrdio] = useState(false)
     const[cijene, setCijene] = useState([])
     const [rezervacije, setRezervacije] = useState([])
 
@@ -63,7 +63,7 @@ export default function RezervacijePromjena(){
             setOsnovnaCijena(s.osnovnaCijena ?? s.cijena ?? '')
             setDateRange([new Date(s.datumPocetka), new Date(s.datumKraja)])
 
-            setPlatio(s.platio)
+            setPotvrdio(s.potvrdio ?? s.platio ?? false)
         })
     }
 
@@ -119,7 +119,7 @@ export default function RezervacijePromjena(){
             datumRezervacije: new Date().toISOString(),
             datumPocetka: startDate.toISOString(),
             datumKraja: endDate.toISOString(),
-            platio: podaci.get('platio') === 'on',
+            potvrdio: podaci.get('potvrdio') === 'on',
             kucniLjubimci: Number(podaci.get('kucniLjubimci') || 0),
         uplaceno: (podaci.get('uplaceno') !== null && podaci.get('uplaceno') !== '') ? Number(podaci.get('uplaceno')) : 0
         })
@@ -274,14 +274,14 @@ export default function RezervacijePromjena(){
 
                                 {/* Aktivan - Switch umjesto checkboxa za moderniji izgled */}
                                 <Col md={6}>
-                                    <Form.Group controlId="platio" className="mb-3 mt-md-3 text-start">
+                                    <Form.Group controlId="potvrdio" className="mb-3 mt-md-3 text-start">
                                         <Form.Check
                                             type="switch"
                                             label="Rezervacija je potvrđena"
-                                            name="platio"
+                                            name="potvrdio"
                                             className="fs-5"
-                                            checked={platio}
-                                            onChange={(e) => setPlatio(e.target.checked)}
+                                            checked={potvrdio}
+                                            onChange={(e) => setPotvrdio(e.target.checked)}
                                         />
                                     </Form.Group>
                                 </Col>
