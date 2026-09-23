@@ -9,6 +9,7 @@ export const RouteNames = {
     REZERVACIJE: '/rezervacije',
     REZERVACIJE_NOVI: '/rezervacije/novi',
     REZERVACIJE_PROMJENA: '/rezervacije/:sifra',
+    UPITI_NOVI: '/upiti/novi',
     KALENDAR: '/kalendar',
 
     CIJENE: '/cijene',

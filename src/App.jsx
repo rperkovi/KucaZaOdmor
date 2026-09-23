@@ -10,6 +10,7 @@ import GostNovi from './pages/gosti/GostNovi'
 import GostPromjena from './pages/gosti/GostPromjena'
 import RezervacijaPregled from './pages/rezervacije/RezervacijaPregled'
 import RezervacijaNovi from './pages/rezervacije/RezervacijaNovi'
+import UpitNovi from './pages/upiti/UpitNovi'
 import CijenaPregled from './pages/cijene/CijenaPregled'
 import CijenaNovi from './pages/cijene/CijenaNovi'
 import CijenaPromjena from './pages/cijene/CijenaPromjena'
@@ -43,6 +44,7 @@ function App() {
 
           <Route path={RouteNames.REZERVACIJE} element={<RezervacijaPregled />} />
           <Route path={RouteNames.REZERVACIJE_NOVI} element={<RezervacijaNovi />} />
+          <Route path={RouteNames.UPITI_NOVI} element={<UpitNovi />} />
           <Route path={RouteNames.REZERVACIJE_PROMJENA} element={<RezervacijePromjena />} />
           <Route path={RouteNames.KALENDAR} element={<Kalendar />} />
           <Route path={RouteNames.NADZORNA_PLOCA} element={<NadzornaPloca />} />

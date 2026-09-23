@@ -109,8 +109,16 @@ export default function Kalendar() {
                         </div>
                     </Form.Group>
                     <div className="mt-3">
-                        <Link to={RouteNames.REZERVACIJE_NOVI} className="btn btn-success">
-                            Nova rezervacija
+                        <Link
+                            to={RouteNames.UPITI_NOVI}
+                            state={{
+                                dateRange: [startDate, endDate],
+                                brojLjubimaca,
+                                iznos: izracunajUkupno()
+                            }}
+                            className="btn btn-success"
+                        >
+                            Novi upit
                         </Link>
                     </div>
                 </Card.Body>
