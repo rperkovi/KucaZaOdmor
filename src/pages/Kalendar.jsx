@@ -13,6 +13,7 @@ export default function Kalendar() {
     const [rezervacije, setRezervacije] = useState([])
     const [cijene, setCijene] = useState([])
     const [dateRange, setDateRange] = useState([null, null])
+    const [gost, setGost] = useState('')
     const [brojLjubimaca, setBrojLjubimaca] = useState(0)
     const [startDate, endDate] = dateRange
 
@@ -59,6 +60,16 @@ export default function Kalendar() {
     return (
         <>
             <h3>Kalendar rezervacija</h3>
+            <Form.Group className="mb-3 mt-3 text-start">
+                <Form.Label className="fw-bold">Gost</Form.Label>
+                <Form.Control
+                    type="text"
+                    value={gost}
+                    onChange={(event) => setGost(event.target.value)}
+                    placeholder="Unesite ime gosta"
+                    autoComplete="off"
+                />
+            </Form.Group>
             <Card className="mt-4">
                 <Card.Body>
                     <DatePicker
@@ -113,6 +124,7 @@ export default function Kalendar() {
                             to={RouteNames.UPITI_NOVI}
                             state={{
                                 dateRange: [startDate, endDate],
+                                gost,
                                 brojLjubimaca,
                                 iznos: izracunajUkupno()
                             }}

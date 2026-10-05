@@ -17,9 +17,10 @@ export function AuthProvider({ children }) {
 
     if (operater) {
       setAuthUser(JSON.parse(operater));
-      setIsLoggedIn(operater);
+      setIsLoggedIn(true);
     } else {
-      navigate(RouteNames.NADZORNA_PLOCA);
+      setAuthUser({});
+      setIsLoggedIn(false);
     }
   }, []);
 

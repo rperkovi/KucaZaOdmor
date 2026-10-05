@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 import { Container } from 'react-bootstrap'
 import Izbornik from './components/Izbornik'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { DATA_SOURCE, RouteNames } from './constants'
 import Home from './pages/Home'
 import GostPregled from './pages/gosti/GostPregled'
@@ -67,6 +67,8 @@ function App() {
                 <Route path={RouteNames.LOGIN} element={<Login />} />
                 <Route path={RouteNames.REGISTRACIJA} element={<Registracija />} />
               </>)}
+
+          <Route path="*" element={<Navigate to={RouteNames.HOME} replace />} />
         </Routes>
         <hr />
         &copy; Roberto, {DATA_SOURCE}

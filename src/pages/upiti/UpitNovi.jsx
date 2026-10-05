@@ -1,20 +1,38 @@
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import DatePicker, { registerLocale } from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import hr from 'date-fns/locale/hr'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { NumericFormat } from 'react-number-format'
 import { RouteNames } from '../../constants'
 
 export default function UpitNovi() {
     registerLocale('hr', hr)
 
+    const location = useLocation()
     const [dateRange, setDateRange] = useState([null, null])
     const [gost, setGost] = useState('')
     const [brojLjubimaca, setBrojLjubimaca] = useState(0)
     const [napomena, setNapomena] = useState('')
     const [startDate, endDate] = dateRange
+
+    useEffect(() => {
+        if (location.state?.gost) {
+            setGost(location.state.gost)
+        }
+
+        if (location.state?.dateRange) {
+            const [prethodniStart, prethodniEnd] = location.state.dateRange
+            if (prethodniStart && prethodniEnd) {
+                setDateRange([prethodniStart, prethodniEnd])
+            }
+        }
+
+        if (location.state?.brojLjubimaca != null) {
+            setBrojLjubimaca(location.state.brojLjubimaca)
+        }
+    }, [location.state])
 
     function brojDana() {
         if (!startDate || !endDate) {
@@ -26,7 +44,7 @@ export default function UpitNovi() {
         return Math.round(razlikaUMilisekundama / milisekundiUDanu) + ' dana'
     }
 
-    function izracunajProcijenjeniIznos() {
+    function izracunajUkupno() {
         if (!startDate || !endDate) {
             return 0
         }
@@ -120,11 +138,11 @@ export default function UpitNovi() {
                                 </Col>
                                 <Col md={6}>
                                     <Form.Group className="mb-3 text-start">
-                                        <Form.Label className="fw-bold">Procijenjeni iznos</Form.Label>
+                                        <Form.Label className="fw-bold">Ukupno (izračunato)</Form.Label>
                                         <div className="form-control-plaintext fw-bold text-success">
                                             {startDate && endDate ? (
                                                 <NumericFormat
-                                                    value={izracunajProcijenjeniIznos()}
+                                                    value={izracunajUkupno()}
                                                     displayType="text"
                                                     thousandSeparator="."
                                                     decimalSeparator=","
