@@ -36,6 +36,8 @@ function App() {
         <Routes>
           <Route path={RouteNames.HOME} element={<Home />} />
 
+          <Route path={RouteNames.KALENDAR} element={<Kalendar />} />
+
           {isLoggedIn ? (<>
           
           <Route path={RouteNames.GOSTI} element={<GostPregled />} />
@@ -46,7 +48,6 @@ function App() {
           <Route path={RouteNames.REZERVACIJE_NOVI} element={<RezervacijaNovi />} />
           <Route path={RouteNames.UPITI_NOVI} element={<UpitNovi />} />
           <Route path={RouteNames.REZERVACIJE_PROMJENA} element={<RezervacijePromjena />} />
-          <Route path={RouteNames.KALENDAR} element={<Kalendar />} />
           <Route path={RouteNames.NADZORNA_PLOCA} element={<NadzornaPloca />} />
 
           <Route path={RouteNames.CIJENE} element={<CijenaPregled />} />
