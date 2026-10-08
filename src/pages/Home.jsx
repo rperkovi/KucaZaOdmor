@@ -1,5 +1,6 @@
 import { Badge, Button, Card, Col, Row } from 'react-bootstrap';
-import { IME_APLIKACIJE } from '../constants';
+import { Link } from 'react-router-dom';
+import { IME_APLIKACIJE, RouteNames } from '../constants';
 import slika from '../assets/slika.jpg';
 
 const pogodnosti = [
@@ -52,7 +53,7 @@ export default function Home() {
           </p>
 
           <div className="hero-actions">
-            <Button href="#rezervacije" variant="primary" size="lg">
+            <Button as={Link} to={RouteNames.KALENDAR} variant="primary" size="lg">
               Rezerviraj svoj odmor
             </Button>
             <Button href="#galerija" variant="outline-light" size="lg">
@@ -199,7 +200,7 @@ export default function Home() {
                   <li>Privatni bazen</li>
                   <li>Doček i odjava</li>
                 </ul>
-                <Button variant="primary" size="lg" className="w-100">
+                <Button as={Link} to={RouteNames.KALENDAR} variant="primary" size="lg" className="w-100">
                   Zatraži rezervaciju
                 </Button>
               </Card.Body>

@@ -6,6 +6,7 @@ import hr from 'date-fns/locale/hr'
 import { Link, useLocation } from 'react-router-dom'
 import { NumericFormat } from 'react-number-format'
 import { RouteNames } from '../../constants'
+import { datumJeProslost, MIN_BROJ_NOCENJA, rezervacijaTrajeMinimalnoNocenja } from '../../utils'
 
 export default function UpitNovi() {
     registerLocale('hr', hr)
@@ -15,6 +16,7 @@ export default function UpitNovi() {
     const [gost, setGost] = useState('')
     const [brojLjubimaca, setBrojLjubimaca] = useState(0)
     const [napomena, setNapomena] = useState('')
+    const [porukaDatuma, setPorukaDatuma] = useState('')
     const [startDate, endDate] = dateRange
 
     useEffect(() => {
@@ -33,6 +35,24 @@ export default function UpitNovi() {
             setBrojLjubimaca(location.state.brojLjubimaca)
         }
     }, [location.state])
+
+    function promijeniRasponDatuma(raspon) {
+        const [noviStartDate, noviEndDate] = raspon
+        if (noviStartDate && datumJeProslost(noviStartDate)) {
+            setDateRange([null, null])
+            setPorukaDatuma('Datum dolaska ne može biti u prošlosti.')
+            return
+        }
+
+        if (noviStartDate && noviEndDate && !rezervacijaTrajeMinimalnoNocenja(noviStartDate, noviEndDate)) {
+            setDateRange([noviStartDate, null])
+            setPorukaDatuma(`Rezervacija mora trajati najmanje ${MIN_BROJ_NOCENJA} noćenja.`)
+            return
+        }
+
+        setDateRange(raspon)
+        setPorukaDatuma('')
+    }
 
     function brojDana() {
         if (!startDate || !endDate) {
@@ -63,8 +83,13 @@ export default function UpitNovi() {
             return
         }
 
-        if (!startDate || !endDate) {
-            alert('Odaberite datum dolaska i odlaska.')
+        if (datumJeProslost(startDate)) {
+            alert('Datum dolaska ne može biti u prošlosti.')
+            return
+        }
+
+        if (!rezervacijaTrajeMinimalnoNocenja(startDate, endDate)) {
+            alert(`Odaberite datum dolaska i odlaska za najmanje ${MIN_BROJ_NOCENJA} noćenja.`)
             return
         }
 
@@ -106,14 +131,16 @@ export default function UpitNovi() {
                                         selectsRange={true}
                                         startDate={startDate}
                                         endDate={endDate}
-                                        onChange={setDateRange}
+                                        onChange={promijeniRasponDatuma}
                                         locale="hr"
                                         dateFormat="dd.MM.yyyy."
+                                        filterDate={(date) => !datumJeProslost(date)}
                                         isClearable={true}
                                         className="form-control odabirDatuma"
                                         placeholderText="Klikni za odabir..."
                                         autoComplete="off"
                                     />
+                                    {porukaDatuma && <p className="text-danger mt-2" role="alert">{porukaDatuma}</p>}
                                     {startDate && endDate && (
                                         <div className="mt-2 fw-semibold text-muted">
                                             {brojDana()}

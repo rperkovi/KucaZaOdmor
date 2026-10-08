@@ -8,6 +8,10 @@
   width: 300px;
 }
 
+.calendar-pet-count {
+  max-width: 242px;
+}
+
 .razdoblje-rezervacije {
   min-width: 230px;
   white-space: nowrap;

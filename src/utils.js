@@ -1,3 +1,11 @@
+import { differenceInCalendarDays, startOfDay } from 'date-fns';
+
+export const MIN_BROJ_NOCENJA = 3;
+
+export function rezervacijaTrajeMinimalnoNocenja(start, end) {
+    return Boolean(start && end && differenceInCalendarDays(end, start) >= MIN_BROJ_NOCENJA);
+}
+
 export function izracunajUkupnuCijenu(start, end, priceList) {
     let ukupno = 0;
     const trenutni = new Date(start);
@@ -30,6 +38,10 @@ function pocetakDana(datum) {
     const rezultat = new Date(datum);
     rezultat.setHours(0, 0, 0, 0);
     return rezultat;
+}
+
+export function datumJeProslost(datum) {
+    return Boolean(datum && startOfDay(datum) < startOfDay(new Date()));
 }
 
 export function rezervacijaPreklapaRaspon(rezervacije, start, end, izuzmiSifru) {
