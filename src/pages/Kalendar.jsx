@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { differenceInCalendarDays } from 'date-fns'
 import DatePicker from 'react-datepicker'
 import { Button, Card, Form, ListGroup } from 'react-bootstrap'
 import { RouteNames } from '../constants'
@@ -17,11 +18,9 @@ import { Link } from 'react-router-dom'
 import { NumericFormat } from 'react-number-format'
 
 const kontakti = [
-    { ime: 'Roberto', telefon: '+385955620929', prikazTelefona: '+385 955620929' },
-    { ime: 'Branislava', telefon: '+385919010767', prikazTelefona: '+385 919010767' }
+    { ime: 'Roberto', telefon: '+385955620929', prikazTelefona: '+385 955620929', email: 'roberto.perkovic01@gmail.com' },
+    { ime: 'Branislava', telefon: '+385919010767', prikazTelefona: '+385 919010767', email: 'branislava.bertosa@gmail.com' }
 ]
-const robertoEmail = 'roberto.perkovic01@gmail.com'
-const branislavaEmail = 'branislava.bertosa@gmail.com'
 
 export default function Kalendar() {
     const [rezervacije, setRezervacije] = useState([])
@@ -30,6 +29,8 @@ export default function Kalendar() {
     const [gost, setGost] = useState('')
     const [brojLjubimaca, setBrojLjubimaca] = useState(0)
     const [porukaDatuma, setPorukaDatuma] = useState('')
+    const [slanjeSmsa, setSlanjeSmsa] = useState(false)
+    const [slanjeEmaila, setSlanjeEmaila] = useState(false)
     const [startDate, endDate] = dateRange
 
     function promijeniRasponDatuma(raspon) {
@@ -72,10 +73,13 @@ export default function Kalendar() {
     }
 
     const mozePoslatiPoruku = Boolean(gost.trim() && rezervacijaTrajeMinimalnoNocenja(startDate, endDate))
+    const brojDanaRezervacije = startDate && endDate
+        ? differenceInCalendarDays(endDate, startDate)
+        : null
     const tekstPoruke = mozePoslatiPoruku
         ? [
             `Gost: ${gost.trim()}`,
-            `Razdoblje: ${startDate.toLocaleDateString('hr-HR')} - ${endDate.toLocaleDateString('hr-HR')}`,
+            `Razdoblje: ${startDate.toLocaleDateString('hr-HR')} - ${endDate.toLocaleDateString('hr-HR')} (${brojDanaRezervacije} dana)`,
             `Kućni ljubimci: ${Number(brojLjubimaca) || 0}`,
             `Ukupno (izračunato): ${izracunajUkupno().toLocaleString('hr-HR', {
                 minimumFractionDigits: 2,
@@ -95,6 +99,72 @@ export default function Kalendar() {
             doo.setHours(0, 0, 0, 0)
             return dan >= od && dan <= doo
         })
+    }
+
+    async function posaljiSms(telefon) {
+        if (!mozePoslatiPoruku) {
+            return
+        }
+
+        setSlanjeSmsa(true)
+
+        try {
+            const odgovor = await fetch('/api/sms', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    to: telefon,
+                    body: tekstPoruke
+                })
+            })
+
+            const podaci = await odgovor.json()
+
+            if (!odgovor.ok || !podaci.success) {
+                throw new Error(podaci.error || 'SMS nije poslan.')
+            }
+
+            alert('SMS je uspješno poslan.')
+        } catch (error) {
+            alert(error.message || 'Došlo je do pogreške pri slanju SMS-a.')
+        } finally {
+            setSlanjeSmsa(false)
+        }
+    }
+
+    async function posaljiEmail(email) {
+        if (!mozePoslatiPoruku) {
+            return
+        }
+
+        setSlanjeEmaila(true)
+
+        try {
+            const odgovor = await fetch('/api/email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    to: email,
+                    body: tekstPoruke
+                })
+            })
+
+            const podaci = await odgovor.json()
+
+            if (!odgovor.ok || !podaci.success) {
+                throw new Error(podaci.error || 'Email nije poslan.')
+            }
+
+            alert('Email je uspješno poslan.')
+        } catch (error) {
+            alert(error.message || 'Došlo je do pogreške pri slanju emaila.')
+        } finally {
+            setSlanjeEmaila(false)
+        }
     }
 
     return (
@@ -132,7 +202,7 @@ export default function Kalendar() {
                     <p className="fw-bold mt-3">
                         Razdoblje rezervacije
                         {startDate && endDate
-                            ? `: ${startDate.toLocaleDateString('hr-HR')} - ${endDate.toLocaleDateString('hr-HR')}`
+                            ? `: ${startDate.toLocaleDateString('hr-HR')} - ${endDate.toLocaleDateString('hr-HR')} (${brojDanaRezervacije} dana)`
                             : ''}
                     </p>
                     {porukaDatuma && <p className="text-danger" role="alert">{porukaDatuma}</p>}
@@ -164,19 +234,20 @@ export default function Kalendar() {
                     </Form.Group>
                     <div className="mb-3 text-start">
                         <p className="fw-bold mb-1">Kontakt</p>
-                        {kontakti.map(({ ime, telefon, prikazTelefona }) => (
+                        {kontakti.map(({ ime, telefon, prikazTelefona, email }) => (
                             <div key={telefon} className="mb-2">
                                 <div className="d-flex align-items-center gap-2">
                                     <a href={`tel:${telefon}`}>{ime}: {prikazTelefona}</a>
                                     {mozePoslatiPoruku ? (
                                         <Button
-                                            as="a"
-                                            href={`sms:${telefon}?body=${encodeURIComponent(tekstPoruke)}`}
+                                            type="button"
                                             variant="outline-success"
                                             size="sm"
+                                            onClick={() => posaljiSms(telefon)}
+                                            disabled={slanjeSmsa}
                                             aria-label={`Pošalji SMS kontaktu ${ime}`}
                                         >
-                                            SMS
+                                            {slanjeSmsa ? 'Šalje...' : 'SMS'}
                                         </Button>
                                     ) : (
                                         <Button
@@ -190,20 +261,19 @@ export default function Kalendar() {
                                         </Button>
                                     )}
                                 </div>
-                                {(ime === 'Roberto' || ime === 'Branislava') && (
+                                {email && (
                                     <div className="d-flex align-items-center gap-2 ms-3 mt-1">
-                                        <a href={`mailto:${ime === 'Roberto' ? robertoEmail : branislavaEmail}`}>
-                                            {ime === 'Roberto' ? robertoEmail : branislavaEmail}
-                                        </a>
+                                        <a href={`mailto:${email}`}>{email}</a>
                                         {mozePoslatiPoruku ? (
                                             <Button
-                                                as="a"
-                                                href={`mailto:${ime === 'Roberto' ? robertoEmail : branislavaEmail}?subject=${encodeURIComponent('Upit za rezervaciju')}&body=${encodeURIComponent(tekstPoruke)}`}
+                                                type="button"
                                                 variant="outline-primary"
                                                 size="sm"
+                                                onClick={() => posaljiEmail(email)}
+                                                disabled={slanjeEmaila}
                                                 aria-label={`Pošalji email ${ime}`}
                                             >
-                                                Email
+                                                {slanjeEmaila ? 'Šalje...' : 'Email'}
                                             </Button>
                                         ) : (
                                             <Button
