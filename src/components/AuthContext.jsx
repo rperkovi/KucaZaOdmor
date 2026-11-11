@@ -1,38 +1,48 @@
-import { createContext, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RouteNames } from '../constants';
 import OperaterServiceMemorija from '../services/operateri/OperaterServiceMemorija';
 import OperaterService from '../services/operateri/OperaterService';
+import { AuthContext } from '../context/AuthContext';
 
-export const AuthContext = createContext();
+function readStoredOperater() {
+  const operater = localStorage.getItem('operater');
+
+  if (!operater) {
+    return {};
+  }
+
+  try {
+    return JSON.parse(operater);
+  } catch {
+    localStorage.removeItem('operater');
+    return {};
+  }
+}
 
 export function AuthProvider({ children }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [authUser, setAuthUser] = useState({});
+  const [isLoggedIn, setIsLoggedIn] = useState(() => Boolean(localStorage.getItem('operater')));
+  const [authUser, setAuthUser] = useState(readStoredOperater);
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const operater = localStorage.getItem('operater');
-
-    if (operater) {
-      setAuthUser(JSON.parse(operater));
-      setIsLoggedIn(true);
-    } else {
-      setAuthUser({});
-      setIsLoggedIn(false);
-    }
-  }, []);
-
   async function login(email, lozinka) {
+    let operateriLS = [];
+    const operateriRaw = localStorage.getItem('operateri');
 
-    const operateriLS = localStorage.getItem('operateri') || []
-   
+    if (operateriRaw) {
+      try {
+        const parsed = JSON.parse(operateriRaw);
+        operateriLS = Array.isArray(parsed) ? parsed : [];
+      } catch {
+        operateriLS = [];
+      }
+    }
+
     const odgovor =
-    operateriLS.length==0 ? 
-    await OperaterServiceMemorija.prijava(email, lozinka) 
-    :
-    await OperaterService.prijava(email, lozinka) 
+      operateriLS.length === 0
+        ? await OperaterServiceMemorija.prijava(email, lozinka)
+        : await OperaterService.prijava(email, lozinka);
 
     if (odgovor.success) {
       localStorage.setItem('operater', JSON.stringify(odgovor.data));
@@ -42,15 +52,14 @@ export function AuthProvider({ children }) {
     } else {
       alert(odgovor.message);
       localStorage.setItem('operater', '');
-      setAuthUser('');
+      setAuthUser({});
       setIsLoggedIn(false);
     }
   }
 
   function logout() {
-    
     localStorage.removeItem('operater');
-    setAuthUser('');
+    setAuthUser({});
     setIsLoggedIn(false);
     navigate(RouteNames.HOME);
   }

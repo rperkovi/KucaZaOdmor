@@ -34,5 +34,18 @@ export const rezervacije = [
         potvrdio: true,
         kucniLjubimci: 1,
         uplaceno: 100
+    },
+    {
+        sifra: 9,
+        gost: 10,
+        cijena: 1560,
+        osnovnaCijena: 1560,
+        popust: 0,
+        datumRezervacije: '2026-11-11T16:57:20.864Z',
+        datumPocetka: '2027-08-16T00:00:00',
+        datumKraja: '2027-08-22T00:00:00',
+        potvrdio: true,
+        kucniLjubimci: 0,
+        uplaceno: 0
     }
 ];

@@ -11,17 +11,12 @@ import CijenaService from "../../services/cijene/CijenaService";
 export default function CijenaNovi() {
 
     const navigate = useNavigate()
-    const [cijena, setCijene] = useState([])
+    const [, setCijene] = useState([])
 
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
 
     registerLocale('hr', hr);
-
-
-    useEffect(() => {
-        ucitajCijene()
-    }, [])
 
     async function ucitajCijene() {
         await GostService.get().then((odgovor) => {
@@ -34,6 +29,10 @@ export default function CijenaNovi() {
             setCijene(odgovor.data)
         })
     }
+
+    useEffect(() => {
+        ucitajCijene()
+    }, [])
 
     async function dodaj(cijena) {
         //console.table(smjer) // ovo je za kontrolu da li je sve OK

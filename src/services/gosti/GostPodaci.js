@@ -34,5 +34,14 @@ export const gosti = [
         telefon: '+49 175 3497192',
         drzava: 'DE',
         aktivan: true
+    },
+    {
+        sifra: 10,
+        ime: 'Petra',
+        prezime: 'Schmidt',
+        email: 'petra.schmidt?@gmail.com',
+        telefon: '+43 300 1234567',
+        drzava: 'AT',
+        aktivan: true
     }
 ]

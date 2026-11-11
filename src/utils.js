@@ -7,6 +7,10 @@ export function rezervacijaTrajeMinimalnoNocenja(start, end) {
 }
 
 export function izracunajUkupnuCijenu(start, end, priceList) {
+    if (!start || !end || !Array.isArray(priceList)) {
+        return 0;
+    }
+
     let ukupno = 0;
     const trenutni = new Date(start);
     trenutni.setHours(0, 0, 0, 0);
@@ -17,15 +21,16 @@ export function izracunajUkupnuCijenu(start, end, priceList) {
         const odgovarajucaCijena = priceList.find((p) => {
             const od = new Date(p.datumPocetka);
             const doo = new Date(p.datumKraja);
+            od.setHours(0, 0, 0, 0);
+            doo.setHours(0, 0, 0, 0);
             return trenutni >= od && trenutni <= doo;
         });
 
         if (odgovarajucaCijena) {
-            if (odgovarajucaCijena.popust > 0) {
-                ukupno += odgovarajucaCijena.cijena * (odgovarajucaCijena.popust / 100);
-            } else {
-                ukupno += odgovarajucaCijena.cijena;
-            }
+            const cijenaPoDanu = Number(odgovarajucaCijena.cijena) || 0;
+            const popust = Number(odgovarajucaCijena.popust) || 0;
+            const cijenaSaPopustom = Math.max(cijenaPoDanu * (1 - popust / 100), 0);
+            ukupno += cijenaSaPopustom;
         }
 
         trenutni.setDate(trenutni.getDate() + 1);

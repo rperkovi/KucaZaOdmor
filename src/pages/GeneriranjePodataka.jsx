@@ -1,5 +1,4 @@
 import { IME_APLIKACIJE } from "../constants";
-import mojaSlika from '../assets/slika.jpg'
 import { Faker, hr } from "@faker-js/faker";
 import { useEffect, useState } from "react";
 import GostService from "../services/gosti/GostService";
@@ -28,7 +27,7 @@ export default function GeneriranjePodataka() {
     });
 
     const generirajGoste = async (broj) => {
-        const gosti = [];
+        const kreiraniGosti = [];
         for (let i = 0; i < broj; i++) {
             const rezultat = await GostService.dodaj({
                 ime: faker.person.firstName(),
@@ -36,9 +35,9 @@ export default function GeneriranjePodataka() {
                 email: faker.internet.email(),
                 aktivan: faker.datatype.boolean()
             });
-            gosti.push(rezultat.data);
+            kreiraniGosti.push(rezultat.data);
         }
-        return gosti;
+        return kreiraniGosti;
     };
 
     const handleGenerirajGoste = async (e) => {
@@ -47,7 +46,7 @@ export default function GeneriranjePodataka() {
         setPoruka(null);
 
         try {
-            const gosti = await generirajGoste(brojGostiju);
+            await generirajGoste(brojGostiju);
 
             setPoruka({
                 tip: 'success',
@@ -103,10 +102,10 @@ export default function GeneriranjePodataka() {
 
     const generirajRezervacije = async (broj) => {
 
-        const gosti = await GostService.get()
-        const gostiData = gosti.data
+        const sviGosti = await GostService.get()
+        const gostiData = sviGosti.data
 
-        const rezervacije = [];
+        const kreiraneRezervacije = [];
         for (let i = 0; i < broj; i++) {
             // 1. Generiraj nasumičan datum početka (npr. u idućih 30 dana)
             const pocetak = faker.date.soon({ days: 30 });
@@ -127,9 +126,9 @@ export default function GeneriranjePodataka() {
                 cijena: 100 // prvo napraviti generiranje cjenika
             });
 
-            rezervacije.push(rezultat.data);
+            kreiraneRezervacije.push(rezultat.data);
         }
-        return rezervacije;
+        return kreiraneRezervacije;
     };
 
     const handleGenerirajRezervacije = async (e) => {
@@ -138,7 +137,7 @@ export default function GeneriranjePodataka() {
         setPoruka(null);
 
         try {
-            const gosti = await generirajRezervacije(brojRezervacija);
+            await generirajRezervacije(brojRezervacija);
 
             setPoruka({
                 tip: 'success',
