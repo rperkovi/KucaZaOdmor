@@ -1,7 +1,6 @@
 import { Badge, Button, Card, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { IME_APLIKACIJE, RouteNames } from '../constants';
-import slika from '../assets/slika.jpg';
 
 const pogodnosti = [
   'Veliki balkon s pogledom na more',
@@ -9,15 +8,18 @@ const pogodnosti = [
   'Obiteljska kuhinja s vrhunskom opremom',
   'Privatni bazen i terasa za ručavanje',
   'Besplatan Wi‑Fi i parking',
-  'U blizini plaže, restorana, supermarketa Plodine i šetališta',
+  'U neposrednoj blizini plaže, supermarketa Plodine i šetališta',
+  'U blizini restorana, ljekarne, bezinske stanice, praonice automobila, tržnice.....',
 ];
 
-const galerija = [
-  slika,
-  'https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80',
-];
+const galerija = Array.from(
+  { length: 59 },
+  (_, index) => `/fotografije/${encodeURIComponent(`app (${index + 1}).jpg`)}`
+).map((slika, index) => {
+  if (index === 0) return '/fotografije/app%20(18).jpg';
+  if (index === 17) return '/fotografije/app%20(1).jpg';
+  return slika;
+});
 
 const preporuke = [
   {
@@ -48,7 +50,7 @@ export default function Home() {
           <h1>{IME_APLIKACIJE}</h1>
           <p>
             Opuštajući obiteljski odmor u mirnoj kući s dvije spavaće sobe i 4+2 mjesta za spavanje,
-            okružen maslinama, pogledom na zelenilo, cvijećem, u blizini plaže, ljekarne, supermarketa,
+            okružen maslinama, pogledom na zelenilo, cvijećem, u neposrednoj blizini plaže, ljekarne, supermarketa,
             restorana, šetališta, benzinske pumpe i praonice automobila, te vrhunskim sadržajima za sve generacije.
           </p>
 
@@ -78,11 +80,11 @@ export default function Home() {
         </div>
 
         <div className="hero-visual">
-          <div
+          <img
             className="hero-image-main"
-            style={{
-              backgroundImage: `url(${slika})`,
-            }}
+            src="/fotografije/app%20(18).jpg"
+            alt="Kuća za odmor"
+            fetchPriority="high"
           />
           <Card className="floating-card">
             <Card.Body>
@@ -128,8 +130,10 @@ export default function Home() {
           <Col lg={6}>
             <div className="image-panel">
               <img
-                src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80"
+                src="/fotografije/app%20(1).jpg"
                 alt="Interijer kuće za odmor"
+                loading="lazy"
+                decoding="async"
               />
             </div>
           </Col>
@@ -157,7 +161,7 @@ export default function Home() {
       <section id="galerija" className="content-block gallery-section">
         <div className="section-heading">
           <Badge bg="warning" text="dark">
-            Galerija
+            Galerija · 59 fotografija
           </Badge>
           <h2>Upoznajte naš prostor</h2>
         </div>
@@ -166,7 +170,12 @@ export default function Home() {
           {galerija.map((slika, index) => (
             <Col md={6} lg={3} key={index}>
               <div className="gallery-item">
-                <img src={slika} alt={`Kuća za odmor ${index + 1}`} />
+                <img
+                  src={slika}
+                  alt={`Fotografija kuće za odmor ${index + 1}`}
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
             </Col>
           ))}
@@ -182,7 +191,7 @@ export default function Home() {
               </Badge>
               <h2>Odmor koji vas opušta od prvog trenutka</h2>
               <p>
-                Kuća sadrži sve što vam je potrebno za bezbrižan boravak: privatna terasa,
+                Kuća sadrži sve što vam je potrebno za bezbrižan boravak: nalazi se u masleniku,privatna terasa,
                 prostrorna dnevna soba, dvije moderne kupaonice, udoban namještaj i veliki vrt za
                 dječju igru i grilanje.
               </p>
