@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Badge, Button, Card, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { IME_APLIKACIJE, RouteNames } from '../constants';
@@ -12,14 +13,30 @@ const pogodnosti = [
   'U blizini restorana, ljekarne, bezinske stanice, praonice automobila, tržnice.....',
 ];
 
-const galerija = Array.from(
-  { length: 59 },
-  (_, index) => `/fotografije/${encodeURIComponent(`app (${index + 1}).jpg`)}`
-).map((slika, index) => {
-  if (index === 0) return '/fotografije/app%20(18).jpg';
-  if (index === 17) return '/fotografije/app%20(1).jpg';
-  return slika;
-});
+const eksterijer = [
+  ...Array.from(
+    { length: 32 },
+    (_, index) => index + 1
+  )
+    .filter((broj) => broj !== 7)
+    .map((broj) => `/fotografije/${encodeURIComponent(`app (${broj}).jpg`)}`),
+  ...Array.from(
+    { length: 9 },
+    (_, index) => `/fotografije/${encodeURIComponent(`app (${index + 35}).jpg`)}`
+  ),
+  '/fotografije/app%20(33).jpg',
+];
+
+const interijer = [
+  '/fotografije/app%20(44).jpg',
+  '/fotografije/app%20(45).jpg',
+  ...Array.from(
+    { length: 14 },
+    (_, index) => `/fotografije/${encodeURIComponent(`app (${index + 46}).jpg`)}`
+  ),
+];
+
+const galerija = [...eksterijer, ...interijer];
 
 const preporuke = [
   {
@@ -40,6 +57,21 @@ const preporuke = [
 ];
 
 export default function Home() {
+  const [aktivnaPrvaSlika, setAktivnaPrvaSlika] = useState(0);
+  const [aktivnaInterijerSlika, setAktivnaInterijerSlika] = useState(0);
+
+  const promijeniPrvuSliku = (smjer) => {
+    setAktivnaPrvaSlika((trenutna) => (
+      (trenutna + smjer + eksterijer.length) % eksterijer.length
+    ));
+  };
+
+  const promijeniInterijerSliku = (smjer) => {
+    setAktivnaInterijerSlika((trenutna) => (
+      (trenutna + smjer + interijer.length) % interijer.length
+    ));
+  };
+
   return (
     <div className="holiday-home-page">
       <section className="hero-section">
@@ -131,7 +163,7 @@ export default function Home() {
             <div className="image-panel">
               <img
                 src="/fotografije/app%20(1).jpg"
-                alt="Interijer kuće za odmor"
+                alt="Eksterijer kuće za odmor"
                 loading="lazy"
                 decoding="async"
               />
@@ -161,25 +193,78 @@ export default function Home() {
       <section id="galerija" className="content-block gallery-section">
         <div className="section-heading">
           <Badge bg="warning" text="dark">
-            Galerija · 59 fotografija
+            Galerija · {galerija.length} fotografija
           </Badge>
           <h2>Upoznajte naš prostor</h2>
+          <h3 className="gallery-category-title">Eksterijer</h3>
         </div>
 
-        <Row className="g-3">
-          {galerija.map((slika, index) => (
-            <Col md={6} lg={3} key={index}>
-              <div className="gallery-item">
-                <img
-                  src={slika}
-                  alt={`Fotografija kuće za odmor ${index + 1}`}
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-            </Col>
-          ))}
-        </Row>
+        <div className="gallery-item gallery-item-carousel gallery-eksterijer-carousel">
+          <button
+            type="button"
+            className="gallery-image-button"
+            onClick={() => promijeniPrvuSliku(1)}
+            aria-label="Prikaži sljedeću fotografiju eksterijera"
+          >
+            <img
+              src={eksterijer[aktivnaPrvaSlika]}
+              alt={`Fotografija eksterijera kuće za odmor ${aktivnaPrvaSlika + 1}`}
+              loading="eager"
+              decoding="async"
+            />
+          </button>
+          <button
+            type="button"
+            className="gallery-arrow gallery-arrow-left"
+            onClick={() => promijeniPrvuSliku(-1)}
+            aria-label="Prethodna fotografija eksterijera"
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            className="gallery-arrow gallery-arrow-right"
+            onClick={() => promijeniPrvuSliku(1)}
+            aria-label="Sljedeća fotografija eksterijera"
+          >
+            ›
+          </button>
+        </div>
+
+        <div className="gallery-category gallery-category-interijer">
+          <h3 className="gallery-category-title">Interijer</h3>
+          <div className="gallery-item gallery-item-carousel gallery-interijer-carousel">
+            <button
+              type="button"
+              className="gallery-image-button"
+              onClick={() => promijeniInterijerSliku(1)}
+              aria-label="Prikaži sljedeću fotografiju interijera"
+            >
+              <img
+                src={interijer[aktivnaInterijerSlika]}
+                alt={`Fotografija interijera kuće za odmor ${aktivnaInterijerSlika + 1}`}
+                loading="lazy"
+                decoding="async"
+              />
+            </button>
+            <button
+              type="button"
+              className="gallery-arrow gallery-arrow-left"
+              onClick={() => promijeniInterijerSliku(-1)}
+              aria-label="Prethodna fotografija interijera"
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              className="gallery-arrow gallery-arrow-right"
+              onClick={() => promijeniInterijerSliku(1)}
+              aria-label="Sljedeća fotografija interijera"
+            >
+              ›
+            </button>
+          </div>
+        </div>
       </section>
 
       <section id="rezervacije" className="content-block booking-section">
