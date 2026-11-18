@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Badge, Button, Card, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { IME_APLIKACIJE, RouteNames } from '../constants';
@@ -71,6 +71,19 @@ export default function Home() {
       (trenutna + smjer + interijer.length) % interijer.length
     ));
   };
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setAktivnaPrvaSlika((trenutna) => (
+        (trenutna + 1) % eksterijer.length
+      ));
+      setAktivnaInterijerSlika((trenutna) => (
+        (trenutna - 1 + interijer.length) % interijer.length
+      ));
+    }, 10000);
+
+    return () => window.clearInterval(interval);
+  }, []);
 
   return (
     <div className="holiday-home-page">
