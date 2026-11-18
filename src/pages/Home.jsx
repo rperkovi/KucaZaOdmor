@@ -50,7 +50,7 @@ const preporuke = [
     zvijezde: '★★★★★',
   },
   {
-    ime: 'Tomislav',
+    ime: 'Denis',
     tekst: 'Odlična lokacija, mirno okruženje i sve što je potrebno za opuštanje s obitelji.',
     zvijezde: '★★★★★',
   },
